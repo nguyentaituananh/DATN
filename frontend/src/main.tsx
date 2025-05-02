@@ -3,6 +3,7 @@ import "./index.css";
 import App from "./App.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router";
+import "antd/dist/reset.css";
 
 const queryClient = new QueryClient();
 
