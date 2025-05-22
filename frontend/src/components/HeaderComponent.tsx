@@ -1,4 +1,3 @@
-import React from "react";
 import { Layout, Input } from "antd";
 import {
   SearchOutlined,
@@ -19,9 +18,8 @@ const HeaderComponent = () => {
         alignItems: "center",
       }}
     >
-      <div style={{ fontSize: "24px", fontWeight: "bold" }}>
-        Logo/Tên Trang Web
-      </div>
+      <img src="" alt="" width={50} height={50} style={{ marginRight: -250 }} />
+      <div style={{ fontSize: "24px", fontWeight: "bold" }}>EcoDecore</div>
       <div>
         <Input
           placeholder="Tìm sản phẩm..."

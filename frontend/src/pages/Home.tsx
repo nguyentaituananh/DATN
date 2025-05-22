@@ -306,7 +306,7 @@ const Home = () => {
   ];
 
   return (
-    <>
+    <div style={{ maxWidth: 1000, margin: "0 auto" }}>
       <HeaderComponent />
       <BannerComponent />
 
@@ -465,7 +465,7 @@ const Home = () => {
       </div>
 
       <FooterComponent />
-    </>
+    </div>
   );
 };
 

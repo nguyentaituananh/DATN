@@ -16,16 +16,16 @@ const BannerComponent = () => {
   const containerStyle: React.CSSProperties = {
     position: "relative",
     width: "100%",
-    height: "1000px",
+    height: "600px",
     overflow: "hidden",
+    backgroundSize: "100% 100%",
+    backgroundPosition: "center",
   };
 
   const slideStyle: React.CSSProperties = {
-    width: "100%", // Đảm bảo slide chiếm toàn bộ chiều rộng
-    height: "100%", // Đảm bảo slide chiếm toàn bộ chiều cao container
+    width: "100%",
+    height: "100%",
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
   };
 
   const imageStyle: React.CSSProperties = {
