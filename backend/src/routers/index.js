@@ -1,10 +1,16 @@
 import { Router } from "express";
 import authRouter from "./auth.router.js";
 import productRouter from "./product.router.js";
+import categoryRouter from "./category.router.js";
+import orderRouter from "./order.router.js"; 
+import reviewRouter from "./review.router.js";
 
 const router = Router();
 
 router.use("/auth", authRouter);
 router.use("/api/products", productRouter);
+router.use("/categories", categoryRouter);
+router.use("/orders", orderRouter); 
+router.use("/reviews", reviewRouter);
 
 export default router;
