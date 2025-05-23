@@ -7,7 +7,7 @@ interface RegisterFormUIProps {
   onFinish: (values: any) => void;
 }
 
-const RegisterFormUI: React.FC<RegisterFormUIProps> = ({ isLoading, onFinish }) => {
+const RegisterPage: React.FC<RegisterFormUIProps> = ({ isLoading, onFinish }) => {
   return (
      <div className="py-12 md:py-16">
       <div className="max-w-md mx-auto px-4">
@@ -121,4 +121,4 @@ const RegisterFormUI: React.FC<RegisterFormUIProps> = ({ isLoading, onFinish }) 
 };
 
 
-export default RegisterFormUI;
+export default RegisterPage;
