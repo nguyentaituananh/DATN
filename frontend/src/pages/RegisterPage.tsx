@@ -157,7 +157,9 @@ const RegisterPage: React.FC = () => {
           <div className="text-center mt-8">
             <p className="text-gray-600">
               Already have an account?{' '}
-             
+             <Link to="/login" className="text-amber-700 hover:text-amber-800 font-medium">
+                Sign in
+              </Link>
             </p>
           </div>
         </div>
