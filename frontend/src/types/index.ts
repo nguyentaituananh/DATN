@@ -44,3 +44,18 @@ export interface Address {
   zipCode: string;
   country: string;
 }
+export interface Order {
+  id: string;
+  userId: string;
+  items: CartItem[];
+  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'canceled';
+  shippingAddress: Address;
+  billingAddress: Address;
+  paymentMethod: string;
+  subtotal: number;
+  shipping: number;
+  tax: number;
+  total: number;
+  createdAt: string;
+  updatedAt: string;
+}

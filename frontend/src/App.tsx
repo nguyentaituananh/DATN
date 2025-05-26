@@ -42,6 +42,7 @@ import Layout from './components/layout/Layout';
 import RegisterPage from './pages/RegisterPage';
 import LayoutAdmin from './layouts/LayoutAdmin';
 import Dashboard from './pages/Dashboard';
+import LoginPage from './pages/LoginPage';
 
 
 // Ant Design theme customization
@@ -65,7 +66,7 @@ function App() {
                   <Route path="/admin" element={<LayoutAdmin />}></Route>
                    <Route index element={<Dashboard />} />
                   <Route path="/register" element={<RegisterPage />} />
-                   
+                    <Route path="/login" element={<LoginPage />} />
             
                 </Routes>
               </Layout>
