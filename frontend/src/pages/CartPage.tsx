@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { InputNumber, Divider, Empty } from 'antd';
 import { Trash2, ArrowRight, ShoppingBag } from 'lucide-react';
-
+import { useCart } from '../context/CartContext';
 const CartPage: React.FC = () => {
   const { items= [], subtotal, shipping, tax, total, updateQuantity, removeFromCart } = useCart();
   const navigate = useNavigate();
