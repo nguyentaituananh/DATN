@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { InputNumber, Divider, Empty } from 'antd';
 import { Trash2, ArrowRight, ShoppingBag } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import Button from '../components/ui/Button';
 const CartPage: React.FC = () => {
   const { items= [], subtotal, shipping, tax, total, updateQuantity, removeFromCart } = useCart();
   const navigate = useNavigate();
@@ -28,6 +29,11 @@ const CartPage: React.FC = () => {
                 <span className="text-gray-500">Giỏ hàng của bạn trống</span>
               }
             >
+              <Button onClick={() => navigate('/products')}
+                leftIcon={<ShoppingBag size={18}/>}
+                >
+                Mua sắm
+              </Button>
             </Empty>
           </div>
         ) : (
@@ -142,6 +148,15 @@ const CartPage: React.FC = () => {
                   <span>Tổng cộng</span>
                   <span className="text-amber-800">${total.toFixed(2)}</span>
                 </div>
+                 <Button 
+                variant="primary"
+                  size="lg"
+                  fullWidth
+                  rightIcon={<ArrowRight size={18} />}
+                  onClick={() => navigate('/checkout')}
+                  >
+                    Tiến hành thanh toán 
+                  </Button>
                 <div className="mt-6">
                   <h3 className="font-medium mb-2">Chúng tôi chấp nhận</h3>
                   <div className="flex space-x-2">
