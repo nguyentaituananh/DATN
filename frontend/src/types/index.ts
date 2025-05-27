@@ -1,3 +1,5 @@
+import { ExportOutlined } from "@ant-design/icons";
+
 export interface Product {
     id: string;
     name:string;
@@ -24,4 +26,19 @@ export interface CartItem {
     product: Product;
     quantity: number; 
     color: string;
+}
+export interface User{
+    id: string;
+    name: string;
+    email:string;
+    avatar?: string;
+    phone?: string;
+    address?: Address;
+}
+export interface Address {
+  street: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  country: string;
 }
