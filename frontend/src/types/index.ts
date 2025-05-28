@@ -6,6 +6,7 @@ export interface Product {
     category:string;
     price: number;
     salePrice?:number;
+    shortDescription?:string;
     description: string;
     images: string[];
     features:string[];

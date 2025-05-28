@@ -18,3 +18,91 @@ body {
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Playfair Display', serif;
 }
+
+.ant-btn-primary {
+  background-color: #B45309;
+}
+
+.ant-btn-primary:hover {
+  background-color: #92400E;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #B45309;
+}
+
+.ant-tabs-ink-bar {
+  background-color: #B45309;
+}
+
+.ant-steps-item-process .ant-steps-item-icon {
+  background-color: #B45309;
+  border-color: #B45309;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon {
+  border-color: #B45309;
+}
+
+.ant-steps-item-finish .ant-steps-item-icon .ant-steps-icon {
+  color: #B45309;
+}
+
+.ant-rate-star-full .ant-rate-star-first,
+.ant-rate-star-full .ant-rate-star-second {
+  color: #F59E0B;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #B45309;
+  border-color: #B45309;
+}
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled) {
+  color: #B45309;
+  border-color: #B45309;
+}
+
+.ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before {
+  background-color: #B45309;
+}
+
+.ant-radio-checked .ant-radio-inner {
+  border-color: #B45309;
+}
+
+.ant-radio-checked .ant-radio-inner::after {
+  background-color: #B45309;
+}
+
+.ant-input:focus,
+.ant-input-focused {
+  border-color: #B45309;
+  box-shadow: 0 0 0 2px rgba(180, 83, 9, 0.2);
+}
+
+.ant-input-affix-wrapper:focus,
+.ant-input-affix-wrapper-focused {
+  border-color: #B45309;
+  box-shadow: 0 0 0 2px rgba(180, 83, 9, 0.2);
+}
+
+.ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+  border-color: #B45309;
+  box-shadow: 0 0 0 2px rgba(180, 83, 9, 0.2);
+}
+
+.ant-form-item-has-error .ant-input,
+.ant-form-item-has-error .ant-input-affix-wrapper,
+.ant-form-item-has-error .ant-input:hover,
+.ant-form-item-has-error .ant-input-affix-wrapper:hover {
+  border-color: #ff4d4f;
+}
+
+.ant-form-item-has-error .ant-input:focus,
+.ant-form-item-has-error .ant-input-affix-wrapper:focus,
+.ant-form-item-has-error .ant-input-focused,
+.ant-form-item-has-error .ant-input-affix-wrapper-focused {
+  border-color: #ff4d4f;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+}
