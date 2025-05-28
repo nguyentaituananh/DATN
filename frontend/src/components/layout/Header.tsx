@@ -74,23 +74,29 @@ const Header: React.FC = () => {
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-6">
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="text-slate-700 hover:text-amber-700 transition-colors"
-              aria-label="Tìm kiếm"
-            >
-              <Search size={20} />
-            </button>
-            <Link to="/cart" className="relative">
-              <Badge count={totalItems} size="small" color="#B45309">
-                <ShoppingCart size={20} className="text-slate-700 hover:text-amber-700 transition-colors" />
-              </Badge>
-            </Link>
-            <Link to={isAuthenticated ? '/account' : '/login'} className="text-slate-700 hover:text-amber-700 transition-colors">
-              <User size={20} />
-            </Link>
-          </div>
+         <div className="hidden md:flex items-center space-x-6">
+  <button
+    onClick={() => setSearchOpen(true)}
+    className="flex items-center justify-center text-slate-700 hover:text-amber-700 transition-colors"
+    aria-label="Tìm kiếm"
+  >
+    <Search size={20} />
+  </button>
+
+  <Link to="/cart" className="relative flex items-center justify-center">
+    <Badge count={totalItems} size="small" color="#B45309">
+      <ShoppingCart size={21} className="text-slate-700 hover:text-amber-700 transition-colors" />
+    </Badge>
+  </Link>
+
+  <Link
+    to={isAuthenticated ? '/account' : '/login'}
+    className="flex items-center justify-center text-slate-700 hover:text-amber-700 transition-colors"
+  >
+    <User size={20} />
+  </Link>
+</div>
+
 
           {/* Mobile Menu Button */}
           <div className="flex items-center space-x-4 md:hidden">

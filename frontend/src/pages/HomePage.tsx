@@ -36,12 +36,20 @@ const [current, setCurrent] = useState(0);
     }, 4000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [heroBackgrounds.length]);
 
   return (
     <div>
       {/* Hero Section */}
-     <section className={`relative h-screen max-h-[800px] min-h-[600px] flex items-center transition-all duration-1000 ease-in-out ${heroBackgrounds[current]}`}>
+     <section className="relative h-screen max-h-[800px] min-h-[600px] flex items-center transition-all duration-1000 ease-in-out" >
+{heroBackgrounds.map((bg, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            index === current ? "opacity-100" : "opacity-0"
+          } ${bg}`}
+        />
+      ))}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-black opacity-40"></div>
         </div>
@@ -73,7 +81,19 @@ const [current, setCurrent] = useState(0);
               </Link>
             </div>
             </motion.div>
+            <div className="absolute left-1/2 transform -translate-x-1/2 mt-40 flex space-x-2">
+           {heroBackgrounds.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrent(index)}
+              className={`h-2 rounded-full transition-all ${
+  index === current ? "w-8 bg-amber-500" : "w-2 bg-white/50"
+}`}
+            />
+          ))}
           </div>
+          </div>
+
         </div>
       </section>
 
