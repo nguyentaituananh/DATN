@@ -6,6 +6,7 @@ import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/HomePage";
 import Layout from "./components/layout/layout";
 import { AuthProvider } from "./context/AuthContext";
+import CheckoutPage from "./pages/CheckoutPage";
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />}/>
         <Route path="/cart" element={<CartPage />}/>
+        <Route path="/checkout" element={<CheckoutPage />}/>
          <Route path="/dashboard" element={<Dashboard />} />
          <Route path="/layoutAdmin" element={<LayoutAdmin />} />
       </Routes>
