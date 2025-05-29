@@ -49,7 +49,6 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       const existingItemIndex = state.items.findIndex(
         item => item.product.id === product.id && item.color === color
       );
-
       let newItems;
       if (existingItemIndex >= 0) {
         newItems = [...state.items];
@@ -146,7 +145,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     </CartContext.Provider>
   );
 };
-
 export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (context === undefined) {

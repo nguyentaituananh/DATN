@@ -8,7 +8,6 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
 }
-
 const Button: React.FC<ButtonProps> = ({
   children,
   variant = 'primary',
@@ -22,7 +21,6 @@ const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseClasses = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
-  
   const variantClasses = {
     primary: 'bg-amber-700 text-white hover:bg-amber-800 focus:ring-amber-500',
     secondary: 'bg-slate-800 text-white hover:bg-slate-900 focus:ring-slate-500',

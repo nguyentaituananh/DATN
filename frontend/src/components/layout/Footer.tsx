@@ -1,6 +1,6 @@
 import React from 'react';
-import { Facebook, Instagram, Twitter, Mail, MapPin, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Facebook, Instagram, Twitter, Mail, MapPin, Phone } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -30,30 +30,29 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="font-medium text-lg mb-4">Danh mục sản phẩm</h4>
             <ul className="space-y-2">
-              <li>
-                <Link to="/products" className="text-slate-300 hover:text-amber-400 transition-colors">
+              <li className="text-slate-300 hover:text-amber-400 transition-colors">
                   Tất cả sản phẩm
-                </Link>
+                
               </li>
-              <li>
-                <Link to="/products/sofas" className="text-slate-300 hover:text-amber-400 transition-colors">
+              <li className="text-slate-300 hover:text-amber-400 transition-colors">
+            
                   Sofa
-                </Link>
+         
               </li>
-              <li>
-                <Link to="/products/tables" className="text-slate-300 hover:text-amber-400 transition-colors">
+              <li className="text-slate-300 hover:text-amber-400 transition-colors">
+               
                   Bàn
-                </Link>
+
               </li>
-              <li>
-                <Link to="/products/chairs" className="text-slate-300 hover:text-amber-400 transition-colors">
+              <li className="text-slate-300 hover:text-amber-400 transition-colors">
+                
                   Ghế
-                </Link>
+
               </li>
-              <li>
-                <Link to="/products/beds" className="text-slate-300 hover:text-amber-400 transition-colors">
+              <li  className="text-slate-300 hover:text-amber-400 transition-colors">
+    
                   Giường
-                </Link>
+                
               </li>
             </ul>
           </div>
