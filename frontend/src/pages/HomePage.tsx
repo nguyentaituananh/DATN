@@ -9,6 +9,7 @@ const heroBackgrounds = [
   "bg-[url('https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg')] bg-cover bg-center",
   "bg-[url('https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg')] bg-cover bg-center",
   "bg-[url('https://images.pexels.com/photos/1090638/pexels-photo-1090638.jpeg')] bg-cover bg-center",
+  "bg-[url('https://images.pexels.com/photos/2251247/pexels-photo-2251247.jpeg')] bg-cover bg-center",
 ]
 
 const textContent = [
@@ -24,7 +25,14 @@ const textContent = [
     heading: "Luxury Living Starts Here",
     subheading: "Experience luxury furniture that blends artisan quality, modern design, and enduring comfort."
   },
-
+   {
+    heading: "Crafted for Every Corner",
+    subheading: "From cozy nooks to grand living rooms, we’ve got you covered.",
+  },
+  {
+    heading: "Natural Materials, Lasting Impressions",
+    subheading: "Sustainable furniture designed to inspire and endure.",
+  },
 ]
 const HomePage: React.FC = () => {
 const [current, setCurrent] = useState(0);
