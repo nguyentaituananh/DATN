@@ -1,7 +1,6 @@
 import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import TestimonialsSection from './TestimonialsSection';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,7 +13,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <main className="flex-grow pt-16 md:pt-20">
         {children}
       </main>
-      <TestimonialsSection/>
       <Footer />
     </div>
   );
