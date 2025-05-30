@@ -1,4 +1,4 @@
-import CartItem from "../models/CartItem.js";
+import CartItem from "../models/cartItem.model.js";
 
 // Tạo mục trong giỏ hàng
 export const addCartItem = async (req, res) => {
@@ -24,7 +24,9 @@ export const addCartItem = async (req, res) => {
 export const getItemsByCartId = async (req, res) => {
   try {
     const { cart_id } = req.params;
-    const items = await CartItem.find({ cart_id }).populate("product_id variant_id");
+    const items = await CartItem.find({ cart_id }).populate(
+      "product_id variant_id"
+    );
     res.status(200).json(items);
   } catch (error) {
     res.status(500).json({ message: error.message });
