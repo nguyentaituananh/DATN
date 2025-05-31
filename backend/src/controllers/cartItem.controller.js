@@ -1,4 +1,4 @@
-import CartItem from "../models/CartItem.js";
+import CartItem from "../models/cartItem.model.js";
 
 // Tạo mục trong giỏ hàng
 export const addCartItem = async (req, res) => {
