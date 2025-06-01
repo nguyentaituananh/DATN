@@ -38,8 +38,7 @@ function App() {
           </Layout>
         </CartProvider>
       </AuthProvider>
-    </ConfigProvider>
-  );
+    </ConfigProvider>)
 }
 
 export default App;
