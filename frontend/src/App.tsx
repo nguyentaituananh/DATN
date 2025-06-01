@@ -10,6 +10,8 @@ import CheckoutPage from "./pages/CheckoutPage";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import { ConfigProvider } from "antd";
+import ProductsPage from "./pages/ProductsPage";
+import ProductDetailPage from "./pages/ProductDetailPage";
 
 const theme = {
   token: {
@@ -27,6 +29,10 @@ function App() {
           <Layout>
             <Routes>
               <Route path="/admin" element={<LayoutAdmin />} />
+              
+                  <Route path="/products" element={<ProductsPage />} />
+                  <Route path="/products/:category" element={<ProductsPage />} />
+                  <Route path="/product/:id" element={<ProductDetailPage />} />
               <Route path="/register" element={<RegisterPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/" element={<HomePage />} />
