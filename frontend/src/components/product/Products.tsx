@@ -1,5 +1,5 @@
-import axios from "axios";
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
+import instanceAxios from "../../utils/instanceAxios";
 
 interface Product {
   id: number;
@@ -17,7 +17,6 @@ interface ProductGroup {
   cabinet?: Product[];
   chairs?: Product[];
   tables?: Product[];
-  // ... có thể mở rộng nếu có nhóm khác
 }
 
 const Products = () => {
@@ -27,9 +26,7 @@ const Products = () => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const { data } = await axios.get<ProductGroup[]>(
-          "http://localhost:5000/products"
-        );
+        const { data } = await instanceAxios.get<ProductGroup[]>("/products");
         setProductData(data);
       } catch (error) {
         console.error("Failed to fetch products:", error);
