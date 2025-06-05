@@ -7,7 +7,6 @@ import {
   RotateCcw,
   MessageSquare,
 } from "lucide-react";
-import ProductGrid from "../components/product/ProductGirt";
 import Button from "../components/ui/Button";
 import { motion } from "framer-motion";
 import SectionHeading from "../components/ui/SectionHeading";

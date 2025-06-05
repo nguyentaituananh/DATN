@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
-import LayoutAdmin from "./layouts/LayoutAdmin";
-import Dashboard from "./layouts/Dashboard";
+import LayoutAdmin from "./layouts/LayoutAdmin/LayoutAdmin";
+import { Dashboard } from "./layouts/LayoutAdmin/Dashboard";
 import CartPage from "./pages/CartPage";
 import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/HomePage";
@@ -26,25 +26,32 @@ function App() {
     <ConfigProvider theme={theme}>
       <AuthProvider>
         <CartProvider>
-          <Layout>
-            <Routes>
-              <Route path="/admin" element={<LayoutAdmin />} />
-              
-                  <Route path="/products" element={<ProductsPage />} />
-                  <Route path="/products/:category" element={<ProductsPage />} />
-                  <Route path="/product/:id" element={<ProductDetailPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/" element={<HomePage />} />
-              <Route path="/cart" element={<CartPage />} />
-              <Route path="/checkout" element={<CheckoutPage />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/layoutAdmin" element={<LayoutAdmin />} />
-            </Routes>
-          </Layout>
+          <Routes>
+            <Route path="/admin" element={<LayoutAdmin />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/layoutAdmin" element={<LayoutAdmin />} />
+            <Route
+              path="*"
+              element={
+                <Layout>
+                  <Routes>
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/products" element={<ProductsPage />} />
+                    <Route path="/products/:category" element={<ProductsPage />} />
+                    <Route path="/product/:id" element={<ProductDetailPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/login" element={<LoginPage />} />
+                    <Route path="/cart" element={<CartPage />} />
+                    <Route path="/checkout" element={<CheckoutPage />} />
+                  </Routes>
+                </Layout>
+              }
+            />
+          </Routes>
         </CartProvider>
       </AuthProvider>
-    </ConfigProvider>)
+    </ConfigProvider>
+  );
 }
 
 export default App;
