@@ -1,17 +1,17 @@
 import { Route, Routes } from "react-router";
-import LayoutAdmin from "./layouts/LayoutAdmin/LayoutAdmin";
-import { Dashboard } from "./layouts/LayoutAdmin/Dashboard";
-import CartPage from "./pages/CartPage";
+import LayoutAdmin from "./layouts/admin/LayoutAdmin";
+import { DashboardPage } from "./pages/admin/DashboardPage";
+import CartPage from "./pages/user/CartPage";
 import { CartProvider } from "./context/CartContext";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/user/HomePage";
 import Layout from "./components/layout/layout";
 import { AuthProvider } from "./context/AuthContext";
-import CheckoutPage from "./pages/CheckoutPage";
-import RegisterPage from "./pages/RegisterPage";
-import LoginPage from "./pages/LoginPage";
+import CheckoutPage from "./pages/user/CheckoutPage";
+import RegisterPage from "./pages/user/RegisterPage";
+import LoginPage from "./pages/user/LoginPage";
 import { ConfigProvider } from "antd";
-import ProductsPage from "./pages/ProductsPage";
-import ProductDetailPage from "./pages/ProductDetailPage";
+import ProductsPage from "./pages/user/ProductsPage";
+import ProductDetailPage from "./pages/user/ProductDetailPage";
 
 const theme = {
   token: {
@@ -28,8 +28,7 @@ function App() {
         <CartProvider>
           <Routes>
             <Route path="/admin" element={<LayoutAdmin />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/layoutAdmin" element={<LayoutAdmin />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route
               path="*"
               element={

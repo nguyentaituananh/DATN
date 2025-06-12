@@ -9,8 +9,8 @@ import {
 import { Button, Layout, Menu } from 'antd';
 import { NavLink } from 'react-router-dom';
 import { FaUserCircle } from 'react-icons/fa';
-import { Dashboard } from './Dashboard';
-import { Search } from '../Sidebar/Search';
+import { DashboardPage } from '../../pages/admin/DashboardPage';
+import { Search } from './Sidebar/Search';
 
 const { Header, Sider } = Layout;
 
@@ -113,7 +113,7 @@ const LayoutAdmin: React.FC = () => {
         <div className="flex h-screen">
                
             <main className='flex-1 p-4 overflow-auto'>
-              <Dashboard/>
+              <DashboardPage/>
             </main>
              </div>
             

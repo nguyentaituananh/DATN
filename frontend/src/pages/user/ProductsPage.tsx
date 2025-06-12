@@ -2,10 +2,10 @@
   import { useParams } from 'react-router-dom';
   import { Slider, Select, Checkbox, Divider } from 'antd';
   import { Filter, X } from 'lucide-react';
-  import SectionHeading from '../components/ui/SectionHeading';
-  import Button from '../components/ui/Button';
-  import { products, getProductsByCategory } from '../data/products';
-import ProductGrid from '../components/product/ProductGirt';
+  import SectionHeading from '../../components/ui/SectionHeading';
+  import Button from '../../components/ui/Button';
+  import { products, getProductsByCategory } from '../../data/products';
+import ProductGrid from '../../components/product/ProductGirt';
 
   const { Option } = Select;
 
