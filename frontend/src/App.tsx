@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router";
 import LayoutAdmin from "./layouts/admin/LayoutAdmin";
-import { DashboardPage } from "./pages/admin/DashboardPage";
 import CartPage from "./pages/user/CartPage";
 import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/user/HomePage";
@@ -28,7 +27,6 @@ function App() {
         <CartProvider>
           <Routes>
             <Route path="/admin" element={<LayoutAdmin />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
             <Route
               path="*"
               element={
@@ -36,8 +34,14 @@ function App() {
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/products" element={<ProductsPage />} />
-                    <Route path="/products/:category" element={<ProductsPage />} />
-                    <Route path="/product/:id" element={<ProductDetailPage />} />
+                    <Route
+                      path="/products/:category"
+                      element={<ProductsPage />}
+                    />
+                    <Route
+                      path="/product/:id"
+                      element={<ProductDetailPage />}
+                    />
                     <Route path="/register" element={<RegisterPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/cart" element={<CartPage />} />
