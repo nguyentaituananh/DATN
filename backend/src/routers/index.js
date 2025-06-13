@@ -9,11 +9,13 @@ import bannersRouter from "./banners.router.js";
 import couponsRouter from "./coupons.router.js";
 import cartRouter from "./cart.router.js";
 import cartItemRouter from "./cartItem.router.js";
+import product_variants from "./product_variants.router.js";
 
 const router = Router();
 
 router.use("/auth", authRouter);
 router.use("/api/products", productRouter);
+router.use("/api/product-variant", product_variants);
 router.use("/api/categories", categoryRouter);
 router.use("/api/orders", orderRouter);
 router.use("/api/reviews", reviewRouter);
