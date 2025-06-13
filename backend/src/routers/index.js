@@ -7,11 +7,21 @@ import reviewRouter from "./review.router.js";
 import favoriteRouter from "./favorite.router.js";
 import bannersRouter from "./banners.router.js";
 import couponsRouter from "./coupons.router.js";
+
 import cartRouter from "./cart.router.js";
 import cartItemRouter from "./cartItem.router.js";
 import roomRouter from "./room.router.js";
 import dimensionRouter from "./dimension.router.js";
 import deliveryOptionRouter from "./deliveryOption.route.js";
+import careInstructionsRouter from "./careInstructions.router.js";
+import assembliesRouter from "./assemblies.router.js";
+import orderItemRouter from "./orderItem.router.js";
+
+
+
+
+import productVariantRouter from "./productVariant.router.js";
+import materialsRouter from "./materials.router.js";
 
 const router = Router();
 
@@ -28,5 +38,15 @@ router.use("/cartItem", cartItemRouter);
 router.use("/room", roomRouter)
 router.use("/dimension", dimensionRouter)
 router.use("/deliveryOption", deliveryOptionRouter)
+router.use("/api/cart", cartRouter);
+router.use("/api/cartItem", cartItemRouter);
+router.use("api/careInstructions", careInstructionsRouter);
+router.use("/api/assemblies", assembliesRouter);
+router.use("/api/oderItems", orderItemRouter);
+
+router.use("/api/product-variants", productVariantRouter);
+router.use("/api/materials", materialsRouter);
+
+
 
 export default router;

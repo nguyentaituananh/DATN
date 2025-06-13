@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, Input, Select, Checkbox, Steps, Radio, Divider, message } from 'antd';
 import { CreditCard, ShoppingBag, Truck, Check } from 'lucide-react';
-import Button from '../components/ui/Button';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
-import { useOrders } from '../context/OrderContext';
-import { Address } from '../types';
+import Button from '../../components/ui/Button';
+import { useCart } from '../../context/CartContext';
+import { useAuth } from '../../context/AuthContext';
+import { useOrders } from '../../context/OrderContext';
+import { Address } from '../../types';
 
 const { Option } = Select;
 const { Step } = Steps;

@@ -1,10 +1,10 @@
 
-import { DashboardCard } from './DashboardCard';
-import { ActivityChart } from './ActivityChart';
-import { RecentTransactions } from './RecentTransactions';
-import UsageChart from './UsageChart';
+import { DashboardCard } from '../../layouts/admin/Dashboard/DashboardCard';
+import { ActivityChart } from '../../layouts/admin/Dashboard/ActivityChart';
+import { RecentTransactions } from '../../layouts/admin/Dashboard/RecentTransactions';
+import UsageChart from '../../layouts/admin/Dashboard/UsageChart';
 
-export const Dashboard = () => {
+export const DashboardPage = () => {
   return (
     <div className="p-6 flex flex-col gap-6">
       {/* Stats */}

@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Tabs, Rate, InputNumber, Radio, message } from 'antd';
 import { ShoppingBag, Heart, Star, Truck, RotateCcw, Shield } from 'lucide-react';
-import Button from '../components/ui/Button';
-import SectionHeading from '../components/ui/SectionHeading';
-import { getProductById, getRelatedProducts } from '../data/products';
-import { useCart } from '../context/CartContext';
-import { Product } from '../types';
-import ProductGrid from '../components/product/ProductGirt';
+import Button from '../../components/ui/Button';
+import SectionHeading from '../../components/ui/SectionHeading';
+import { getProductById, getRelatedProducts } from '../../data/products';
+import { useCart } from '../../context/CartContext';
+import { Product } from '../../types';
+import ProductGrid from '../../components/product/ProductGirt';
 
 const { TabPane } = Tabs;
 
