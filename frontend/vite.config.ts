@@ -16,7 +16,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3001', // <-- nơi json-server chạy
+        target: 'http://localhost:5000', // <-- nơi json-server chạy
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },

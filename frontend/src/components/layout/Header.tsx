@@ -54,8 +54,8 @@ const productMenuItems: MenuProps["items"] = [
 
 
 const Header: React.FC = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { items } = useCart();
+  const { isAuthenticated, user } = useAuth();
   const location = useLocation();
 
   const { user, logout } = useAuth();

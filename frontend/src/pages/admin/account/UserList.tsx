@@ -42,8 +42,6 @@ import { User } from "../../../types";
 import instanceAxios from "../../../utils/instanceAxios";
 import { useAuth } from "../../../context/AuthContext";
 
-const { Option } = Select;
-
 const UserList: React.FC = () => {
   const [data, setData] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
