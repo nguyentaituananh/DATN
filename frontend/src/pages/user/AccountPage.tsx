@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Tabs, Form, Input, Upload, Avatar, message } from 'antd';
 import { User, Package, CreditCard, Heart, LogOut, Edit } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import Button from '../components/ui/Button';
-import { useAuth } from '../context/AuthContext';
-import { useOrders } from '../context/OrderContext';
+import Button from '../../components/ui/Button';
+import { useAuth } from '../../context/AuthContext';
+import { useOrders } from '../../context/OrderContext';
 
 const { TabPane } = Tabs;
 
