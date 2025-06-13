@@ -5,17 +5,24 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "json-server db.json -m ./node_modules/json-server-auth -p 3000",
+    "server": "json-server src/api/db.json -m ./node_modules/json-server-auth -p 5000",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.67.2",
+    "antd": "^5.25.3",
     "axios": "^1.8.3",
+    "cmdk": "^1.1.1",
+    "framer-motion": "^12.15.0",
+    "lucide-react": "^0.511.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router": "^7.3.0"
+    "react-icons": "^5.5.0",
+    "react-router": "^7.3.0",
+    "react-router-dom": "^7.6.1",
+    "recharts": "^2.15.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
@@ -34,5 +41,10 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0"
-  }
+  },
+  "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
+  "main": "eslint.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

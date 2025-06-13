@@ -13,7 +13,7 @@ export const creatCareInstruction = async (req, res) => {
   try {
     const { product_id, content } = req.body;
     if (!product_id || !content) {
-      return res.status(400).json({ message: "Product ID and content are required." });
+      return res.status(400).json({ message: "ID sản phẩm và nội dung là bắt buộc." });
     }
 
     const newCareInstruction = new CareInstructions({
@@ -34,7 +34,7 @@ export const updateCartIntruction = async (req, res) => {
     const { content } = req.body;
 
     if (!content) {
-      return res.status(400).json({ message: "Content is required." });
+      return res.status(400).json({ message: "Nội dung là bắt buộc" });
     }
 
     const updatedCareInstruction = await CareInstructions.findByIdAndUpdate(
@@ -44,7 +44,7 @@ export const updateCartIntruction = async (req, res) => {
     );
 
     if (!updatedCareInstruction) {
-      return res.status(404).json({ message: "Care instruction not found." });
+      return res.status(404).json({ message: "Không tìm thấy hướng dẫn chăm sóc." });
     }
 
     res.status(200).json(updatedCareInstruction);
@@ -60,10 +60,10 @@ export const deleteCareInstruction = async (req, res) => {
     const deletedCareInstruction = await CareInstructions.findByIdAndDelete(id);
 
     if (!deletedCareInstruction) {
-      return res.status(404).json({ message: "Care instruction not found." });
+      return res.status(404).json({ message: "Không tìm thấy hướng dẫn chăm sóc." });
     }
 
-    res.status(200).json({ message: "Care instruction deleted successfully." });
+    res.status(200).json({ message: "Hướng dẫn chăm sóc đã được xóa thành công." });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
