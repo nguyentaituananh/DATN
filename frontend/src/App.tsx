@@ -12,6 +12,8 @@ import LoginPage from "./pages/LoginPage";
 import { ConfigProvider } from "antd";
 import ProductsPage from "./pages/ProductsPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
+// import { User } from "./layouts/LayoutAdmin/User";
+
 
 const theme = {
   token: {
@@ -26,15 +28,19 @@ function App() {
     <ConfigProvider theme={theme}>
       <AuthProvider>
         <CartProvider>
+          
           <Routes>
             <Route path="/admin" element={<LayoutAdmin />} />
             <Route path="/dashboard" element={<Dashboard />} />
+           
             <Route path="/layoutAdmin" element={<LayoutAdmin />} />
+             
             <Route
               path="*"
               element={
                 <Layout>
                   <Routes>
+                    
                     <Route path="/" element={<HomePage />} />
                     <Route path="/products" element={<ProductsPage />} />
                     <Route path="/products/:category" element={<ProductsPage />} />
