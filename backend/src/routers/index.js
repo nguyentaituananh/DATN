@@ -9,6 +9,9 @@ import bannersRouter from "./banners.router.js";
 import couponsRouter from "./coupons.router.js";
 import cartRouter from "./cart.router.js";
 import cartItemRouter from "./cartItem.router.js";
+import roomRouter from "./room.router.js";
+import dimensionRouter from "./dimension.router.js";
+import deliveryOptionRouter from "./deliveryOption.route.js";
 
 const router = Router();
 
@@ -22,5 +25,8 @@ router.use("/api/banners", bannersRouter);
 router.use("/api/coupons", couponsRouter);
 router.use("/cart", cartRouter);
 router.use("/cartItem", cartItemRouter);
+router.use("/room", roomRouter)
+router.use("/dimension", dimensionRouter)
+router.use("/deliveryOption", deliveryOptionRouter)
 
 export default router;

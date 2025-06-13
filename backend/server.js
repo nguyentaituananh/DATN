@@ -7,6 +7,7 @@ import connectDB from "./src/config/db.js";
 // import authRoutes from "./src/routers/auth.router.js";
 // import cartRoutes from "./src/routers/cart.router.js";
 import router from "./src/routers/index.js";
+import roomRouter from "./src/routers/room.router.js";
 
 dotenv.config();
 
