@@ -18,6 +18,10 @@ import orderItemRouter from "./orderItem.router.js";
 import productVariantRouter from "./productVariant.router.js";
 import materialsRouter from "./materials.router.js";
 
+
+import productVariantRouter from "./productVariant.router.js";
+import materialsRouter from "./materials.router.js";
+
 const router = Router();
 
 router.use("/auth", authRouter);
@@ -33,6 +37,9 @@ router.use("/api/cartItem", cartItemRouter);
 router.use("api/careInstructions", careInstructionsRouter);
 router.use("/api/assemblies", assembliesRouter);
 router.use("/api/oderItems", orderItemRouter);
+
+router.use("/api/product-variants", productVariantRouter);
+router.use("/api/materials", materialsRouter);
 
 router.use("/api/product-variants", productVariantRouter);
 router.use("/api/materials", materialsRouter);
