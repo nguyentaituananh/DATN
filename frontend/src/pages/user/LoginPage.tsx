@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Form, Input, Checkbox, Divider, message } from "antd";
 import { Mail, Lock } from "lucide-react";
-import Button from "../components/ui/Button";
-import { useAuth } from "../context/AuthContext";
+import Button from "../../components/ui/Button";
+import { useAuth } from "../../context/AuthContext";
 
 const LoginPage: React.FC = () => {
   const { login } = useAuth();

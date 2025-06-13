@@ -7,10 +7,10 @@ import {
   RotateCcw,
   MessageSquare,
 } from "lucide-react";
-import Button from "../components/ui/Button";
+import Button from "../../components/ui/Button";
 import { motion } from "framer-motion";
-import SectionHeading from "../components/ui/SectionHeading";
-import Products from "../components/product/Products";
+import SectionHeading from "../../components/ui/SectionHeading";
+import Products from "../../components/product/Products";
 const heroBackgrounds = [
   "bg-[url('https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg')] bg-cover bg-center",
   "bg-[url('https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg')] bg-cover bg-center",

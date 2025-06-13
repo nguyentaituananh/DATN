@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 import { Form, Input, Checkbox, Divider, message } from 'antd';
-import { useAuth } from '../context/AuthContext';
-import Button from '../components/ui/Button';
+import { useAuth } from '../../context/AuthContext';
+import Button from '../../components/ui/Button';
 import { Mail, Lock, User } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
