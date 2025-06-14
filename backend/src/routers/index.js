@@ -14,7 +14,7 @@ import cartItemRouter from "./cartItem.router.js";
 
 import productVariantRouter from "./productVariant.router.js";
 import materialsRouter from "./materials.router.js";
-
+import stylesRouter from "./styles.router.js";
 const router = Router();
 
 router.use("/auth", authRouter);
@@ -30,5 +30,5 @@ router.use("/cartItem", cartItemRouter);
 
 router.use("/api/product-variants", productVariantRouter);
 router.use("/api/materials", materialsRouter);
-
+router.use("/api/styles", stylesRouter);
 export default router;
