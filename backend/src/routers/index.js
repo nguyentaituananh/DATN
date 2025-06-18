@@ -13,7 +13,7 @@ import cartItemRouter from "./cartItem.router.js";
 import product_variants from "./product_variants.router.js";
 
 import materialsRouter from "./materials.router.js";
-
+import stylesRouter from "./styles.router.js";
 const router = Router();
 
 router.use("/auth", authRouter);
@@ -28,5 +28,5 @@ router.use("/api/coupons", couponsRouter);
 router.use("/api/cart", cartRouter);
 router.use("/api/cartItem", cartItemRouter);
 router.use("/api/materials", materialsRouter);
-
+router.use("/api/styles", stylesRouter);
 export default router;
