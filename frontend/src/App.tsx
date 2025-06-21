@@ -11,6 +11,9 @@ import LoginPage from "./pages/user/LoginPage";
 import { ConfigProvider } from "antd";
 import ProductsPage from "./pages/user/ProductsPage";
 import ProductDetailPage from "./pages/user/ProductDetailPage";
+import ProductList from "./pages/admin/products/ProductList";
+import { DashboardPage } from "./pages/admin/DashboardPage";
+import CreateProducts from "./pages/admin/products/CreateProducts";
 
 const theme = {
   token: {
@@ -26,7 +29,14 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <Routes>
-            <Route path="/admin" element={<LayoutAdmin />} />
+            <Route path="/admin" element={<LayoutAdmin />}>
+              <Route index element={<DashboardPage />} />{" "}
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="product" element={<ProductList />} />
+              <Route path="product/add" element={<CreateProducts />} />
+              <Route path="product/edit/:id" element={<CreateProducts />} />
+            </Route>
+
             <Route
               path="*"
               element={

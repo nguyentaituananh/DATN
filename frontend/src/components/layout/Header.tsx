@@ -102,7 +102,7 @@ const Header: React.FC = () => {
             </Link>
 
             <Link
-              to={isAuthenticated ? "/account" : "/login"}
+              to={isAuthenticated ? "/register" : "/login"}
               className="flex items-center justify-center text-slate-700 hover:text-amber-700 transition-colors"
             >
               <User size={20} />

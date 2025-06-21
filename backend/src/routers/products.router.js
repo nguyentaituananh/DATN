@@ -1,4 +1,5 @@
 import express from "express";
+import upload from "../middlewares/upload.js";
 import {
   getAllProducts,
   getProductById,
@@ -8,13 +9,13 @@ import {
   getProductsByCategoryName,
 } from "../controllers/products.controller.js";
 
-const productRouter = express.Router();
+const router = express.Router();
 
-productRouter.get("/", getAllProducts);
-productRouter.get("/:id", getProductById);
-productRouter.post("/", createProduct);
-productRouter.put("/:id", updateProduct);
-productRouter.delete("/:id", deleteProduct);
-productRouter.get("/categories/:name", getProductsByCategoryName);
+router.get("/", getAllProducts);
+router.get("/:id", getProductById);
+router.get("/category/:name", getProductsByCategoryName);
+router.post("/", upload.array("images"), createProduct);
+router.put("/:id", updateProduct);
+router.delete("/:id", deleteProduct);
 
-export default productRouter;
+export default router;
