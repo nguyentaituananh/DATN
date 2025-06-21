@@ -22,7 +22,7 @@ import orderItemRouter from "./orderItem.router.js";
 
 import productVariantRouter from "./productVariant.router.js";
 import materialsRouter from "./materials.router.js";
-
+import stylesRouter from "./styles.router.js";
 const router = Router();
 
 router.use("/auth", authRouter);
@@ -49,4 +49,6 @@ router.use("/api/materials", materialsRouter);
 
 
 
+
+router.use("/api/styles", stylesRouter);
 export default router;
