@@ -7,12 +7,12 @@ import {
   deleteMaterial,
 } from "../controllers/materials.controller.js";
 
-const router = express.Router();
+const materialsRouter = express.Router();
 
-router.post("/", createMaterial);
-router.get("/", getAllMaterials);
-router.get("/:id", getMaterialById);
-router.put("/:id", updateMaterial);
-router.delete("/:id", deleteMaterial);
+materialsRouter.post("/", createMaterial);
+materialsRouter.get("/", getAllMaterials);
+materialsRouter.get("/:id", getMaterialById);
+materialsRouter.put("/:id", updateMaterial);
+materialsRouter.delete("/:id", deleteMaterial);
 
-export default router;
+export default materialsRouter;

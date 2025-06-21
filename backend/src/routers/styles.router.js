@@ -8,12 +8,12 @@ import {
   deleteStyle,
 } from "../controllers/styles.controller.js";
 
-const router = express.Router();
+const stylesRouter = express.Router();
 
-router.post("/", createStyle);
-router.get("/", getAllStyles);
-router.get("/:id", getStyleById);
-router.put("/:id", updateStyle);
-router.delete("/:id", deleteStyle);
+stylesRouter.post("/", createStyle);
+stylesRouter.get("/", getAllStyles);
+stylesRouter.get("/:id", getStyleById);
+stylesRouter.put("/:id", updateStyle);
+stylesRouter.delete("/:id", deleteStyle);
 
-export default router;
+export default stylesRouter;
