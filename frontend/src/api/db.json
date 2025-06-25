@@ -2,7 +2,7 @@
   "categories": [],
   "products": [
     {
-      "category": "Sofas 🛋️",
+      "category": "Sofas",
       "sofas": [
         {
           "id": 1,
@@ -41,7 +41,7 @@
       ]
     },
     {
-      "category": "Cabinet 🪵",
+      "category": "Cabinet",
       "cabinet": [
         {
           "id": 6,
@@ -78,7 +78,7 @@
       ]
     },
     {
-      "category": "Chairs 🪑",
+      "category": "Chairs",
       "chairs": [
         {
           "id": 11,
@@ -115,7 +115,7 @@
       ]
     },
     {
-      "category": "Tables 🪑",
+      "category": "Tables",
       "tables": [
         {
           "id": 16,

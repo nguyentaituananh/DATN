@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, User, Menu, X, Search, ChevronDown } from "lucide-react";
+import { ShoppingCart, User, Menu,  Search, ChevronDown } from "lucide-react";
 import { Badge, Drawer } from "antd";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
