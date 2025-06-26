@@ -33,7 +33,7 @@ const Header: React.FC = () => {
      { to: "/", label: "Trang chủ" },
     {
       to: "/products",
-      label: "Tất cả sản phẩm",
+      label: " Sản phẩm",
       children: [
         { to: "/products/sofas", label: "Sofa" },
         { to: "/products/tables", label: "Bàn" },
