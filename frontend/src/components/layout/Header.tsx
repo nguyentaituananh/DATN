@@ -41,7 +41,7 @@ const Header: React.FC = () => {
         { to: "/products/beds", label: "Giường" },
       ],
     },
-    { to: "/collections/khuyen-mai", label: "Khuyến mãi" },
+    { to: "/about", label: "Về chúng tôi" },
     { to: "/blogs/news", label: "Tin tức" },
   ];
 

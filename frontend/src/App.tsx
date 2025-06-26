@@ -11,6 +11,7 @@ import LoginPage from "./pages/user/LoginPage";
 import { ConfigProvider } from "antd";
 import ProductsPage from "./pages/user/ProductsPage";
 import ProductDetailPage from "./pages/user/ProductDetailPage";
+import AboutPage from "./pages/user/AboutPage";
 
 const theme = {
   token: {
@@ -42,6 +43,7 @@ function App() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/about" element={<AboutPage />} />
                   </Routes>
                 </Layout>
               }
