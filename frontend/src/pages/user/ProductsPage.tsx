@@ -6,6 +6,7 @@
   import Button from '../../components/ui/Button';
   import { products, getProductsByCategory } from '../../data/products';
 import ProductGrid from '../../components/product/ProductGirt';
+import PageHeader from '../../components/shared/PageHeader';
 
   const { Option } = Select;
 
@@ -77,8 +78,13 @@ import ProductGrid from '../../components/product/ProductGirt';
     }
 
     return (
-      <div className="py-8 md:py-12">
-        <div className="container mx-auto px-4">
+      <div className="py-8">
+        <PageHeader
+        title="Elegant Sofa Collection"
+        subtitle="Elevate your home with our exclusive range of designer sofas, blending luxurious comfort with sleek, modern aesthetics to suit every taste and lifestyle"
+        backgroundImage="https://images.pexels.com/photos/30380606/pexels-photo-30380606.jpeg"
+      />
+        <div className="py-16 md:py-24 container mx-auto px-4">
           <SectionHeading title={pageTitle} alignment="left" />
 
           <div className="flex flex-col lg:flex-row gap-8">
