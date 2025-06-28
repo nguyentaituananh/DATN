@@ -33,14 +33,14 @@ router.use("/api/reviews", reviewRouter);
 router.use("/api/favorites", favoriteRouter);
 router.use("/api/banners", bannersRouter);
 router.use("/api/coupons", couponsRouter);
-router.use("/cart", cartRouter);
-router.use("/cartItem", cartItemRouter);
-router.use("/room", roomRouter)
-router.use("/dimension", dimensionRouter)
-router.use("/deliveryOption", deliveryOptionRouter)
 router.use("/api/cart", cartRouter);
 router.use("/api/cartItem", cartItemRouter);
-router.use("api/careInstructions", careInstructionsRouter);
+router.use("/api/room", roomRouter)
+router.use("/api/dimension", dimensionRouter)
+router.use("/api/deliveryOption", deliveryOptionRouter)
+router.use("/api/cart", cartRouter);
+router.use("/api/cartItem", cartItemRouter);
+router.use("/api/careInstructions", careInstructionsRouter);
 router.use("/api/assemblies", assembliesRouter);
 router.use("/api/oderItems", orderItemRouter);
 

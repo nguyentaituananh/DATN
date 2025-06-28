@@ -1,7 +1,18 @@
 import Material from "../models/materials.model.js";
+import { materialSchema, materialUpdateSchema } from "../validates/material.validate.js";
 
-// Tạo mới chất liệu
+//  Tạo mới chất liệu
 export const createMaterial = async (req, res) => {
+  const { error } = materialSchema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    const errors = error.details.map((err) => ({
+      field: err.path?.[0] || "null",
+      message: err.message,
+    }));
+    return res.status(400).json({ errors });
+  }
+
   try {
     const newMaterial = new Material(req.body);
     const savedMaterial = await newMaterial.save();
@@ -11,7 +22,7 @@ export const createMaterial = async (req, res) => {
   }
 };
 
-// Lấy tất cả chất liệu
+//  Lấy tất cả chất liệu
 export const getAllMaterials = async (req, res) => {
   try {
     const materials = await Material.find();
@@ -21,7 +32,7 @@ export const getAllMaterials = async (req, res) => {
   }
 };
 
-// Lấy chất liệu theo ID
+//  Lấy chất liệu theo ID
 export const getMaterialById = async (req, res) => {
   try {
     const material = await Material.findById(req.params.id);
@@ -33,8 +44,18 @@ export const getMaterialById = async (req, res) => {
   }
 };
 
-// Cập nhật chất liệu
+//  Cập nhật chất liệu
 export const updateMaterial = async (req, res) => {
+  const { error } = materialUpdateSchema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    const errors = error.details.map((err) => ({
+      field: err.path?.[0] || "null",
+      message: err.message,
+    }));
+    return res.status(400).json({ errors });
+  }
+
   try {
     const updated = await Material.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -47,7 +68,7 @@ export const updateMaterial = async (req, res) => {
   }
 };
 
-// Xoá chất liệu
+//  Xoá chất liệu
 export const deleteMaterial = async (req, res) => {
   try {
     const deleted = await Material.findByIdAndDelete(req.params.id);

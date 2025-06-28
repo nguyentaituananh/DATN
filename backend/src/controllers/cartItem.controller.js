@@ -1,12 +1,18 @@
 import CartItem from "../models/cartItem.model.js";
+import { cartItemSchema, quantitySchema } from "../validates/cartItem.validate.js";
 
 // Tạo mục trong giỏ hàng
 export const addCartItem = async (req, res) => {
+  const {error} = cartItemSchema.validate(req.body, {abortEarly:false});
+  if(error){
+    const errors = error.details.map((err)=>({
+      field : error?.path?.[0] || "null",
+      message : err.message,
+    }));
+    return res.status(400).json({errors});
+  }
   try {
     const { cart_id, product_id, variant_id, quantity } = req.body;
-    if (quantity < 1) {
-      return res.status(400).json({ message: "Quantity must be at least 1" });
-    }
     const newItem = new CartItem({
       cart_id,
       product_id,
@@ -35,12 +41,15 @@ export const getItemsByCartId = async (req, res) => {
 
 // Cập nhật số lượng mục trong giỏ hàng theo _id
 export const updateCartItemQuantity = async (req, res) => {
+  const {error} = quantitySchema.validate(req.body);
+  if(error){
+    return res.status(400).json({
+      message : error.details[0].message,
+    })
+  }
   try {
     const { id } = req.params;
     const { quantity } = req.body;
-    if (quantity < 1) {
-      return res.status(400).json({ message: "Quantity must be at least 1" });
-    }
     const updatedItem = await CartItem.findByIdAndUpdate(
       id,
       { quantity },
