@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-serif font-medium">Welcome Back</h1>
-            <p className="text-gray-600 mt-2">Sign in to continue to your account</p>
+            <p className="text-gray-600 mt-2">Đăng nhập để tiếp tục vào tài khoản của bạn</p>
           </div>
           
           <Form
@@ -73,10 +73,11 @@ const LoginPage: React.FC = () => {
 
             <div className="flex justify-between items-center mb-6">
               <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox>Remember me</Checkbox>
+                <Checkbox>Lưu lại </Checkbox>
               </Form.Item>
               <Link to="/forgot-password" className="text-amber-700 hover:text-amber-800">
-                Forgot password?
+                Quên mật khẩu?
+
               </Link>
             </div>
 
@@ -88,13 +89,13 @@ const LoginPage: React.FC = () => {
                 fullWidth 
                 isLoading={isLoading}
               >
-                Sign In
+                Đăng nhập
               </Button>
             </Form.Item>
           </Form>
 
           {/* Social Login Options would go here in a real implementation */}
-          <Divider plain>or continue with</Divider>
+          <Divider plain>hoặc tiếp tục với</Divider>
           
           <div className="grid grid-cols-3 gap-3 mt-6">
             <button className="flex justify-center items-center py-2 border rounded-md hover:bg-gray-50">
@@ -110,9 +111,9 @@ const LoginPage: React.FC = () => {
           
           <div className="text-center mt-8">
             <p className="text-gray-600">
-              Don't have an account?{' '}
+             Bạn chưa có tài khoản?{' '}
               <Link to="/register" className="text-amber-700 hover:text-amber-800 font-medium">
-                Create one
+                Tạo mới
               </Link>
             </p>
           </div>

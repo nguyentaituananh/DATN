@@ -47,7 +47,7 @@ export const products: Product[] = [
     ],
     features: [
       "Solid oak construction",
-      "Natural finish with matte sealant",
+      "Natural finish with matte seala  nt",
       "Seats 6 people comfortably",
       "Easy assembly",
       "Heat and water-resistant surface"

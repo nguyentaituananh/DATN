@@ -7,10 +7,11 @@ import {
   ShoppingOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu } from "antd";
-import { NavLink } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
 import { DashboardPage } from "../../pages/admin/DashboardPage";
 import { Search } from "./Sidebar/Search";
+import ProductList from "../../pages/admin/products/ProductList";
 
 const { Header, Sider } = Layout;
 
@@ -21,7 +22,7 @@ const LayoutAdmin: React.FC = () => {
     {
       key: "dashboard",
       icon: <DashboardOutlined />,
-      label: <NavLink to="/admin">Dashboard</NavLink>,
+      label: <NavLink to="dashboard">Dashboard</NavLink>,
     },
     {
       key: "product",
@@ -31,7 +32,12 @@ const LayoutAdmin: React.FC = () => {
     {
       key: "user",
       icon: <UserOutlined />,
-      label: <NavLink to="/user">User</NavLink>,
+      label: <NavLink to="user">User</NavLink>,
+    },
+     {
+      key: "Danh mục",
+      icon: <UserOutlined />,
+      label: <NavLink to="/danhmuc">Danh mục</NavLink>,
     },
   ];
 
@@ -108,12 +114,7 @@ const LayoutAdmin: React.FC = () => {
             <span>Admin</span>
           </div>
         </Header>
-
-        <div className="flex h-screen">
-          <main className="flex-1 p-4 overflow-auto">
-            <DashboardPage />
-          </main>
-        </div>
+        <Outlet />
       </Layout>
     </Layout>
   );

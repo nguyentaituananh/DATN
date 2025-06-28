@@ -34,7 +34,7 @@ const RegisterPage: React.FC = () => {
         <div className="bg-white rounded-lg shadow-sm p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-serif font-medium">Create Account</h1>
-            <p className="text-gray-600 mt-2">Join us for a better shopping experience</p>
+            <p className="text-gray-600 mt-2">Hãy tham gia cùng chúng tôi để có trải nghiệm mua sắm tốt hơn</p>
           </div>
           
           <Form
@@ -47,7 +47,7 @@ const RegisterPage: React.FC = () => {
             <Form.Item
               name="name"
               label="Full Name"
-              rules={[{ required: true, message: 'Please enter your name' }]}
+              rules={[{ required: true, message: 'Vui lòng nhập tên của bạn' }]}
             >
               <Input 
                 prefix={<User size={16} className="text-gray-400 mr-2" />} 
@@ -59,8 +59,8 @@ const RegisterPage: React.FC = () => {
               name="email"
               label="Email"
               rules={[
-                { required: true, message: 'Please enter your email' },
-                { type: 'email', message: 'Please enter a valid email' }
+                { required: true, message: 'Vui lòng nhập email của bạn' },
+                { type: 'email', message: 'Vui lòng nhập email hợp lệ' }
               ]}
             >
               <Input 
@@ -73,8 +73,8 @@ const RegisterPage: React.FC = () => {
               name="password"
               label="Password"
               rules={[
-                { required: true, message: 'Please enter your password' },
-                { min: 8, message: 'Password must be at least 8 characters' }
+                { required: true, message: 'Vui lòng nhập mật khẩu của bạn' },
+                { min: 8, message: 'Mật khẩu phải có ít nhất 8 ký tự' }
               ]}
             >
               <Input.Password 
@@ -88,13 +88,13 @@ const RegisterPage: React.FC = () => {
               label="Confirm Password"
               dependencies={['password']}
               rules={[
-                { required: true, message: 'Please confirm your password' },
+                { required: true, message: 'Vui lòng xác nhận mật khẩu của bạn' },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
                     if (!value || getFieldValue('password') === value) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(new Error('The two passwords do not match'));
+                    return Promise.reject(new Error('Hai mật khẩu không khớp nhau'));
                   },
                 }),
               ]}
@@ -111,18 +111,18 @@ const RegisterPage: React.FC = () => {
               rules={[
                 { 
                   validator: (_, value) =>
-                    value ? Promise.resolve() : Promise.reject(new Error('You must accept the terms and conditions')),
+                    value ? Promise.resolve() : Promise.reject(new Error('Bạn phải chấp nhận các điều khoản và điều kiện')),
                 },
               ]}
             >
               <Checkbox>
-                I agree to the{' '}
+                Tôi đồng ý với{' '}
                 <Link to="/terms" className="text-amber-700">
-                  Terms of Service
+                  Điều khoản dịch vụ
                 </Link>{' '}
-                and{' '}
+                và{' '}
                 <Link to="/privacy" className="text-amber-700">
-                  Privacy Policy
+                  Chính sách bảo mật
                 </Link>
               </Checkbox>
             </Form.Item>
@@ -135,12 +135,12 @@ const RegisterPage: React.FC = () => {
                 fullWidth 
                 isLoading={isLoading}
               >
-                Create Account
+               Tạo tài khoản
               </Button>
             </Form.Item>
           </Form>
 
-          <Divider plain>or sign up with</Divider>
+          <Divider plain>hoặc đăng ký với</Divider>
           
           <div className="grid grid-cols-3 gap-3 mt-6">
             <button className="flex justify-center items-center py-2 border rounded-md hover:bg-gray-50">
@@ -156,9 +156,9 @@ const RegisterPage: React.FC = () => {
           
           <div className="text-center mt-8">
             <p className="text-gray-600">
-              Already have an account?{' '}
+             Bạn đã có tài khoản?{' '}
              <Link to="/login" className="text-amber-700 hover:text-amber-800 font-medium">
-                Sign in
+                Đăng nhập
               </Link>
             </p>
           </div>
