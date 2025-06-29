@@ -160,7 +160,7 @@ const RegisterPage: React.FC = () => {
                 </Link>{" "}
                 and{" "}
                 <Link to="/privacy" className="text-amber-700">
-                  Privacy Policy
+                  Chính sách bảo mật
                 </Link>
               </Checkbox>
             </Form.Item>
@@ -173,7 +173,7 @@ const RegisterPage: React.FC = () => {
                 fullWidth
                 isLoading={isLoading}
               >
-                Create Account
+                Tạo tài khoản
               </Button>
             </Form.Item>
           </Form>

@@ -57,7 +57,7 @@ const HomePage: React.FC = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-screen max-h-[800px] min-h-[600px] flex items-center transition-all duration-1000 ease-in-out">
+      <section className="relative h-screen mt-8 md:h-[700px] min-h-[600px] flex items-center transition-all duration-1000 ease-in-out">
         {heroBackgrounds.map((bg, index) => (
           <div
             key={index}
@@ -123,9 +123,9 @@ const HomePage: React.FC = () => {
           subtitle="Browse our extensive collection of premium furniture for every room"
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 ">
           <Link to="/products/sofas" className="group">
-            <div className="relative rounded-lg overflow-hidden aspect-square">
+            <div className="relative rounded-lg overflow-hidden aspect-square ">
               <img
                 src="https://images.pexels.com/photos/276583/pexels-photo-276583.jpeg"
                 alt="Sofas"

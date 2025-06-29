@@ -11,6 +11,7 @@ import LoginPage from "./pages/user/LoginPage";
 import { ConfigProvider } from "antd";
 import ProductsPage from "./pages/user/ProductsPage";
 import ProductDetailPage from "./pages/user/ProductDetailPage";
+
 import ProductList from "./pages/admin/products/ProductList";
 import { DashboardPage } from "./pages/admin/DashboardPage";
 import CreateProducts from "./pages/admin/products/CreateProducts";
@@ -18,6 +19,7 @@ import OrderList from "./pages/admin/order/OrderList";
 import UserList from "./pages/admin/account/UserList";
 import CommentList from "./pages/admin/comment/CommentList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
+import AboutPage from "./pages/user/AboutPage";
 
 const theme = {
   token: {
@@ -45,7 +47,7 @@ function App() {
               <Route path="import" element={<OrderList />} />
               <Route path="account" element={<AccountInfo />} />
             </Route>
-
+            <Route path="/admin" element={<LayoutAdmin />} />
             <Route
               path="*"
               element={
@@ -65,6 +67,7 @@ function App() {
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/checkout" element={<CheckoutPage />} />
+                    <Route path="/about" element={<AboutPage />} />
                   </Routes>
                 </Layout>
               }

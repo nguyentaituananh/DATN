@@ -56,6 +56,11 @@ const LayoutAdmin: React.FC = () => {
       icon: <DollarOutlined />,
       label: <NavLink to="account">Thông tin tài khoản</NavLink>,
     },
+     {
+      key: "Danh mục",
+      icon: <UserOutlined />,
+      label: <NavLink to="/danhmuc">Danh mục</NavLink>,
+    },
   ];
 
   return (
