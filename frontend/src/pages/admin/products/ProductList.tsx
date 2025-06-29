@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import instanceAxios from "../../../utils/instanceAxios";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+
+interface Variant {
+  _id: string;
+  size?: string;
+  color?: string;
+  stock: number;
+  price: number;
+}
 
 interface Product {
   _id: string;
@@ -18,6 +25,7 @@ interface Product {
     _id: string;
     name: string;
   }[];
+  variants?: Variant[];
 }
 
 const ProductList = () => {
@@ -73,12 +81,12 @@ const ProductList = () => {
               <thead className="bg-gray-100">
                 <tr>
                   <th className="p-3 border">Tên</th>
-                  <th className="p-3 border">Mô tả</th>
                   <th className="p-3 border">Giá</th>
                   <th className="p-3 border">Giá KM</th>
                   <th className="p-3 border">Ảnh</th>
                   <th className="p-3 border">Danh mục</th>
                   <th className="p-3 border">Liên quan</th>
+                  <th className="p-3 border">Biến thể</th>
                   <th className="p-3 border">Hành động</th>
                 </tr>
               </thead>
@@ -86,7 +94,6 @@ const ProductList = () => {
                 {products.map((product) => (
                   <tr key={product._id} className="text-center">
                     <td className="p-3 border font-semibold">{product.name}</td>
-                    <td className="p-3 border">{product.description}</td>
                     <td className="p-3 border text-blue-600 font-medium">
                       {product.price.toLocaleString()}₫
                     </td>
@@ -111,13 +118,30 @@ const ProductList = () => {
                         ? product.related_products.map((p) => p.name).join(", ")
                         : "—"}
                     </td>
+                    <td className="p-3 border text-left">
+                      {product.variants && product.variants.length > 0
+                        ? product.variants.map((v) => (
+                            <div key={v._id} className="mb-1">
+                              <span className="font-semibold">Size:</span>{" "}
+                              {v.size || "—"},
+                              <span className="font-semibold ml-1">Màu:</span>{" "}
+                              {v.color || "—"},
+                              <span className="font-semibold ml-1">Giá:</span>{" "}
+                              {v.price.toLocaleString()}₫,
+                              <span className="font-semibold ml-1">
+                                Kho:
+                              </span>{" "}
+                              {v.stock}
+                            </div>
+                          ))
+                        : "Không có"}
+                    </td>
                     <td className="p-3 border flex gap-2 justify-center">
                       <Link to={`edit/${product._id}`}>
                         <button className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500 transition">
                           Sửa
                         </button>
                       </Link>
-
                       <button
                         onClick={() => handleDelete(product._id)}
                         className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"

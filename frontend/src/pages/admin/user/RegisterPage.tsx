@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Form, Input, Checkbox, Divider, message } from "antd";
-import { useAuth } from "../../context/AuthContext";
-import Button from "../../components/ui/Button";
-import { Mail, Lock, User, Phone, Home } from "lucide-react";
+import { useAuth } from "../../../context/AuthContext";
+import Button from "../../../components/ui/Button";
+import { Mail, Lock, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 const RegisterPage: React.FC = () => {
@@ -14,16 +14,17 @@ const RegisterPage: React.FC = () => {
     name: string;
     email: string;
     password: string;
-    address: string;
-    phone_number: string;
   }) => {
+    const { name, email, password } = values;
     setIsLoading(true);
     try {
-      await register(values.name, values.email, values.password);
-      message.success("Registration successful!");
-      navigate("/");
-    } catch (error) {
-      message.error("Registration failed. Please try again.");
+      await register(name, email, password);
+      message.success("Đăng ký tài khoản thành công!");
+      navigate("/login");
+    } catch (error: any) {
+      message.error(
+        error.response?.data?.message || "Đăng ký thất bại, thử lại."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +64,7 @@ const RegisterPage: React.FC = () => {
               label="Email"
               rules={[
                 { required: true, message: "Please enter your email" },
-                { type: "email", message: "Please enter a valid email" },
+                { type: "email", message: "Invalid email format" },
               ]}
             >
               <Input
@@ -82,8 +83,7 @@ const RegisterPage: React.FC = () => {
             >
               <Input.Password
                 prefix={<Lock size={16} className="text-gray-400 mr-2" />}
-                placeholder="Password (min. 8 characters)"
-                autoComplete="new-password"
+                placeholder="Min. 8 characters"
               />
             </Form.Item>
 
@@ -98,9 +98,7 @@ const RegisterPage: React.FC = () => {
                     if (!value || getFieldValue("password") === value) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(
-                      new Error("The two passwords do not match")
-                    );
+                    return Promise.reject(new Error("Passwords do not match"));
                   },
                 }),
               ]}
@@ -112,34 +110,6 @@ const RegisterPage: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-              name="address"
-              label="Address"
-              rules={[{ required: true, message: "Please enter your address" }]}
-            >
-              <Input
-                prefix={<Home size={16} className="text-gray-400 mr-2" />}
-                placeholder="Your address"
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="phone_number"
-              label="Phone Number"
-              rules={[
-                { required: true, message: "Please enter your phone number" },
-                {
-                  pattern: /^[0-9]{10,11}$/,
-                  message: "Phone number must be 10-11 digits",
-                },
-              ]}
-            >
-              <Input
-                prefix={<Phone size={16} className="text-gray-400 mr-2" />}
-                placeholder="Your phone number"
-              />
-            </Form.Item>
-
-            <Form.Item
               name="agreement"
               valuePropName="checked"
               rules={[
@@ -147,9 +117,7 @@ const RegisterPage: React.FC = () => {
                   validator: (_, value) =>
                     value
                       ? Promise.resolve()
-                      : Promise.reject(
-                          new Error("You must accept the terms and conditions")
-                        ),
+                      : Promise.reject(new Error("You must accept the terms")),
                 },
               ]}
             >
@@ -179,7 +147,6 @@ const RegisterPage: React.FC = () => {
           </Form>
 
           <Divider plain>or sign up with</Divider>
-
           <div className="grid grid-cols-3 gap-3 mt-6">
             <button className="flex justify-center items-center py-2 border rounded-md hover:bg-gray-50">
               Google

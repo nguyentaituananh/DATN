@@ -8,12 +8,9 @@ const productVariantSchema = new mongoose.Schema({
   },
   sku: { type: String, required: true },
   attributes: { type: Object },
-  material_id: { type: mongoose.Schema.Types.ObjectId, ref: "Material" },
-  style_id: { type: mongoose.Schema.Types.ObjectId, ref: "Style" },
-  room_id: { type: mongoose.Schema.Types.ObjectId, ref: "Room" },
   price: { type: Number, required: true },
-  discount_price: { type: Number },
   stock_quantity: { type: Number, required: true },
+  discount_price: { type: Number },
   images: [String],
   is_active: { type: Boolean, default: true },
 });

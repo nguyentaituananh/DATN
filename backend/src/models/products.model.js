@@ -17,6 +17,7 @@ const ProductSchema = new mongoose.Schema(
       required: true,
       min: [0, "Giá phải lớn hơn hoặc bằng 0"],
     },
+
     discount_price: {
       type: Number,
       min: [0, "Giá khuyến mãi phải lớn hơn hoặc bằng 0"],
@@ -43,8 +44,16 @@ const ProductSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   }
 );
+
+ProductSchema.virtual("variants", {
+  ref: "ProductVariant", // model liên kết
+  localField: "_id", // khóa ở bảng này
+  foreignField: "product_id", // khóa ở bảng ProductVariant
+});
 
 const Product = mongoose.model("Product", ProductSchema);
 export default Product;

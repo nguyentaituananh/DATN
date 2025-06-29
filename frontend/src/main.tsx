@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
+import { App as AntdApp } from "antd";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { StrictMode } from "react";
 import { BrowserRouter } from "react-router";
@@ -16,7 +17,9 @@ createRoot(document.getElementById("root")!).render(
       <OrderProvider>
         <BrowserRouter>
           <StrictMode>
-            <App />
+            <AntdApp>
+              <App />
+            </AntdApp>
           </StrictMode>
         </BrowserRouter>
       </OrderProvider>

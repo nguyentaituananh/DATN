@@ -6,7 +6,7 @@ import HomePage from "./pages/user/HomePage";
 import Layout from "./components/layout/layout";
 import { AuthProvider } from "./context/AuthContext";
 import CheckoutPage from "./pages/user/CheckoutPage";
-import RegisterPage from "./pages/user/RegisterPage";
+import RegisterPage from "./pages/admin/user/RegisterPage";
 import LoginPage from "./pages/user/LoginPage";
 import { ConfigProvider } from "antd";
 import ProductsPage from "./pages/user/ProductsPage";
@@ -14,6 +14,10 @@ import ProductDetailPage from "./pages/user/ProductDetailPage";
 import ProductList from "./pages/admin/products/ProductList";
 import { DashboardPage } from "./pages/admin/DashboardPage";
 import CreateProducts from "./pages/admin/products/CreateProducts";
+import OrderList from "./pages/admin/order/OrderList";
+import UserList from "./pages/admin/account/UserList";
+import CommentList from "./pages/admin/comment/CommentList";
+import AccountInfo from "./pages/admin/account/AccountInfo";
 
 const theme = {
   token: {
@@ -35,6 +39,11 @@ function App() {
               <Route path="product" element={<ProductList />} />
               <Route path="product/add" element={<CreateProducts />} />
               <Route path="product/edit/:id" element={<CreateProducts />} />
+              <Route path="order" element={<OrderList />} />
+              <Route path="user" element={<UserList />} />
+              <Route path="comment" element={<CommentList />} />
+              <Route path="import" element={<OrderList />} />
+              <Route path="account" element={<AccountInfo />} />
             </Route>
 
             <Route

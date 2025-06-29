@@ -5,13 +5,15 @@ import {
   UserOutlined,
   DashboardOutlined,
   ShoppingOutlined,
+  FileTextOutlined,
+  CommentOutlined,
+  DollarOutlined,
+  FileAddOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu } from "antd";
 import { NavLink, Outlet } from "react-router-dom";
 import { FaUserCircle } from "react-icons/fa";
-import { DashboardPage } from "../../pages/admin/DashboardPage";
 import { Search } from "./Sidebar/Search";
-import ProductList from "../../pages/admin/products/ProductList";
 
 const { Header, Sider } = Layout;
 
@@ -22,17 +24,37 @@ const LayoutAdmin: React.FC = () => {
     {
       key: "dashboard",
       icon: <DashboardOutlined />,
-      label: <NavLink to="dashboard">Dashboard</NavLink>,
+      label: <NavLink to="dashboard">Thống kê</NavLink>,
     },
     {
       key: "product",
       icon: <ShoppingOutlined />,
-      label: <NavLink to="product">Product</NavLink>,
+      label: <NavLink to="product">Quản lý sản phẩm</NavLink>,
     },
     {
       key: "user",
       icon: <UserOutlined />,
-      label: <NavLink to="user">User</NavLink>,
+      label: <NavLink to="user">Quản lý người dùng</NavLink>,
+    },
+    {
+      key: "order",
+      icon: <FileTextOutlined />,
+      label: <NavLink to="order">Quản lý đơn hàng</NavLink>,
+    },
+    {
+      key: "import",
+      icon: <FileAddOutlined />,
+      label: <NavLink to="import">Quản lý nhập hàng</NavLink>,
+    },
+    {
+      key: "comment",
+      icon: <CommentOutlined />,
+      label: <NavLink to="comment">Quản lý bình luận</NavLink>,
+    },
+    {
+      key: "account",
+      icon: <DollarOutlined />,
+      label: <NavLink to="account">Thông tin tài khoản</NavLink>,
     },
   ];
 
@@ -74,10 +96,8 @@ const LayoutAdmin: React.FC = () => {
       </Sider>
 
       {/* Main layout */}
-
       <Layout>
         {/* Header */}
-
         <Header
           style={{
             padding: "0 24px",
@@ -109,6 +129,8 @@ const LayoutAdmin: React.FC = () => {
             <span>Admin</span>
           </div>
         </Header>
+
+        {/* Main Content */}
         <Outlet />
       </Layout>
     </Layout>
