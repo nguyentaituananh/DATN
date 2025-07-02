@@ -1,0 +1,172 @@
+{
+  "categories": [],
+  "products": [
+    {
+      "category": "Sofas",
+      "sofas": [
+        {
+          "id": 1,
+          "name": "Sofa Zara",
+          "price": 3200000,
+          "image": "https://www.miliashop.com/158508-thickbox_default/zara-deep-nicoline-sofa.jpg",
+          "isNew": true
+        },
+        {
+          "id": 2,
+          "name": "Sofa Jarrod",
+          "price": 4500000,
+          "oldPrice": 5100000,
+          "image": "https://www.miliashop.com/158508-thickbox_default/zara-deep-nicoline-sofa.jpg",
+          "isSale": true
+        },
+        {
+          "id": 3,
+          "name": "Sofa Mallini",
+          "price": 3700000,
+          "image": "https://res.cainver.com/sku/2021/6/2081/n_mountain-grey-8c88fb56.jpg"
+        },
+        {
+          "id": 4,
+          "name": "Sofa Hudson",
+          "price": 4100000,
+          "image": "https://jangin.vn/wp-content/uploads/2022/11/hudson_3.jpg",
+          "isNew": true
+        },
+        {
+          "id": 5,
+          "name": "Sofa Luxe",
+          "price": 5200000,
+          "image": "https://noithatgiakhanh.com/wp-content/uploads/2024/06/SF551-1-800x600.jpg"
+        }
+      ]
+    },
+    {
+      "category": "Cabinet",
+      "cabinet": [
+        {
+          "id": 6,
+          "name": "Tủ Chessa",
+          "price": 2300000,
+          "image": "https://vcdn1-giadinh.vnecdn.net/2021/01/03/1-3990-1609668825.jpg?w=460&h=0&q=100&dpr=2&fit=crop&s=7sbEkDxdor1WsRVauJSUGg"
+        },
+        {
+          "id": 7,
+          "name": "Tủ Jallix",
+          "price": 2600000,
+          "oldPrice": 2900000,
+          "image": "https://homeoffice.com.vn/images/detailed/103/tu-locker-4-ngan-khoa-so-go-cao-su-3.jpg",
+          "isSale": true
+        },
+        {
+          "id": 8,
+          "name": "Tủ Massol",
+          "price": 1700000,
+          "image": "https://jysk.vn/Data/Sites/1/media/mo-ta-sp/3689889-tu-phong-an-markskel-trang-mau-soi-jysk-1c.jpg"
+        },
+        {
+          "id": 9,
+          "name": "Tủ Forene",
+          "price": 2800000,
+          "image": "https://dogophuclan.com/upload/images/tu-quan-ao-cua-lua-1.jpg"
+        },
+        {
+          "id": 10,
+          "name": "Tủ Shelvi",
+          "price": 3100000,
+          "image": "https://gotrangtri.vn/wp-content/uploads/2024/12/tu-ke-trang-tri-phong-khach-ghs-52518-a-2-1.jpg"
+        }
+      ]
+    },
+    {
+      "category": "Chairs",
+      "chairs": [
+        {
+          "id": 11,
+          "name": "Ghế Dorris",
+          "price": 800000,
+          "image": "https://product.hstatic.net/1000281247/product/022_dea56701a1ee48fcbf9df5f89a73404d_master.jpg"
+        },
+        {
+          "id": 12,
+          "name": "Ghế Lottie",
+          "price": 1130000,
+          "image": "https://bizweb.dktcdn.net/100/487/301/products/z2980370125693-6bb977df6126866c7ce1e1ffe06c9b92-jpg-v-1638260220910.jpg?v=1685763887463",
+          "isNew": true
+        },
+        {
+          "id": 13,
+          "name": "Ghế Know",
+          "price": 900000,
+          "image": "https://noithatphucthinh.com/upload/image/Gh%E1%BA%BF%20van%20phong/Ghe-xoay-luoi-tay-lat-mau-den-trang.jpg"
+        },
+        {
+          "id": 14,
+          "name": "Ghế Lucaz",
+          "price": 1050000,
+          "image": "https://ghevanphong24.vn/wp-content/uploads/2017/10/ghe-lucas-02_2016_10_07_15_52_50_32_mediumSize.jpg"
+        },
+        {
+          "id": 15,
+          "name": "Ghế Vento",
+          "price": 950000,
+          "image": "https://govi.vn/wp-content/uploads/2022/05/Passo-PA-1806A-ct1.jpg",
+          "isSale": true
+        }
+      ]
+    },
+    {
+      "category": "Tables",
+      "tables": [
+        {
+          "id": 16,
+          "name": "Bàn Forrest",
+          "price": 900000,
+          "image": "https://cf.bstatic.com/xdata/images/hotel/max1024x768/230608417.jpg?k=8e49728a8ac15a292a2f46410b124df1c016c8f3d5ba044d85e1a9f4d354d5dc&o=&hp=1"
+        },
+        {
+          "id": 17,
+          "name": "Bàn Fadadat",
+          "price": 1350000,
+          "image": "https://homedo.com.vn/images/thumbnails/640/640/detailed/8/cfd68071-ban-cafe-mat-da-chan-sat-07.jpeg",
+          "isNew": true
+        },
+        {
+          "id": 18,
+          "name": "Bàn Scallem",
+          "price": 1300000,
+          "image": "https://noithatdangkhoa.com/wp-content/uploads/2024/06/ban-lam-viec-tai-nha-blvdk44-1.jpg"
+        },
+        {
+          "id": 19,
+          "name": "Bàn Corden",
+          "price": 1100000,
+          "image": "https://noithatkienhung.vn/wp-content/uploads/2023/08/ban-lam-viec-1m2-3.jpg"
+        },
+        {
+          "id": 20,
+          "name": "Bàn Vesta",
+          "price": 1400000,
+          "image": "https://i2.ex-cdn.com/homeaz.vn/files/content/2020/09/07/ban-an-go-soi-chan-sat-tinh-dien-cao-cap-vesta-homeazvn-5-1256.jpg"
+        }
+      ]
+    }
+  ],
+  "users": [],
+  "orders": [],
+  "reviews": [],
+  "carts": [],
+  "cart_items": [],
+  "favorites": [],
+  "banners": [],
+  "coupons": [],
+  "product_variants": [],
+  "materials": [],
+  "styles": [],
+  "rooms": [],
+  "dimensions": [],
+  "delivery_options": [],
+  "care_instructions": [],
+  "assemblies": [],
+  "payments": [],
+  "order_items": []
+}

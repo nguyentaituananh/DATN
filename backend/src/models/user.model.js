@@ -10,6 +10,19 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
   },
   password: { type: String, required: true },
+<<<<<<< HEAD
+=======
+  address: {
+    type: String,
+    required: true,
+  },
+  phone_number: {
+    type: String,
+    required: true,
+  },
+  role: { type: String, enum: ['admin', 'customer'], default: 'customer' },
+  is_active: { type: Boolean, default: true },
+>>>>>>> 55d107a72aa0df79e9a549e316f81d2abd82a840
 });
 
 // Mã hoá mật khẩu trước khi lưu
@@ -25,4 +38,8 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 };
 
 const User = mongoose.model("User", userSchema);
+<<<<<<< HEAD
 export default User;
+=======
+export default User;
+>>>>>>> 55d107a72aa0df79e9a549e316f81d2abd82a840

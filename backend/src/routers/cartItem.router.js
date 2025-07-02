@@ -1,4 +1,5 @@
 import express from "express";
+<<<<<<< HEAD
 import { addCartItem, deleteCartItem, getItemsByCartId } from "../controllers/cartItem.controller";
 import { updateCartItem } from "../controllers/cart.controller";
 
@@ -18,3 +19,16 @@ cartItemRouter.put("/:id", updateCartItem);
 cartItemRouter.delete("/:id", deleteCartItem);
 
 export default cartItemRouter;
+=======
+import { addCartItem, deleteCartItem, getItemsByCartId } from "../controllers/cartItem.controller.js";
+import { updateCartItem } from "../controllers/cart.controller.js";
+
+
+const cartItemRouter = express.Router();
+cartItemRouter.post("/", addCartItem);
+cartItemRouter.get("/cart/:cart_id", getItemsByCartId);
+cartItemRouter.put("/:id", updateCartItem);
+cartItemRouter.delete("/:id", deleteCartItem);
+
+export default cartItemRouter;
+>>>>>>> 55d107a72aa0df79e9a549e316f81d2abd82a840
