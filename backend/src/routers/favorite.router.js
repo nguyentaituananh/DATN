@@ -1,15 +1,5 @@
 import express from "express";
-<<<<<<< HEAD
-import { addFavorite, getFavoritesByUser, removeFavorite } from "../controllers/favorite.controller.js";
 
-const favoriteRouter = express.Router();
-
-favoriteRouter.get("/:userId", getFavoritesByUser );
-favoriteRouter.post("/", addFavorite);
-favoriteRouter.delete("/:userId/:productId", removeFavorite);
-
-export default favoriteRouter;
-=======
 import { createFavorite, deleteAllFavoritesByUser, deleteFavorite, getAllFavorites, updateFavorite } from "../controllers/favorites.controller.js";
 
 const favoriteRouter = express.Router();
@@ -23,4 +13,4 @@ favoriteRouter.delete('/:userId',deleteAllFavoritesByUser) // Xóa tất cả s�
 
 
 export default favoriteRouter;
->>>>>>> 55d107a72aa0df79e9a549e316f81d2abd82a840
+

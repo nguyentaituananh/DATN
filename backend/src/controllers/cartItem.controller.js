@@ -1,14 +1,4 @@
-<<<<<<< HEAD
-import CartItem from "../models/CartItem.js";
 
-// Tạo mục trong giỏ hàng
-export const addCartItem = async (req, res) => {
-  try {
-    const { cart_id, product_id, variant_id, quantity } = req.body;
-    if (quantity < 1) {
-      return res.status(400).json({ message: "Quantity must be at least 1" });
-    }
-=======
 import CartItem from "../models/cartItem.model.js";
 import { cartItemSchema, quantitySchema } from "../validates/cartItem.validate.js";
 
@@ -24,7 +14,7 @@ export const addCartItem = async (req, res) => {
   }
   try {
     const { cart_id, product_id, variant_id, quantity } = req.body;
->>>>>>> 55d107a72aa0df79e9a549e316f81d2abd82a840
+
     const newItem = new CartItem({
       cart_id,
       product_id,
@@ -42,13 +32,11 @@ export const addCartItem = async (req, res) => {
 export const getItemsByCartId = async (req, res) => {
   try {
     const { cart_id } = req.params;
-<<<<<<< HEAD
-    const items = await CartItem.find({ cart_id }).populate("product_id variant_id");
-=======
+
     const items = await CartItem.find({ cart_id }).populate(
       "product_id variant_id"
     );
->>>>>>> 55d107a72aa0df79e9a549e316f81d2abd82a840
+
     res.status(200).json(items);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -57,14 +45,7 @@ export const getItemsByCartId = async (req, res) => {
 
 // Cập nhật số lượng mục trong giỏ hàng theo _id
 export const updateCartItemQuantity = async (req, res) => {
-<<<<<<< HEAD
-  try {
-    const { id } = req.params;
-    const { quantity } = req.body;
-    if (quantity < 1) {
-      return res.status(400).json({ message: "Quantity must be at least 1" });
-    }
-=======
+
   const {error} = quantitySchema.validate(req.body);
   if(error){
     return res.status(400).json({
@@ -74,7 +55,7 @@ export const updateCartItemQuantity = async (req, res) => {
   try {
     const { id } = req.params;
     const { quantity } = req.body;
->>>>>>> 55d107a72aa0df79e9a549e316f81d2abd82a840
+
     const updatedItem = await CartItem.findByIdAndUpdate(
       id,
       { quantity },

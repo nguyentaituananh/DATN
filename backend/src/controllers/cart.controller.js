@@ -97,8 +97,6 @@ export const clearCart = async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
-<<<<<<< HEAD
+
 };
-=======
-};
->>>>>>> 55d107a72aa0df79e9a549e316f81d2abd82a840
+
