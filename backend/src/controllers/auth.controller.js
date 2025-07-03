@@ -10,33 +10,36 @@ const generateToken = (userId) => {
 
 // Đăng ký
 export const register = async (req, res) => {
-
   const { name, email, password, address, phone_number, role } = req.body;
 
+  if (!name || !email || !password || !address || !phone_number) {
+    return res.status(400).json({ message: "Thiếu thông tin bắt buộc." });
+  }
+
   try {
-    // Kiểm tra xem email đã tồn tại chưa
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: "Email đã tồn tại." });
 
-    // Tạo người dùng mới
     const newUser = new User({
       name,
       email,
       password,
       address,
       phone_number,
-      role,
+      role: role || "customer",
     });
 
-    // Mã hóa mật khẩu trước khi lưu vào DB
     await newUser.save();
 
-    // Tạo JWT token
     const token = generateToken(newUser._id);
     res.status(201).json({ user: newUser.name, token });
 
   } catch (err) {
+    console.error("Lỗi khi đăng ký:", err);
     res.status(500).json({ message: err.message });
+    console.error("Register Error:", err);
+res.status(500).json({ message: err.message, error: err });
+
   }
 };
 

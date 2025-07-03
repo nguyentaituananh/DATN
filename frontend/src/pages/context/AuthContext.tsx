@@ -1,6 +1,8 @@
 import React, { createContext, useContext, ReactNode } from "react";
 import instanceAxios from "../../utils/instanceAxios";
 
+
+
 interface AuthContextType {
   register: (data: {
     name: string;
@@ -9,6 +11,10 @@ interface AuthContextType {
     address: string;
     phone_number: string;
   }) => Promise<any>;
+   login: (data: {
+     email: string;
+     password: string 
+    }) => Promise<any>; 
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -16,6 +22,8 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
+    console.log("AuthContext instance:", import.meta.url);
+
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
@@ -37,7 +45,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const login = async (data: { email: string; password: string }) => {
+  try {
+    const res = await instanceAxios.post("auth/login", data);
+    return res.data;
+  } catch (err: any) {
+    throw err.response?.data || err;
+  }
+};
+
   return (
-    <AuthContext.Provider value={{ register }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ register,login }}>{children}</AuthContext.Provider>
   );
 };
