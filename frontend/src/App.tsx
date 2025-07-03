@@ -4,9 +4,8 @@ import CartPage from "./pages/user/CartPage";
 import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/user/HomePage";
 import Layout from "./components/layout/layout";
-import { AuthProvider } from "./context/AuthContext";
 import CheckoutPage from "./pages/user/CheckoutPage";
-import RegisterPage from "./pages/admin/user/RegisterPage";
+import RegisterPage from "./pages/user/RegisterPage";
 import LoginPage from "./pages/user/LoginPage";
 import { ConfigProvider } from "antd";
 import ProductsPage from "./pages/user/ProductsPage";
@@ -20,7 +19,6 @@ import UserList from "./pages/admin/account/UserList";
 import CommentList from "./pages/admin/comment/CommentList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
 import AboutPage from "./pages/user/AboutPage";
-import ProductVariantManager from "./pages/user/ProductVariantManager";
 
 const theme = {
   token: {
@@ -36,8 +34,9 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <Routes>
+            {/* ADMIN ROUTES */}
             <Route path="/admin" element={<LayoutAdmin />}>
-              <Route index element={<DashboardPage />} />{" "}
+              <Route index element={<DashboardPage />} />
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="product" element={<ProductList />} />
               <Route path="product/add" element={<CreateProducts />} />
@@ -49,31 +48,19 @@ function App() {
               <Route path="account" element={<AccountInfo />} />
               <Route path="test" element={<ProductVariantManager />} />
             </Route>
-            <Route path="/admin" element={<LayoutAdmin />} />
-            <Route
-              path="*"
-              element={
-                <Layout>
-                  <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/products" element={<ProductsPage />} />
-                    <Route
-                      path="/products/:category"
-                      element={<ProductsPage />}
-                    />
-                    <Route
-                      path="/product/:id"
-                      element={<ProductDetailPage />}
-                    />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/cart" element={<CartPage />} />
-                    <Route path="/checkout" element={<CheckoutPage />} />
-                    <Route path="/about" element={<AboutPage />} />
-                  </Routes>
-                </Layout>
-              }
-            />
+
+            {/* USER ROUTES */}
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="products" element={<ProductsPage />} />
+              <Route path="products/:category" element={<ProductsPage />} />
+              <Route path="product/:id" element={<ProductDetailPage />} />
+              <Route path="register" element={<RegisterPage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="cart" element={<CartPage />} />
+              <Route path="checkout" element={<CheckoutPage />} />
+              <Route path="about" element={<AboutPage />} />
+            </Route>
           </Routes>
         </CartProvider>
       </AuthProvider>

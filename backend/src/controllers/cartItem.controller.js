@@ -1,3 +1,4 @@
+
 import CartItem from "../models/cartItem.model.js";
 import { cartItemSchema, quantitySchema } from "../validates/cartItem.validate.js";
 
@@ -13,6 +14,7 @@ export const addCartItem = async (req, res) => {
   }
   try {
     const { cart_id, product_id, variant_id, quantity } = req.body;
+
     const newItem = new CartItem({
       cart_id,
       product_id,
@@ -30,9 +32,11 @@ export const addCartItem = async (req, res) => {
 export const getItemsByCartId = async (req, res) => {
   try {
     const { cart_id } = req.params;
+
     const items = await CartItem.find({ cart_id }).populate(
       "product_id variant_id"
     );
+
     res.status(200).json(items);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -41,6 +45,7 @@ export const getItemsByCartId = async (req, res) => {
 
 // Cập nhật số lượng mục trong giỏ hàng theo _id
 export const updateCartItemQuantity = async (req, res) => {
+
   const {error} = quantitySchema.validate(req.body);
   if(error){
     return res.status(400).json({
@@ -50,6 +55,7 @@ export const updateCartItemQuantity = async (req, res) => {
   try {
     const { id } = req.params;
     const { quantity } = req.body;
+
     const updatedItem = await CartItem.findByIdAndUpdate(
       id,
       { quantity },

@@ -1,4 +1,5 @@
 import express from "express";
+
 import { createFavorite, deleteAllFavoritesByUser, deleteFavorite, getAllFavorites, updateFavorite } from "../controllers/favorites.controller.js";
 
 const favoriteRouter = express.Router();
@@ -12,3 +13,4 @@ favoriteRouter.delete('/:userId',deleteAllFavoritesByUser) // Xóa tất cả s�
 
 
 export default favoriteRouter;
+
