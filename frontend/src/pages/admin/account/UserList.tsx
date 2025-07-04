@@ -24,7 +24,7 @@ import React from "react";
 import { Table, Tag } from "antd";
 import dayjs from "dayjs";
 
-import type { ColumnsType } from "antd/es/table"; // 👈 import kiểu dữ liệu
+import type { ColumnsType } from "antd/es/table"; 
 
 interface UserType {
   key: string;
