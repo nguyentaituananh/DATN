@@ -115,8 +115,8 @@ const data = [
   {
     key: "2",
     code: "DH002",
-    customer: "Ngọc Lan",
-    date: "2024-06-28",
+    customer: "Hoàng Duy",
+    date: "2025-07-04",
     total: "1,200,000₫",
     status: "Đang xử lý",
   },
