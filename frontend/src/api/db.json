@@ -154,7 +154,15 @@
   "users": [],
   "orders": [],
   "reviews": [],
-  "carts": [],
+  "carts": [
+       {
+    "id": 1,
+    "userId": "1",
+    "product": { "id": "abc123", "name": "sofa", "price": 100 },
+    "quantity": 2,
+    "color": "đen"
+  }
+  ],
   "cart_items": [],
   "favorites": [],
   "banners": [],

@@ -3,7 +3,7 @@ import LayoutAdmin from "./layouts/admin/LayoutAdmin";
 import CartPage from "./pages/user/CartPage";
 import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/user/HomePage";
-import Layout from "./components/layout/layout";
+import Layout from "./components/layout/Layout";
 import CheckoutPage from "./pages/user/CheckoutPage";
 import RegisterPage from "./pages/user/RegisterPage";
 import LoginPage from "./pages/user/LoginPage";
