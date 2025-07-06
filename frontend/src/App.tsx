@@ -20,6 +20,7 @@ import UserList from "./pages/admin/account/UserList";
 import CommentList from "./pages/admin/comment/CommentList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
 import AboutPage from "./pages/user/AboutPage";
+import StoreLocator from "./pages/user/StoreLocator";
 
 const theme = {
   token: {
@@ -46,6 +47,8 @@ function App() {
               <Route path="comment" element={<CommentList />} />
               <Route path="import" element={<OrderList />} />
               <Route path="account" element={<AccountInfo />} />
+              
+              
             </Route>
             <Route path="/admin" element={<LayoutAdmin />} />
             <Route
@@ -68,6 +71,7 @@ function App() {
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/checkout" element={<CheckoutPage />} />
                     <Route path="/about" element={<AboutPage />} />
+                    <Route path="/Store" element={<StoreLocator />} />
                   </Routes>
                 </Layout>
               }
