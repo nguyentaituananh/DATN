@@ -126,155 +126,207 @@ const CreateProducts = () => {
   );
 
   return (
-    <div className="max-w-5xl mx-auto p-6 bg-white rounded-xl shadow">
+    <div className="max-w-6xl mx-auto p-6 bg-white rounded-xl shadow">
       <h2 className="text-2xl font-bold mb-4">Thêm Sản phẩm mới</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Tên sản phẩm"
-          value={formData.name}
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-          required
-        />
-        <textarea
-          name="description"
-          placeholder="Mô tả sản phẩm"
-          value={formData.description}
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-          required
-        />
-        <select
-          name="category_id"
-          value={formData.category_id}
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-          required
-        >
-          <option value="">-- Chọn danh mục --</option>
-          {categories.map((c) => (
-            <option key={c._id} value={c._id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-        />
-        <div className="flex gap-2 flex-wrap">
-          {imagePreviews.map((src, idx) => (
-            <img
-              key={idx}
-              src={src}
-              alt=""
-              className="w-20 h-20 object-cover rounded"
-            />
-          ))}
+        {/* Tên sản phẩm */}
+        <div>
+          <label className="block mb-1 font-semibold">Tên sản phẩm</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Nhập tên sản phẩm"
+            value={formData.name}
+            onChange={handleChange}
+            className="border p-3 w-full rounded"
+            required
+          />
         </div>
 
+        {/* Mô tả */}
+        <div>
+          <label className="block mb-1 font-semibold">Mô tả</label>
+          <textarea
+            name="description"
+            placeholder="Nhập mô tả sản phẩm"
+            value={formData.description}
+            onChange={handleChange}
+            className="border p-3 w-full rounded"
+            required
+          />
+        </div>
+
+        {/* Danh mục */}
+        <div>
+          <label className="block mb-1 font-semibold">Danh mục</label>
+          <select
+            name="category_id"
+            value={formData.category_id}
+            onChange={handleChange}
+            className="border p-3 w-full rounded"
+            required
+          >
+            <option value="">-- Chọn danh mục --</option>
+            {categories.map((c) => (
+              <option key={c._id} value={c._id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Ảnh */}
+        <div>
+          <label className="block mb-1 font-semibold">Ảnh sản phẩm</label>
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleChange}
+            className="border p-3 w-full rounded"
+          />
+          <div className="flex gap-2 flex-wrap mt-2">
+            {imagePreviews.map((src, idx) => (
+              <img
+                key={idx}
+                src={src}
+                alt=""
+                className="w-20 h-20 object-cover rounded"
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Biến thể */}
         {showVariants && (
           <>
             <h3 className="font-semibold text-lg mt-6">Thông tin Biến thể</h3>
-            <div className="grid grid-cols-3 gap-3">
-              <input
-                type="text"
-                placeholder="Mã SKU"
-                value={variantForm.sku}
-                onChange={(e) =>
-                  setVariantForm({ ...variantForm, sku: e.target.value })
-                }
-                className="border p-2 rounded"
-              />
-              <input
-                type="number"
-                placeholder="Giá nhập (giá vốn)"
-                value={variantForm.import_price}
-                onChange={(e) =>
-                  setVariantForm({
-                    ...variantForm,
-                    import_price: Number(e.target.value),
-                  })
-                }
-                className="border p-2 rounded"
-              />
-              <input
-                type="number"
-                placeholder="Giá bán"
-                value={variantForm.price}
-                onChange={(e) =>
-                  setVariantForm({
-                    ...variantForm,
-                    price: Number(e.target.value),
-                  })
-                }
-                className="border p-2 rounded"
-              />
-              <input
-                type="number"
-                placeholder="Tồn kho"
-                value={variantForm.stock_quantity}
-                onChange={(e) =>
-                  setVariantForm({
-                    ...variantForm,
-                    stock_quantity: Number(e.target.value),
-                  })
-                }
-                className="border p-2 rounded"
-              />
-              <select
-                value={variantForm.size}
-                onChange={(e) =>
-                  setVariantForm({ ...variantForm, size: e.target.value })
-                }
-                className="border p-2 rounded"
-              >
-                <option value="">Chọn Size</option>
-                <option value="S">S</option>
-                <option value="M">M</option>
-                <option value="L">L</option>
-                <option value="XL">XL</option>
-                <option value="XXL">XXL</option>
-              </select>
-              <select
-                value={variantForm.color}
-                onChange={(e) =>
-                  setVariantForm({ ...variantForm, color: e.target.value })
-                }
-                className="border p-2 rounded"
-              >
-                <option value="">Chọn Màu</option>
-                <option value="Đỏ">Đỏ</option>
-                <option value="Xanh">Xanh</option>
-                <option value="Vàng">Vàng</option>
-                <option value="Nâu">Nâu</option>
-                <option value="Xám">Xám</option>
-              </select>
-              <select
-                value={variantForm.dimensions}
-                onChange={(e) =>
-                  setVariantForm({ ...variantForm, dimensions: e.target.value })
-                }
-                className="border p-2 rounded"
-              >
-                <option value="">Chọn Kích thước</option>
-                <option value="180x80x90cm">180x80x90cm</option>
-                <option value="200x90x75cm">200x90x75cm</option>
-                <option value="120x60x75cm">120x60x75cm</option>
-                <option value="100x50x70cm">100x50x70cm</option>
-                <option value="250x100x80cm">250x100x80cm</option>
-              </select>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
+                <label className="block mb-1 font-semibold">Mã SKU</label>
+                <input
+                  type="text"
+                  value={variantForm.sku}
+                  onChange={(e) =>
+                    setVariantForm({ ...variantForm, sku: e.target.value })
+                  }
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">
+                  Giá nhập (Giá vốn)
+                </label>
+                <input
+                  type="number"
+                  value={variantForm.import_price}
+                  onChange={(e) =>
+                    setVariantForm({
+                      ...variantForm,
+                      import_price: Number(e.target.value),
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">Giá bán</label>
+                <input
+                  type="number"
+                  value={variantForm.price}
+                  onChange={(e) =>
+                    setVariantForm({
+                      ...variantForm,
+                      price: Number(e.target.value),
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">
+                  Số lượng tồn kho
+                </label>
+                <input
+                  type="number"
+                  value={variantForm.stock_quantity}
+                  onChange={(e) =>
+                    setVariantForm({
+                      ...variantForm,
+                      stock_quantity: Number(e.target.value),
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">Size</label>
+                <select
+                  value={variantForm.size}
+                  onChange={(e) =>
+                    setVariantForm({ ...variantForm, size: e.target.value })
+                  }
+                  className="border p-2 rounded w-full"
+                >
+                  <option value="">Chọn size</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                  <option value="XXL">XXL</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">Màu sắc</label>
+                <select
+                  value={variantForm.color}
+                  onChange={(e) =>
+                    setVariantForm({ ...variantForm, color: e.target.value })
+                  }
+                  className="border p-2 rounded w-full"
+                >
+                  <option value="">Chọn màu</option>
+                  <option value="Đỏ">Đỏ</option>
+                  <option value="Xanh">Xanh</option>
+                  <option value="Vàng">Vàng</option>
+                  <option value="Nâu">Nâu</option>
+                  <option value="Xám">Xám</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">
+                  Kích thước (Dimensions)
+                </label>
+                <select
+                  value={variantForm.dimensions}
+                  onChange={(e) =>
+                    setVariantForm({
+                      ...variantForm,
+                      dimensions: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                >
+                  <option value="">Chọn kích thước</option>
+                  <option value="180x80x90cm">180x80x90cm</option>
+                  <option value="200x90x75cm">200x90x75cm</option>
+                  <option value="120x60x75cm">120x60x75cm</option>
+                  <option value="100x50x70cm">100x50x70cm</option>
+                  <option value="250x100x80cm">250x100x80cm</option>
+                </select>
+              </div>
             </div>
+
             <button
               type="button"
               onClick={addVariant}
-              className="bg-green-600 text-white px-4 py-2 rounded mt-3"
+              className="bg-green-600 text-white px-4 py-2 rounded mt-4"
             >
               Thêm biến thể
             </button>
@@ -312,7 +364,7 @@ const CreateProducts = () => {
 
         <button
           type="submit"
-          className="bg-blue-600 text-white py-3 px-6 rounded"
+          className="bg-blue-600 text-white py-3 px-6 rounded mt-6"
         >
           Tạo sản phẩm
         </button>
