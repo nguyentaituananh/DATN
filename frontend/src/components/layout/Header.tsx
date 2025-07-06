@@ -1,13 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, User, Menu,  Search, ChevronDown } from "lucide-react";
-import { Badge, Drawer } from "antd";
-import { useCart } from "../../context/CartContext";
-import { useAuth } from "../../context/AuthContext";
+import { ShoppingCart, User, Menu, Search, ChevronDown } from "lucide-react";
+import { Badge } from "antd";
 
 const Header: React.FC = () => {
-  const { items } = useCart();
-  const { isAuthenticated, user } = useAuth();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -27,10 +23,8 @@ const Header: React.FC = () => {
     setSearchOpen(false);
   }, [location]);
 
-  const totalItems = (items ?? []).reduce((total, item) => total + item.quantity, 0);
-
   const navLinks = [
-     { to: "/", label: "Trang chủ" },
+    { to: "/", label: "Trang chủ" },
     {
       to: "/products",
       label: " Sản phẩm",
@@ -64,9 +58,7 @@ const Header: React.FC = () => {
                     <span>{link.label}</span>
                     <ChevronDown size={16} />
                   </div>
-                  <div
-                    className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
-                  >
+                  <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                     {link.children.map((child) => (
                       <Link
                         key={child.to}
@@ -100,19 +92,19 @@ const Header: React.FC = () => {
             </button>
 
             <Link to="/cart" className="relative flex items-center justify-center">
-              <Badge count={totalItems} size="small" color="#B45309">
+              <Badge count={0} size="small" color="#B45309">
                 <ShoppingCart size={21} className="text-slate-700 hover:text-amber-700 transition-colors" />
               </Badge>
             </Link>
 
-            <Link to={isAuthenticated ? "/account" : "/login"} className="flex items-center justify-center text-slate-700 hover:text-amber-700 transition-colors">
+            <Link to="/login" className="flex items-center justify-center text-slate-700 hover:text-amber-700 transition-colors">
               <User size={20} />
             </Link>
           </div>
 
           <div className="flex items-center space-x-4 md:hidden">
             <Link to="/cart" className="relative">
-              <Badge count={totalItems} size="small" color="#B45309">
+              <Badge count={0} size="small" color="#B45309">
                 <ShoppingCart size={20} className="text-slate-700" />
               </Badge>
             </Link>
@@ -122,7 +114,7 @@ const Header: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* ... Drawer logic giữ nguyên như cũ ... */}
+      {/* Drawer hoặc phần mở rộng menu (nếu có) giữ nguyên ở đây */}
     </header>
   );
 };
