@@ -151,7 +151,15 @@
       ]
     }
   ],
-  "users": [],
+ "users": [
+    {
+      "id": 1,
+      "name": "Tuấn Anh",
+      "email": "tuananh@gmail.com",
+      "role": "Admin",
+      "createdAt": "2024-06-01"
+    }
+  ],
   "orders": [],
   "reviews": [],
   "carts": [],
