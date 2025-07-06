@@ -37,6 +37,7 @@ const Header: React.FC = () => {
     },
     { to: "/about", label: "Về chúng tôi" },
     { to: "/blogs/news", label: "Tin tức" },
+    { to: "/Store", label: "Cửa hàng" },
   ];
 
   return (

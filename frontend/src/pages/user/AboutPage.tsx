@@ -11,7 +11,7 @@ const AboutPage: React.FC = () => {
         <div className="relative z-10 text-center text-white px-4">
           {/* <h1 className="text-4xl md:text-5xl font-serif font-bold">VỀ CHÚNG TÔI</h1> */}
         </div>
-      </section>
+      </section>  
 
       {/* Nội dung giới thiệu */}
       <section className="max-w-4xl mx-auto py-16">
