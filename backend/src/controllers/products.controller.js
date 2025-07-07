@@ -62,7 +62,7 @@ export const createProduct = async (req, res) => {
       dimensions,
     } = req.body;
 
-    if (!name || !description || !price || !category_id) {
+    if (!name || !description || !category_id) {
       return res.status(400).json({
         message:
           "Thiếu các trường bắt buộc: name, description, price, category_id.",

@@ -19,9 +19,10 @@ import assembliesRouter from "./assemblies.router.js";
 import orderItemRouter from "./orderItem.router.js";
 import product_variants from "./product_variants.router.js";
 
-
 import materialsRouter from "./materials.router.js";
 import stylesRouter from "./styles.router.js";
+import voucherRouter from "./voucher.router.js";
+
 const router = Router();
 
 router.use("/auth", authRouter);
@@ -36,14 +37,14 @@ router.use("/api/banners", bannersRouter);
 router.use("/api/coupons", couponsRouter);
 router.use("/api/cart", cartRouter);
 router.use("/api/cartItem", cartItemRouter);
-router.use("/api/room", roomRouter)
-router.use("/api/dimension", dimensionRouter)
-router.use("/api/deliveryOption", deliveryOptionRouter)
+router.use("/api/room", roomRouter);
+router.use("/api/dimension", dimensionRouter);
+router.use("/api/deliveryOption", deliveryOptionRouter);
 router.use("/api/careInstructions", careInstructionsRouter);
 router.use("/api/assemblies", assembliesRouter);
 router.use("/api/oderItems", orderItemRouter);
 router.use("/api/materials", materialsRouter);
 router.use("/api/styles", stylesRouter);
-
+router.use("/api/vouchers", voucherRouter);
 
 export default router;

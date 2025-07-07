@@ -21,6 +21,8 @@ import AccountInfo from "./pages/admin/account/AccountInfo";
 import AboutPage from "./pages/user/AboutPage";
 import { AuthProvider } from "./context/AuthContext";
 import CreateOrder from "./pages/admin/order/CreateOder";
+import VoucherList from "./pages/admin/voucher/VoucherList";
+import CreateVoucher from "./pages/admin/voucher/CreateVoucher";
 
 const theme = {
   token: {
@@ -48,6 +50,8 @@ function App() {
               <Route path="user" element={<UserList />} />
               <Route path="comment" element={<CommentList />} />
               <Route path="import" element={<OrderList />} />
+              <Route path="voucher" element={<VoucherList />} />
+              <Route path="voucher/create" element={<CreateVoucher />} />
               <Route path="account" element={<AccountInfo />} />
             </Route>
 
