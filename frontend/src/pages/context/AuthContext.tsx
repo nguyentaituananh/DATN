@@ -1,8 +1,6 @@
 import React, { createContext, useContext, ReactNode } from "react";
 import instanceAxios from "../../utils/instanceAxios";
 
-
-
 interface AuthContextType {
   register: (data: {
     name: string;
@@ -23,8 +21,6 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    console.log("AuthContext instance:", import.meta.url);
-
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;

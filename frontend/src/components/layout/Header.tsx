@@ -1,208 +1,273 @@
-import React, { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, User, Menu, Search, ChevronDown } from "lucide-react";
-import { Badge } from "antd";
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  Input,
+  Badge,
+  Dropdown,
+  Button as AntButton,
+  Drawer,
+  Space,
+  Typography,
+  Avatar,
+  Divider
+} from 'antd';
+import {
+  ShoppingCartOutlined,
+  HeartOutlined,
+  UserOutlined,
+  MenuOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  DownOutlined,
+  HomeOutlined,
+  GiftOutlined,
+  BellOutlined
+} from '@ant-design/icons';
+import {
+  Sofa,
+  Bed,
+  Armchair,
+  Archive,
+  Lamp,
+  Table
+} from 'lucide-react';
+import { motion } from 'framer-motion';
+
+const { Search } = Input;
+const { Text } = Typography;
 
 const Header: React.FC = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userName, setUserName] = useState<string | null>(null);
-  const [UserId, setUserId] = useState<string | null>(null);
-
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 50);
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    setMenuOpen(false);
-    setSearchOpen(false);
-  }, [location]);
-
-  useEffect(() => {
-  const storedUser = localStorage.getItem("user");
-  const User_id = localStorage.getItem("id");
-  if (storedUser) {
-    setIsLoggedIn(true);
-    setUserName(storedUser); 
-  } else {
-    setIsLoggedIn(false);
-    setUserName(null);
-  }
-
-  if (User_id) {
-    setIsLoggedIn(true);
-    setUserId(User_id); 
-  } else {
-    setIsLoggedIn(false);
-    setUserId(null);
-  }
-}, [location]);
-
-
-const handleLogout = () => {
-  localStorage.removeItem("user");
-  localStorage.removeItem("token"); 
-  localStorage.removeItem("id"); 
-  setIsLoggedIn(false);
-  setUserName(null);
-  setUserId(null);
-  window.location.href = "/"; 
-};
-
-
-
-  const navLinks = [
-    { to: "/", label: "Trang chủ" },
+  const productMenuItems = [
     {
-      to: "/products",
-      label: " Sản phẩm",
-      children: [
-        { to: "/products/sofas", label: "Sofa" },
-        { to: "/products/tables", label: "Bàn" },
-        { to: "/products/chairs", label: "Ghế" },
-        { to: "/products/beds", label: "Giường" },
-      ],
+      key: 'all',
+      label: (
+        <Link to="/products" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
+          <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
+            <HomeOutlined className="text-amber-600" />
+          </div>
+          <div>
+            <div className="font-medium text-stone-700">Tất cả sản phẩm</div>
+            <div className="text-xs text-stone-500">Xem toàn bộ bộ sưu tập</div>
+          </div>
+        </Link>
+      ),
     },
-    { to: "/about", label: "Về chúng tôi" },
-    { to: "/blogs/news", label: "Tin tức" },
-    { to: "/Store", label: "Cửa hàng" },
+    { type: 'divider' },
+    {
+      key: 'sofas',
+      label: (
+        <Link to="/products/sofas" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
+          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <Sofa size={16} className="text-blue-600" />
+          </div>
+          <div>
+            <div className="font-medium text-stone-700">Sofa</div>
+            <div className="text-xs text-stone-500">120+ sản phẩm</div>
+          </div>
+        </Link>
+      ),
+    },
+    {
+      key: 'beds',
+      label: (
+        <Link to="/products/beds" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
+          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+            <Bed size={16} className="text-green-600" />
+          </div>
+          <div>
+            <div className="font-medium text-stone-700">Giường</div>
+            <div className="text-xs text-stone-500">60+ sản phẩm</div>
+          </div>
+        </Link>
+      ),
+    },
+    {
+      key: 'chairs',
+      label: (
+        <Link to="/products/chairs" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
+          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+            <Armchair size={16} className="text-purple-600" />
+          </div>
+          <div>
+            <div className="font-medium text-stone-700">Ghế</div>
+            <div className="text-xs text-stone-500">95+ sản phẩm</div>
+          </div>
+        </Link>
+      ),
+    },
+    {
+      key: 'tables',
+      label: (
+        <Link to="/products/tables" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
+          <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
+            <Table size={16} className="text-orange-600" />
+          </div>
+          <div>
+            <div className="font-medium text-stone-700">Bàn</div>
+            <div className="text-xs text-stone-500">85+ sản phẩm</div>
+          </div>
+        </Link>
+      ),
+    },
+    {
+      key: 'cabinets',
+      label: (
+        <Link to="/products/cabinets" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
+          <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+            <Archive size={16} className="text-red-600" />
+          </div>
+          <div>
+            <div className="font-medium text-stone-700">Tủ</div>
+            <div className="text-xs text-stone-500">75+ sản phẩm</div>
+          </div>
+        </Link>
+      ),
+    },
+    {
+      key: 'lighting',
+      label: (
+        <Link to="/products/lighting" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
+          <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+            <Lamp size={16} className="text-yellow-600" />
+          </div>
+          <div>
+            <div className="font-medium text-stone-700">Đèn</div>
+            <div className="text-xs text-stone-500">40+ sản phẩm</div>
+          </div>
+        </Link>
+      ),
+    },
+  ];
+
+  const userMenuItems = [
+    {
+      key: 'profile',
+      label: <Link to="/account">Thông tin tài khoản</Link>,
+    },
+    {
+      key: 'orders',
+      label: <Link to="/orders">Đơn hàng</Link>,
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: 'logout',
+      label: <span>Đăng xuất</span>,
+    },
   ];
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? "bg-white shadow-md py-3" : "bg-transparent py-5"}`}>
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="font-serif text-2xl font-bold tracking-tight text-slate-800">
-            Eco Decore
-          </Link>
-
-          <nav className="font-sans hidden md:flex items-center space-x-6 relative">
-            {navLinks.map((link) =>
-              link.children ? (
-                <div key={link.to} className="relative group">
-                  <div
-                    className={`flex items-center space-x-1 font-medium transition-colors ${location.pathname.startsWith(link.to) ? "text-amber-800" : "text-slate-700 hover:text-amber-700"}`}
-                  >
-                    <span>{link.label}</span>
-                    <ChevronDown size={16} />
-                  </div>
-                  <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                    {link.children.map((child) => (
-                      <Link
-                        key={child.to}
-                        to={child.to}
-                        className="block px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
-                      >
-                        {child.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`font-medium transition-colors ${location.pathname === link.to ? "text-amber-800" : "text-slate-700 hover:text-amber-700"}`}
-                >
-                  {link.label}
-                </Link>
-              )
-            )}
-          </nav>
-
-          <div className="hidden md:flex items-center space-x-6">
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="flex items-center justify-center text-slate-700 hover:text-amber-700 transition-colors"
-              aria-label="Tìm kiếm"
-            >
-              <Search size={20} />
-            </button>
-
-            <Link to="/cart" className="relative flex items-center justify-center">
-              <Badge count={0} size="small" color="#B45309">
-                <ShoppingCart size={21} className="text-slate-700 hover:text-amber-700 transition-colors" />
-              </Badge>
-            </Link>
-
-      <div className="relative group">
-  <div className="flex items-center justify-center text-slate-700 hover:text-amber-700 transition-colors cursor-pointer">
-    {isLoggedIn ? (
-      <img
-        src="/https://saiuniversity.edu.in/wp-content/uploads/2021/02/default-img.jpg" 
-        alt="Avatar"
-        className="w-6 h-6 rounded-full object-cover"
-      />
-    ) : (
-      <User size={20} />
-    )}
-  </div>
-
-  <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-md z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-    {isLoggedIn ? (
-      <>
-        <span className="block px-4 py-2 text-slate-600 font-medium cursor-default">
-          👋 {userName || "Tài khoản"}
-        </span>
-        <Link
-          to={`userDeitail/${UserId}`}
-          className="block px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
-        >
-          Xem thông tin
-        </Link>
-        <button
-          onClick={handleLogout}
-          className="w-full text-left px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
-        >
-          Đăng xuất
-        </button>
-      </>
-    ) : (
-      <>
-        <Link
-          to="/login"
-          className="block px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
-        >
-          Đăng nhập
-        </Link>
-        <Link
-          to="/register"
-          className="block px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
-        >
-          Đăng ký
-        </Link>
-      </>
-    )}
-  </div>
-</div>
-
-
-
-          </div>
-
-          <div className="flex items-center space-x-4 md:hidden">
-            <Link to="/cart" className="relative">
-              <Badge count={0} size="small" color="#B45309">
-                <ShoppingCart size={20} className="text-slate-700" />
-              </Badge>
-            </Link>
-            <button onClick={() => setMenuOpen(true)} className="text-slate-700" aria-label="Mở menu">
-              <Menu size={24} />
-            </button>
-          </div>
+    <>
+      {/* Top Bar */}
+      <div className="bg-gradient-to-r from-stone-800 to-stone-700 text-white py-3 text-sm">
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          <Space size="large" className="hidden md:flex">
+            <div className="flex items-center space-x-2 hover:text-amber-300 transition-colors cursor-pointer">
+              <PhoneOutlined className="text-amber-300" />
+              <Text className="text-white font-medium">Hotline: 1900 xxxx</Text>
+            </div>
+            <div className="flex items-center space-x-2 hover:text-amber-300 transition-colors cursor-pointer">
+              <MailOutlined className="text-amber-300" />
+              <Text className="text-white font-medium">info@ecodecore.com</Text>
+            </div>
+          </Space>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="bg-gradient-to-r from-amber-600 to-amber-500 px-4 py-1 rounded-full shadow-lg"
+          >
+            <Text className="text-white font-semibold text-xs flex items-center space-x-1">
+              <GiftOutlined className="text-xs" />
+              <span>🚚 Miễn phí vận chuyển đơn hàng trên 20 triệu</span>
+            </Text>
+          </motion.div>
         </div>
       </div>
-      {/* Drawer hoặc phần mở rộng menu (nếu có) giữ nguyên ở đây */}
-    </header>
+
+      {/* Main Header */}
+      <motion.header
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className={`sticky top-0 z-50 transition-all duration-500 ${
+          isScrolled
+            ? 'bg-white/95 backdrop-blur-lg shadow-xl border-b border-gray-100'
+            : 'bg-white shadow-md'
+        }`}
+      >
+        <div className="container mx-auto px-4 flex items-center justify-between h-20">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-4 group">
+            <motion.div
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              className="bg-gradient-to-br from-amber-500 to-amber-700 p-3 rounded-xl shadow-lg"
+            >
+              <HomeOutlined className="text-white text-2xl" />
+            </motion.div>
+            <div>
+              <h1 className="text-3xl font-serif font-bold bg-gradient-to-r from-stone-800 to-amber-700 bg-clip-text text-transparent">
+                Eco Decore
+              </h1>
+              <p className="text-sm text-stone-500 font-medium -mt-1">Nội Thất Cao Cấp</p>
+            </div>
+          </Link>
+
+          {/* Search + Actions */}
+          <div className="flex items-center space-x-3">
+            <div className="hidden md:block">
+              <Search placeholder="Tìm kiếm sản phẩm..." allowClear size="large" style={{ width: 320 }} />
+            </div>
+            <Badge count={1}><AntButton icon={<BellOutlined />} type="text" /></Badge>
+            <Badge count={2}><AntButton icon={<HeartOutlined />} type="text" /></Badge>
+            <Badge count={3}><AntButton icon={<ShoppingCartOutlined />} type="text" /></Badge>
+            <Dropdown menu={{ items: userMenuItems }} trigger={['hover']}>
+              <AntButton type="text">
+                <Space>
+                  <Avatar size="small" icon={<UserOutlined />} />
+                  <span className="text-sm font-semibold">Tài khoản</span>
+                </Space>
+              </AntButton>
+            </Dropdown>
+            <AntButton icon={<MenuOutlined />} type="text" onClick={() => setIsMobileMenuOpen(true)} />
+          </div>
+        </div>
+
+        {/* Mobile Drawer */}
+        <Drawer
+          title="Menu"
+          placement="right"
+          onClose={() => setIsMobileMenuOpen(false)}
+          open={isMobileMenuOpen}
+          width={350}
+        >
+          <Search placeholder="Tìm kiếm sản phẩm..." allowClear size="large" />
+          <Divider />
+          <Text strong>Danh mục sản phẩm</Text>
+          <div className="space-y-2 mt-2">
+            {productMenuItems
+              .filter(item => item.key !== 'all' && item.type !== 'divider')
+              .map(item => (
+                <div key={item.key} onClick={() => setIsMobileMenuOpen(false)}>
+                  {item.label}
+                </div>
+              ))}
+          </div>
+        </Drawer>
+      </motion.header>
+    </>
   );
 };
 

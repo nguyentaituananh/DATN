@@ -5,7 +5,7 @@ import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/user/HomePage";
 import Layout from "./components/layout/layout";
 import CheckoutPage from "./pages/user/CheckoutPage";
-import RegisterPage from "./pages/user/RegisterPage";
+import RegisterPage from "./pages/admin/user/RegisterPage";
 import LoginPage from "./pages/user/LoginPage";
 import { ConfigProvider } from "antd";
 import ProductsPage from "./pages/user/ProductsPage";
@@ -36,9 +36,8 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <Routes>
-            {/* ADMIN ROUTES */}
             <Route path="/admin" element={<LayoutAdmin />}>
-              <Route index element={<DashboardPage />} />
+              <Route index element={<DashboardPage />} />{" "}
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="product" element={<ProductList />} />
               <Route path="product/add" element={<CreateProducts />} />

@@ -8,7 +8,6 @@ import {
   deleteStyle,
 } from "../controllers/styles.controller.js";
 
-
 const stylesRouter = express.Router();
 
 stylesRouter.post("/", createStyle);
@@ -18,4 +17,3 @@ stylesRouter.put("/:id", updateStyle);
 stylesRouter.delete("/:id", deleteStyle);
 
 export default stylesRouter;
-

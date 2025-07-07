@@ -1,63 +1,63 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
+import { registerSchema } from "../validates/user.validate.js";
+
 
 
 // Tạo token
 const generateToken = (userId) => {
-
   return jwt.sign({ id: userId }, "SECRET_KEY", { expiresIn: "7d" }); // Thay "SECRET_KEY" bằng biến môi trường thực tế
-
 };
 
 // Đăng ký
+
 export const register = async (req, res) => {
-  const { name, email, password, address, phone_number, role } = req.body;
-
-  if (!name || !email || !password || !address || !phone_number) {
-    return res.status(400).json({ message: "Thiếu thông tin bắt buộc." });
-  }
-
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "Email đã tồn tại." });
+    const { error } = registerSchema.validate(req.body, { abortEarly: false });
+    if (error) {
+      const messages = error.details.map((detail) => detail.message);
+      return res.status(400).json({ message: messages });
+    }
 
+    const { name, email, password, address, phone_number, role } = req.body;
+
+    // Kiểm tra email đã tồn tại
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email đã tồn tại." });
+    }
+
+    // Tạo người dùng mới
     const newUser = new User({
       name,
       email,
       password,
       address,
       phone_number,
-      role: role || "customer",
+      role,
     });
 
     await newUser.save();
 
     const token = generateToken(newUser._id);
     res.status(201).json({ user: newUser.name, token });
-
   } catch (err) {
-    console.error("Lỗi khi đăng ký:", err);
     res.status(500).json({ message: err.message });
-    console.error("Register Error:", err);
-res.status(500).json({ message: err.message, error: err });
-
   }
 };
 
+
 // Đăng nhập
 export const login = async (req, res) => {
-
   const { email, password } = req.body;
 
   try {
     // Tìm người dùng theo email
     const user = await User.findOne({ email });
-
     if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ message: "Sai tài khoản hoặc mật khẩu" });
     }
-
 
     // Kiểm tra trạng thái người dùng (is_active)
     if (!user.is_active) {
@@ -111,7 +111,6 @@ export const deleteUser = async (req, res) => {
     const user = await User.findByIdAndDelete(req.params.id);
     if (user) res.json({ message: "Người dùng đã bị xóa" });
     else res.status(404).json({ message: "Không tìm thấy người dùng để xóa" });
-
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
