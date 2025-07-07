@@ -35,6 +35,8 @@ const { Text } = Typography;
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -45,6 +47,23 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    const user_id = localStorage.getItem('id');
+    if (storedUser) {
+      // const parsedUser = JSON.parse(storedUser);
+      setUserName(storedUser || null);
+    } else {
+      setUserName(null);
+    }
+
+    if (user_id) {
+      setUserId(user_id || null);
+    } else {
+      setUserId(null);
+    }
+  }, [location]);
+
   const productMenuItems = [
     { key: 'sofas', label: <Link to="/products/sofas" className="flex items-center space-x-2"><Sofa size={16} /><span>Sofa</span></Link> },
     { key: 'beds', label: <Link to="/products/beds" className="flex items-center space-x-2"><Bed size={16} /><span>Giường</span></Link> },
@@ -54,13 +73,37 @@ const Header: React.FC = () => {
     { key: 'lighting', label: <Link to="/products/lighting" className="flex items-center space-x-2"><Lamp size={16} /><span>Đèn</span></Link> },
   ];
 
-  const userMenu = (
+  const loggedInMenu = (
     <Menu>
-      <Menu.Item key="profile">Thông tin cá nhân</Menu.Item>
+    <Menu.Item key="profile">
+  <Link to={`/userDeitail/${userId}`}>Thông tin cá nhân</Link>
+</Menu.Item>
+
       <Menu.Item key="orders">Đơn hàng của tôi</Menu.Item>
       <Menu.Item key="wishlist">Danh sách yêu thích</Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="logout">Đăng xuất</Menu.Item>
+      <Menu.Item
+  key="logout"
+  onClick={() => {
+    localStorage.clear(); 
+    setUserName(null);    
+    window.location.href = '/'; 
+  }}
+>
+  Đăng xuất
+</Menu.Item>
+
+    </Menu>
+  );
+
+  const guestMenu = (
+    <Menu>
+      <Menu.Item key="register">
+        <Link to="/register">Đăng ký</Link>
+      </Menu.Item>
+      <Menu.Item key="login">
+        <Link to="/login">Đăng nhập</Link>
+      </Menu.Item>
     </Menu>
   );
 
@@ -137,11 +180,13 @@ const Header: React.FC = () => {
             </Badge>
 
             <div className="hidden md:block">
-              <Dropdown overlay={userMenu} placement="bottomRight" trigger={["hover"]}>
+              <Dropdown overlay={userName ? loggedInMenu : guestMenu} placement="bottomRight" trigger={["hover"]}>
                 <AntButton type="text" className="text-stone-600 hover:text-amber-600">
                   <Space>
                     <Avatar size="small" icon={<UserOutlined />} />
-                    <span className="text-sm font-medium">Tài khoản</span>
+                    <span className="text-sm font-medium">
+                      {userName ? userName : "Tài khoản"}
+                    </span>
                   </Space>
                 </AntButton>
               </Dropdown>
@@ -189,14 +234,25 @@ const Header: React.FC = () => {
 
             <div className="pt-4 border-t border-stone-200">
               <Space direction="vertical" size="middle" className="w-full">
-                <AntButton
-                  type="primary"
-                  icon={<UserOutlined />}
-                  block
-                  className="bg-amber-600 border-amber-600 hover:bg-amber-700"
-                >
-                  Đăng nhập
-                </AntButton>
+                {userName ? (
+                  <Text strong className="text-stone-700">Xin chào, {userName}</Text>
+                ) : (
+                  <>
+                    <Link to="/login">
+                      <AntButton
+                        type="primary"
+                        icon={<UserOutlined />}
+                        block
+                        className="bg-amber-600 border-amber-600 hover:bg-amber-700"
+                      >
+                        Đăng nhập
+                      </AntButton>
+                    </Link>
+                    <Link to="/register">
+                      <AntButton block>Đăng ký</AntButton>
+                    </Link>
+                  </>
+                )}
                 <div className="flex justify-between">
                   <Badge count={2}>
                     <AntButton icon={<HeartOutlined />}>Yêu thích</AntButton>
