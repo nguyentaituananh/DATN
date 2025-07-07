@@ -4,6 +4,7 @@ import CartPage from "./pages/user/CartPage";
 import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/user/HomePage";
 import Layout from "./components/layout/layout";
+import { AuthProvider } from "./context/AuthContext";
 import CheckoutPage from "./pages/user/CheckoutPage";
 import RegisterPage from "./pages/admin/user/RegisterPage";
 import LoginPage from "./pages/user/LoginPage";
@@ -19,7 +20,6 @@ import UserList from "./pages/admin/account/UserList";
 import CommentList from "./pages/admin/comment/CommentList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
 import AboutPage from "./pages/user/AboutPage";
-import { AuthProvider } from "./pages/context/AuthContext";
 
 const theme = {
   token: {
