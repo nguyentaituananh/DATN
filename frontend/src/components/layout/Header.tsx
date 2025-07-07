@@ -8,8 +8,8 @@ import {
   Drawer,
   Space,
   Typography,
+  Menu,
   Avatar,
-  Divider
 } from 'antd';
 import {
   ShoppingCartOutlined,
@@ -20,8 +20,6 @@ import {
   MailOutlined,
   DownOutlined,
   HomeOutlined,
-  GiftOutlined,
-  BellOutlined
 } from '@ant-design/icons';
 import {
   Sofa,
@@ -29,9 +27,7 @@ import {
   Armchair,
   Archive,
   Lamp,
-  Table
 } from 'lucide-react';
-import { motion } from 'framer-motion';
 
 const { Search } = Input;
 const { Text } = Typography;
@@ -43,230 +39,177 @@ const Header: React.FC = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 100);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const productMenuItems = [
-    {
-      key: 'all',
-      label: (
-        <Link to="/products" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
-          <div className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-            <HomeOutlined className="text-amber-600" />
-          </div>
-          <div>
-            <div className="font-medium text-stone-700">Tất cả sản phẩm</div>
-            <div className="text-xs text-stone-500">Xem toàn bộ bộ sưu tập</div>
-          </div>
-        </Link>
-      ),
-    },
-    { type: 'divider' },
-    {
-      key: 'sofas',
-      label: (
-        <Link to="/products/sofas" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
-          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-            <Sofa size={16} className="text-blue-600" />
-          </div>
-          <div>
-            <div className="font-medium text-stone-700">Sofa</div>
-            <div className="text-xs text-stone-500">120+ sản phẩm</div>
-          </div>
-        </Link>
-      ),
-    },
-    {
-      key: 'beds',
-      label: (
-        <Link to="/products/beds" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
-          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-            <Bed size={16} className="text-green-600" />
-          </div>
-          <div>
-            <div className="font-medium text-stone-700">Giường</div>
-            <div className="text-xs text-stone-500">60+ sản phẩm</div>
-          </div>
-        </Link>
-      ),
-    },
-    {
-      key: 'chairs',
-      label: (
-        <Link to="/products/chairs" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
-          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
-            <Armchair size={16} className="text-purple-600" />
-          </div>
-          <div>
-            <div className="font-medium text-stone-700">Ghế</div>
-            <div className="text-xs text-stone-500">95+ sản phẩm</div>
-          </div>
-        </Link>
-      ),
-    },
-    {
-      key: 'tables',
-      label: (
-        <Link to="/products/tables" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
-          <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
-            <Table size={16} className="text-orange-600" />
-          </div>
-          <div>
-            <div className="font-medium text-stone-700">Bàn</div>
-            <div className="text-xs text-stone-500">85+ sản phẩm</div>
-          </div>
-        </Link>
-      ),
-    },
-    {
-      key: 'cabinets',
-      label: (
-        <Link to="/products/cabinets" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
-          <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-            <Archive size={16} className="text-red-600" />
-          </div>
-          <div>
-            <div className="font-medium text-stone-700">Tủ</div>
-            <div className="text-xs text-stone-500">75+ sản phẩm</div>
-          </div>
-        </Link>
-      ),
-    },
-    {
-      key: 'lighting',
-      label: (
-        <Link to="/products/lighting" className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-amber-50 transition-colors">
-          <div className="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
-            <Lamp size={16} className="text-yellow-600" />
-          </div>
-          <div>
-            <div className="font-medium text-stone-700">Đèn</div>
-            <div className="text-xs text-stone-500">40+ sản phẩm</div>
-          </div>
-        </Link>
-      ),
-    },
+    { key: 'sofas', label: <Link to="/products/sofas" className="flex items-center space-x-2"><Sofa size={16} /><span>Sofa</span></Link> },
+    { key: 'beds', label: <Link to="/products/beds" className="flex items-center space-x-2"><Bed size={16} /><span>Giường</span></Link> },
+    { key: 'chairs', label: <Link to="/products/chairs" className="flex items-center space-x-2"><Armchair size={16} /><span>Ghế</span></Link> },
+    { key: 'tables', label: <Link to="/products/tables" className="flex items-center space-x-2"><Archive size={16} /><span>Bàn</span></Link> },
+    { key: 'cabinets', label: <Link to="/products/cabinets" className="flex items-center space-x-2"><Archive size={16} /><span>Tủ</span></Link> },
+    { key: 'lighting', label: <Link to="/products/lighting" className="flex items-center space-x-2"><Lamp size={16} /><span>Đèn</span></Link> },
   ];
 
-  const userMenuItems = [
-    {
-      key: 'profile',
-      label: <Link to="/account">Thông tin tài khoản</Link>,
-    },
-    {
-      key: 'orders',
-      label: <Link to="/orders">Đơn hàng</Link>,
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'logout',
-      label: <span>Đăng xuất</span>,
-    },
+  const userMenu = (
+    <Menu>
+      <Menu.Item key="profile">Thông tin cá nhân</Menu.Item>
+      <Menu.Item key="orders">Đơn hàng của tôi</Menu.Item>
+      <Menu.Item key="wishlist">Danh sách yêu thích</Menu.Item>
+      <Menu.Divider />
+      <Menu.Item key="logout">Đăng xuất</Menu.Item>
+    </Menu>
+  );
+
+  const navigation = [
+    { name: 'Trang Chủ', href: '/', key: 'home' },
+    { name: 'Sản Phẩm', href: '/products', key: 'products', hasDropdown: true },
+    { name: 'Về Chúng Tôi', href: '/about', key: 'about' },
+    { name: 'Liên Hệ', href: '/contact', key: 'contact' },
   ];
 
   return (
     <>
-      {/* Top Bar */}
-      <div className="bg-gradient-to-r from-stone-800 to-stone-700 text-white py-3 text-sm">
+      <div className="bg-stone-800 text-white py-2 text-sm">
         <div className="container mx-auto px-4 flex justify-between items-center">
-          <Space size="large" className="hidden md:flex">
-            <div className="flex items-center space-x-2 hover:text-amber-300 transition-colors cursor-pointer">
-              <PhoneOutlined className="text-amber-300" />
-              <Text className="text-white font-medium">Hotline: 1900 xxxx</Text>
-            </div>
-            <div className="flex items-center space-x-2 hover:text-amber-300 transition-colors cursor-pointer">
-              <MailOutlined className="text-amber-300" />
-              <Text className="text-white font-medium">info@ecodecore.com</Text>
-            </div>
-          </Space>
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="bg-gradient-to-r from-amber-600 to-amber-500 px-4 py-1 rounded-full shadow-lg"
-          >
-            <Text className="text-white font-semibold text-xs flex items-center space-x-1">
-              <GiftOutlined className="text-xs" />
-              <span>🚚 Miễn phí vận chuyển đơn hàng trên 20 triệu</span>
-            </Text>
-          </motion.div>
+          <div className="hidden md:flex items-center space-x-6">
+            <Space size="middle">
+              <Space size="small">
+                <PhoneOutlined />
+                <Text className="text-white">Hotline: 1900 xxxx</Text>
+              </Space>
+              <Space size="small">
+                <MailOutlined />
+                <Text className="text-white">info@noithat.vn</Text>
+              </Space>
+            </Space>
+          </div>
+          <Text className="text-amber-300 ml-auto">
+            Miễn phí vận chuyển đơn hàng trên 20 triệu
+          </Text>
         </div>
       </div>
 
-      {/* Main Header */}
-      <motion.header
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        className={`sticky top-0 z-50 transition-all duration-500 ${
-          isScrolled
-            ? 'bg-white/95 backdrop-blur-lg shadow-xl border-b border-gray-100'
-            : 'bg-white shadow-md'
-        }`}
-      >
+      <header className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-white'}`}>
         <div className="container mx-auto px-4 flex items-center justify-between h-20">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-4 group">
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              className="bg-gradient-to-br from-amber-500 to-amber-700 p-3 rounded-xl shadow-lg"
-            >
-              <HomeOutlined className="text-white text-2xl" />
-            </motion.div>
+          <Link to="/" className="flex items-center space-x-3">
+            <div className="bg-amber-600 p-2 rounded-lg">
+              <HomeOutlined className="text-white text-xl" />
+            </div>
             <div>
-              <h1 className="text-3xl font-serif font-bold bg-gradient-to-r from-stone-800 to-amber-700 bg-clip-text text-transparent">
-                Eco Decore
-              </h1>
-              <p className="text-sm text-stone-500 font-medium -mt-1">Nội Thất Cao Cấp</p>
+              <h1 className="text-2xl font-serif font-bold text-stone-900">Nội Thất</h1>
+              <p className="text-xs text-stone-500 -mt-1">Cao Cấp</p>
             </div>
           </Link>
 
-          {/* Search + Actions */}
-          <div className="flex items-center space-x-3">
+          <nav className="hidden lg:flex items-center space-x-8">
+            {navigation.map((item) => (
+              <div key={item.key}>
+                {item.hasDropdown ? (
+                  <Dropdown overlay={<Menu items={productMenuItems} />} placement="bottomLeft" trigger={["hover"]}>
+                    <Link to={item.href} className={`flex items-center space-x-1 py-2 px-3 rounded-lg transition-colors hover:text-amber-600 ${location.pathname === item.href ? 'text-amber-600 bg-amber-50' : 'text-stone-700'}`}>
+                      <span className="font-medium">{item.name}</span>
+                      <DownOutlined className="text-xs" />
+                    </Link>
+                  </Dropdown>
+                ) : (
+                  <Link to={item.href} className={`flex items-center space-x-1 py-2 px-3 rounded-lg transition-colors hover:text-amber-600 ${location.pathname === item.href ? 'text-amber-600 bg-amber-50' : 'text-stone-700'}`}>
+                    <span className="font-medium">{item.name}</span>
+                  </Link>
+                )}
+              </div>
+            ))}
+          </nav>
+
+          <div className="flex items-center space-x-4">
             <div className="hidden md:block">
-              <Search placeholder="Tìm kiếm sản phẩm..." allowClear size="large" style={{ width: 320 }} />
+              <Search placeholder="Tìm kiếm sản phẩm..." allowClear style={{ width: 300 }} />
             </div>
-            <Badge count={1}><AntButton icon={<BellOutlined />} type="text" /></Badge>
-            <Badge count={2}><AntButton icon={<HeartOutlined />} type="text" /></Badge>
-            <Badge count={3}><AntButton icon={<ShoppingCartOutlined />} type="text" /></Badge>
-            <Dropdown menu={{ items: userMenuItems }} trigger={['hover']}>
-              <AntButton type="text">
-                <Space>
-                  <Avatar size="small" icon={<UserOutlined />} />
-                  <span className="text-sm font-semibold">Tài khoản</span>
-                </Space>
-              </AntButton>
-            </Dropdown>
-            <AntButton icon={<MenuOutlined />} type="text" onClick={() => setIsMobileMenuOpen(true)} />
+
+            <Badge count={2} size="small">
+              <AntButton type="text" icon={<HeartOutlined />} className="text-stone-600 hover:text-amber-600" />
+            </Badge>
+            <Badge count={3} size="small">
+              <AntButton type="text" icon={<ShoppingCartOutlined />} className="text-stone-600 hover:text-amber-600" />
+            </Badge>
+
+            <div className="hidden md:block">
+              <Dropdown overlay={userMenu} placement="bottomRight" trigger={["hover"]}>
+                <AntButton type="text" className="text-stone-600 hover:text-amber-600">
+                  <Space>
+                    <Avatar size="small" icon={<UserOutlined />} />
+                    <span className="text-sm font-medium">Tài khoản</span>
+                  </Space>
+                </AntButton>
+              </Dropdown>
+            </div>
+
+            <AntButton
+              type="text"
+              icon={<MenuOutlined />}
+              className="lg:hidden text-stone-600 hover:text-amber-600"
+              onClick={() => setIsMobileMenuOpen(true)}
+            />
           </div>
         </div>
 
-        {/* Mobile Drawer */}
         <Drawer
           title="Menu"
           placement="right"
           onClose={() => setIsMobileMenuOpen(false)}
           open={isMobileMenuOpen}
-          width={350}
+          width={300}
         >
-          <Search placeholder="Tìm kiếm sản phẩm..." allowClear size="large" />
-          <Divider />
-          <Text strong>Danh mục sản phẩm</Text>
-          <div className="space-y-2 mt-2">
-            {productMenuItems
-              .filter(item => item.key !== 'all' && item.type !== 'divider')
-              .map(item => (
-                <div key={item.key} onClick={() => setIsMobileMenuOpen(false)}>
-                  {item.label}
-                </div>
+          <div className="space-y-6">
+            <Search placeholder="Tìm kiếm sản phẩm..." allowClear size="large" />
+
+            <Menu mode="vertical" selectedKeys={[location.pathname]} className="border-none">
+              {navigation.map((item) => (
+                <Menu.Item key={item.href}>
+                  <Link to={item.href} onClick={() => setIsMobileMenuOpen(false)}>
+                    {item.name}
+                  </Link>
+                </Menu.Item>
               ))}
+            </Menu>
+
+            <div>
+              <Text strong className="text-stone-700">Danh mục sản phẩm</Text>
+              <Menu mode="vertical" className="border-none mt-2">
+                {productMenuItems.map((item) => (
+                  <Menu.Item key={item.key}>
+                    <div onClick={() => setIsMobileMenuOpen(false)}>{item.label}</div>
+                  </Menu.Item>
+                ))}
+              </Menu>
+            </div>
+
+            <div className="pt-4 border-t border-stone-200">
+              <Space direction="vertical" size="middle" className="w-full">
+                <AntButton
+                  type="primary"
+                  icon={<UserOutlined />}
+                  block
+                  className="bg-amber-600 border-amber-600 hover:bg-amber-700"
+                >
+                  Đăng nhập
+                </AntButton>
+                <div className="flex justify-between">
+                  <Badge count={2}>
+                    <AntButton icon={<HeartOutlined />}>Yêu thích</AntButton>
+                  </Badge>
+                  <Badge count={3}>
+                    <AntButton icon={<ShoppingCartOutlined />}>Giỏ hàng</AntButton>
+                  </Badge>
+                </div>
+              </Space>
+            </div>
           </div>
         </Drawer>
-      </motion.header>
+      </header>
     </>
   );
 };
