@@ -175,7 +175,15 @@
     }
   ],
   "cart_items": [],
-  "account": [],
+  "account": [
+    {
+      "id": "1",
+      "name": "Hoàng Duy",
+      "email": "hoangduy@gmail.com",
+      "role": "User",
+      "createdAt": "2025-07-07"
+    }
+  ],
   "favorites": [],
   "banners": [],
   "coupons": [],
