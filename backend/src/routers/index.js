@@ -1,6 +1,5 @@
 import { Router } from "express";
 import authRouter from "./auth.router.js";
-
 import productRouter from "./products.router.js";
 import categoryRouter from "./category.router.js";
 import orderRouter from "./order.router.js";
@@ -19,14 +18,12 @@ import assembliesRouter from "./assemblies.router.js";
 import orderItemRouter from "./orderItem.router.js";
 import product_variants from "./product_variants.router.js";
 
-
 import materialsRouter from "./materials.router.js";
 import stylesRouter from "./styles.router.js";
 const router = Router();
 
 router.use("/auth", authRouter);
 router.use("/api/products", productRouter);
-
 router.use("/api/product-variant", product_variants);
 router.use("/api/categories", categoryRouter);
 router.use("/api/orders", orderRouter);
@@ -44,6 +41,5 @@ router.use("/api/assemblies", assembliesRouter);
 router.use("/api/oderItems", orderItemRouter);
 router.use("/api/materials", materialsRouter);
 router.use("/api/styles", stylesRouter);
-
 
 export default router;
