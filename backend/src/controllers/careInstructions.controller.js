@@ -1,65 +1,58 @@
-import CareInstructions from "../models/careInstructions.model.js"
+
+import { careInstructionSchema, careInstructionUpdateSchema } from "../validates/careInstructions.validate.js";
 
 export const getAllCareInstructions = async (req, res) => {
   try {
-    const CareInstructions = await C.find().populate("product_id");
-    res.status(200).json(CareInstructions);
+    const careInstructions = await CareInstructions.find().populate("product_id");
+    res.status(200).json(careInstructions);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
-export const creatCareInstruction = async (req, res) => {
+export const createCareInstruction = async (req, res) => {
   try {
-    const { product_id, content } = req.body;
-    if (!product_id || !content) {
-      return res.status(400).json({ message: "ID sản phẩm và nội dung là bắt buộc." });
+    const { error } = careInstructionSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
     }
 
-    const newCareInstruction = new CareInstructions({
-      product_id,
-      content
-    });
+    const newCareInstruction = new CareInstructions(req.body);
+    const saved = await newCareInstruction.save();
 
-    const savedCareInstruction = await newCareInstruction.save();
-    res.status(201).json(savedCareInstruction);
+    res.status(201).json(saved);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
-export const updateCartIntruction = async (req, res) => {
+export const updateCareInstruction = async (req, res) => {
   try {
     const { id } = req.params;
-    const { content } = req.body;
 
-    if (!content) {
-      return res.status(400).json({ message: "Nội dung là bắt buộc" });
+    const { error } = careInstructionUpdateSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
     }
 
-    const updatedCareInstruction = await CareInstructions.findByIdAndUpdate(
-      id,
-      { content },
-      { new: true }
-    );
+    const updated = await CareInstructions.findByIdAndUpdate(id, req.body, { new: true });
 
-    if (!updatedCareInstruction) {
+    if (!updated) {
       return res.status(404).json({ message: "Không tìm thấy hướng dẫn chăm sóc." });
     }
 
-    res.status(200).json(updatedCareInstruction);
+    res.status(200).json(updated);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};
 
 export const deleteCareInstruction = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deletedCareInstruction = await CareInstructions.findByIdAndDelete(id);
-
-    if (!deletedCareInstruction) {
+    const deleted = await CareInstructions.findByIdAndDelete(id);
+    if (!deleted) {
       return res.status(404).json({ message: "Không tìm thấy hướng dẫn chăm sóc." });
     }
 
@@ -67,4 +60,4 @@ export const deleteCareInstruction = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-}
+};

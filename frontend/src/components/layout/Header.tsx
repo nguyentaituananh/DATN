@@ -152,71 +152,8 @@ const Header: React.FC = () => {
         </Link>
       ),
     },
-  ];
-
-  const userMenuItems = [
-    {
-      key: 'profile',
-      label: (
-        <div className="flex items-center space-x-3 py-2">
-          <UserOutlined className="text-stone-500" />
-          <span>Thông tin cá nhân</span>
-        </div>
-      ),
-    },
-    {
-      key: 'orders',
-      label: (
-        <div className="flex items-center space-x-3 py-2">
-          <GiftOutlined className="text-stone-500" />
-          <span>Đơn hàng của tôi</span>
-        </div>
-      ),
-    },
-    {
-      key: 'wishlist',
-      label: (
-        <div className="flex items-center space-x-3 py-2">
-          <HeartOutlined className="text-stone-500" />
-          <span>Danh sách yêu thích</span>
-        </div>
-      ),
-    },
-    {
-      type: 'divider',
-    },
-    {
-      key: 'logout',
-      label: (
-        <div className="flex items-center space-x-3 py-2 text-red-600">
-          <span>Đăng xuất</span>
-        </div>
-      ),
-    },
-  ];
-
-  const navigation = [
-    {
-      name: 'Trang Chủ',
-      href: '/',
-      key: 'home'
-    },
-    {
-      name: 'Sản Phẩm',
-      href: '/products',
-      key: 'products',
-      hasDropdown: true
-    },
-    {
-      name: 'Về Chúng Tôi',
-      href: '/about',
-      key: 'about'
-    },
-    {
-      name: 'Liên Hệ',
-      href: '/contact',
-      key: 'contact'
-    }
+    { to: "/about", label: "Về chúng tôi" },
+    { to: "/blogs/news", label: "Tin tức" },
   ];
 
   return (
