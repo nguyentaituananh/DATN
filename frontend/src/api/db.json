@@ -151,18 +151,29 @@
       ]
     }
   ],
- "users": [
+  "users": [
     {
-      "id": 1,
-      "name": "Tuấn Anh",
+      "name": "Hoàng Duy",
       "email": "tuananh@gmail.com",
-      "role": "Admin",
-      "createdAt": "2024-06-01"
+      "role": "User",
+      "id": 1
     }
   ],
   "orders": [],
   "reviews": [],
-  "carts": [],
+  "carts": [
+    {
+      "id": 1,
+      "userId": "1",
+      "product": {
+        "id": "abc123",
+        "name": "sofa",
+        "price": 100
+      },
+      "quantity": 2,
+      "color": "đen"
+    }
+  ],
   "cart_items": [],
   "favorites": [],
   "banners": [],

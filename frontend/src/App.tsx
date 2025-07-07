@@ -3,7 +3,7 @@ import LayoutAdmin from "./layouts/admin/LayoutAdmin";
 import CartPage from "./pages/user/CartPage";
 import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/user/HomePage";
-import Layout from "./components/layout/layout";
+
 import CheckoutPage from "./pages/user/CheckoutPage";
 import RegisterPage from "./pages/user/RegisterPage";
 import LoginPage from "./pages/user/LoginPage";
@@ -20,6 +20,8 @@ import CommentList from "./pages/admin/comment/CommentList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
 import AboutPage from "./pages/user/AboutPage";
 import { AuthProvider } from "./pages/context/AuthContext";
+import Layout from "./components/layout/layout";
+
 
 const theme = {
   token: {
@@ -50,7 +52,7 @@ function App() {
             </Route>
 
             {/* USER ROUTES */}
-            <Route path="/" element={<Layout />}>
+            <Route path="/" element={<Layout/>}>
               <Route index element={<HomePage />} />
               <Route path="products" element={<ProductsPage />} />
               <Route path="products/:category" element={<ProductsPage />} />
