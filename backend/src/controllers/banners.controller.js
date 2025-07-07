@@ -1,5 +1,15 @@
 import Banners from "../models/banners.model.js";
+import { bannerSchema,bannerUpdateSchema } from "../validates/banner.validate.js";
 export const createBanner = async(req,res)=>{
+    const { error } = bannerSchema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    const errors = error.details.map((err) => ({
+      field: err.path?.[0] || "null",
+      message: err.message,
+    }));
+    return res.status(400).json({ errors });
+  }
     try {
         const { title, image_url, link_to,position } = req.body;
         const newBanner = new Banners({
@@ -16,6 +26,15 @@ export const createBanner = async(req,res)=>{
 }
 
 export const updateBanner = async(req,res)=>{
+    const { error } = bannerUpdateSchema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    const errors = error.details.map((err) => ({
+      field: err.path?.[0] || "null",
+      message: err.message,
+    }));
+    return res.status(400).json({ errors });
+  }
     try {
         const {id} = req.params;
         const { title, image_url, link_to, position } = req.body;
