@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
+
 
 // Tạo token
 const generateToken = (userId) => {
@@ -64,7 +66,7 @@ export const login = async (req, res) => {
 
     // Tạo JWT token
     const token = generateToken(user._id);
-    res.status(200).json({ user: user.name, token });
+    res.status(200).json({ user: user.name, token ,id :user.id});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -114,3 +116,28 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+export const changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "Không tìm thấy người dùng." });
+
+    const isMatch = await user.matchPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Mật khẩu hiện tại không đúng." });
+    }
+
+    user.password = newPassword; // sẽ được mã hóa bởi pre-save
+    await user.save();
+
+    res.json({ message: "Đổi mật khẩu thành công." });
+  } catch (err) {
+    console.error("Lỗi khi đổi mật khẩu:", err);
+    res.status(500).json({ message: "Lỗi server khi đổi mật khẩu.", error: err.message });
+  }
+};
+

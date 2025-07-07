@@ -9,6 +9,10 @@ const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [UserId, setUserId] = useState<string | null>(null);
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -22,6 +26,39 @@ const Header: React.FC = () => {
     setMenuOpen(false);
     setSearchOpen(false);
   }, [location]);
+
+  useEffect(() => {
+  const storedUser = localStorage.getItem("user");
+  const User_id = localStorage.getItem("id");
+  if (storedUser) {
+    setIsLoggedIn(true);
+    setUserName(storedUser); 
+  } else {
+    setIsLoggedIn(false);
+    setUserName(null);
+  }
+
+  if (User_id) {
+    setIsLoggedIn(true);
+    setUserId(User_id); 
+  } else {
+    setIsLoggedIn(false);
+    setUserId(null);
+  }
+}, [location]);
+
+
+const handleLogout = () => {
+  localStorage.removeItem("user");
+  localStorage.removeItem("token"); 
+  localStorage.removeItem("id"); 
+  setIsLoggedIn(false);
+  setUserName(null);
+  setUserId(null);
+  window.location.href = "/"; 
+};
+
+
 
   const navLinks = [
     { to: "/", label: "Trang chủ" },
@@ -97,9 +134,59 @@ const Header: React.FC = () => {
               </Badge>
             </Link>
 
-            <Link to="/login" className="flex items-center justify-center text-slate-700 hover:text-amber-700 transition-colors">
-              <User size={20} />
-            </Link>
+      <div className="relative group">
+  <div className="flex items-center justify-center text-slate-700 hover:text-amber-700 transition-colors cursor-pointer">
+    {isLoggedIn ? (
+      <img
+        src="/https://saiuniversity.edu.in/wp-content/uploads/2021/02/default-img.jpg" 
+        alt="Avatar"
+        className="w-6 h-6 rounded-full object-cover"
+      />
+    ) : (
+      <User size={20} />
+    )}
+  </div>
+
+  <div className="absolute right-0 mt-2 w-44 bg-white shadow-lg rounded-md z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+    {isLoggedIn ? (
+      <>
+        <span className="block px-4 py-2 text-slate-600 font-medium cursor-default">
+          👋 {userName || "Tài khoản"}
+        </span>
+        <Link
+          to={`userDeitail/${UserId}`}
+          className="block px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+        >
+          Xem thông tin
+        </Link>
+        <button
+          onClick={handleLogout}
+          className="w-full text-left px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+        >
+          Đăng xuất
+        </button>
+      </>
+    ) : (
+      <>
+        <Link
+          to="/login"
+          className="block px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+        >
+          Đăng nhập
+        </Link>
+        <Link
+          to="/register"
+          className="block px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+        >
+          Đăng ký
+        </Link>
+      </>
+    )}
+  </div>
+</div>
+
+
+
           </div>
 
           <div className="flex items-center space-x-4 md:hidden">

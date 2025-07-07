@@ -20,6 +20,7 @@ import CommentList from "./pages/admin/comment/CommentList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
 import AboutPage from "./pages/user/AboutPage";
 import { AuthProvider } from "./pages/context/AuthContext";
+import AccountInfoPage from "./pages/user/DeitailUser";
 
 const theme = {
   token: {
@@ -60,6 +61,7 @@ function App() {
               <Route path="cart" element={<CartPage />} />
               <Route path="checkout" element={<CheckoutPage />} />
               <Route path="about" element={<AboutPage />} />
+              <Route path="userDeitail/:id" element={<AccountInfoPage />} />
             </Route>
           </Routes>
         </CartProvider>

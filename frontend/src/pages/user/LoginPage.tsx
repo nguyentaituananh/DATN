@@ -14,20 +14,37 @@ const LoginPage: React.FC = () => {
   // Extract returnTo from location state if available
   const returnTo = location.state?.returnTo || '/';
 
-  const onFinish = async (values: { email: string; password: string }) => {
-    const { email, password } = values;
-    setIsLoading(true);
-    
-    try {
-      await login({email , password});
-      message.success('Login successful!');
+ const onFinish = async (values: { email: string; password: string }) => {
+  const { email, password } = values;
+  setIsLoading(true);
+
+  try {
+    const response = await login({ email, password });
+
+    console.log("Login response:", response);
+
+    const { token, user,id } = response;
+
+    if (!id) {
+      console.error("❌ Không tìm thấy user._id trong response!");
+    } else {
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("id", id); 
+
+      message.success("Login successful!");
       navigate(returnTo);
-    } catch (error) {
-      message.error('Login failed. Please check your credentials.');
-    } finally {
-      setIsLoading(false);
     }
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+    message.error("Login failed. Please check your credentials.");
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+
+
 
   return (
     <div className="py-12 md:py-16">

@@ -27,7 +27,7 @@ const RegisterPage: React.FC = () => {
       phone_number: values.phone_number,
     });
     message.success("Registration successful!");
-    navigate("/");
+    navigate("/login");
   } catch (error: any) {
   const msg = error?.message || error?.response?.data?.message || "Registration failed.";
   message.error(msg);
