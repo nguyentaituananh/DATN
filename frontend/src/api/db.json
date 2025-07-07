@@ -154,8 +154,8 @@
   "users": [
     {
       "name": "Hoàng Duy",
-      "email": "tuananh@gmail.com",
-      "role": "User",
+      "email": "hoangduy@gmail.com",
+      "role": "Admin",
       "id": 1
     }
   ],
@@ -175,6 +175,7 @@
     }
   ],
   "cart_items": [],
+  "account": [],
   "favorites": [],
   "banners": [],
   "coupons": [],
