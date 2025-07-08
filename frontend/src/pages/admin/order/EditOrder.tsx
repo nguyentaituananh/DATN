@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import {
   Button,
   Input,
-  Select,
   Form,
   InputNumber,
   Space,
   Card,
   DatePicker,
+  Select,
   App as AntdApp,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
@@ -22,13 +22,20 @@ const EditOrder = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [userId, setUserId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [userNameDisplay, setUserNameDisplay] = useState("");
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
         const { data } = await instanceAxios.get(`/api/orders/${id}`);
-        setUserId(data.user_id); // lưu riêng user_id để đưa vào payload
+
+        if (data.user_id) {
+          // user_id là object chứa thông tin user
+          form.setFieldValue("user_id", data.user_id._id);
+          setUserNameDisplay(`${data.user_id.customer_code} - ${data.user_id.name}`);
+        }
+
         form.setFieldsValue({
           ...data,
           order_date: dayjs(data.order_date),
@@ -46,7 +53,6 @@ const EditOrder = () => {
       setLoading(true);
       const payload = {
         ...values,
-        user_id: userId, // dùng từ state
         order_date: values.order_date?.toISOString(),
       };
       await instanceAxios.put(`/api/orders/${id}`, payload);
@@ -59,21 +65,32 @@ const EditOrder = () => {
     }
   };
 
-  const [loading, setLoading] = useState(false);
-
   return (
     <Card title="✏️ Sửa đơn hàng" bordered={false} className="shadow-lg rounded-xl">
       <Form form={form} onFinish={handleSubmit} layout="vertical">
-        {/* ✅ Hiển thị user_id nhưng disabled */}
-        <Form.Item label="ID người dùng">
-          <Input value={userId} disabled />
-        </Form.Item>
-
-        <Form.Item label="Địa chỉ giao hàng" name="shipping_address" rules={[{ required: true }]}>
+        {/* ✅ Trường user_id ẩn để gửi kèm khi cập nhật */}
+        <Form.Item name="user_id" hidden>
           <Input />
         </Form.Item>
 
-        <Form.Item label="Ngày đặt hàng" name="order_date" rules={[{ required: true }]}>
+        {/* ✅ Hiển thị tên khách hàng (không cho sửa) */}
+        <Form.Item label="Khách hàng">
+          <Input value={userNameDisplay} disabled />
+        </Form.Item>
+
+        <Form.Item
+          label="Địa chỉ giao hàng"
+          name="shipping_address"
+          rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
+        >
+          <Input placeholder="VD: 123 Nguyễn Huệ, Q1" />
+        </Form.Item>
+
+        <Form.Item
+          label="Ngày đặt hàng"
+          name="order_date"
+          rules={[{ required: true, message: "Chọn ngày đặt hàng" }]}
+        >
           <DatePicker format="YYYY-MM-DD" className="w-full" />
         </Form.Item>
 
@@ -91,20 +108,35 @@ const EditOrder = () => {
               <label className="font-medium text-base">Sản phẩm</label>
               {fields.map(({ key, name, ...rest }) => (
                 <Space key={key} align="baseline" wrap style={{ marginBottom: 8 }}>
-                  <Form.Item {...rest} name={[name, "product_id"]} rules={[{ required: true }]}>
+                  <Form.Item
+                    {...rest}
+                    name={[name, "product_id"]}
+                    rules={[{ required: true, message: "Nhập ID sản phẩm" }]}
+                  >
                     <Input placeholder="Product ID" />
                   </Form.Item>
-                  <Form.Item {...rest} name={[name, "quantity"]} rules={[{ required: true }]}>
+                  <Form.Item
+                    {...rest}
+                    name={[name, "quantity"]}
+                    rules={[{ required: true, message: "Nhập số lượng" }]}
+                  >
                     <InputNumber min={1} placeholder="SL" />
                   </Form.Item>
-                  <Form.Item {...rest} name={[name, "price"]} rules={[{ required: true }]}>
+                  <Form.Item
+                    {...rest}
+                    name={[name, "price"]}
+                    rules={[{ required: true, message: "Nhập giá sản phẩm" }]}
+                  >
                     <InputNumber
                       min={0}
                       placeholder="Giá (VNĐ)"
                       formatter={(v) => v!.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     />
                   </Form.Item>
-                  <MinusCircleOutlined onClick={() => remove(name)} className="text-red-500" />
+                  <MinusCircleOutlined
+                    onClick={() => remove(name)}
+                    className="text-red-500"
+                  />
                 </Space>
               ))}
               <Form.Item>
