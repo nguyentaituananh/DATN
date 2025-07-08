@@ -1,6 +1,5 @@
 // db.js
 import mongoose from "mongoose";
-
 import dotenv from "dotenv" 
 dotenv.config(); // nạp biến từ .env
 
@@ -19,7 +18,5 @@ const connectDB = async () => {
   }
 };
 
-
 export default connectDB
-
 

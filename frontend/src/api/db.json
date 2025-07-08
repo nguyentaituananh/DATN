@@ -151,11 +151,39 @@
       ]
     }
   ],
-  "users": [],
+  "users": [
+    {
+      "name": "Hoàng Duy",
+      "email": "hoangduy@gmail.com",
+      "role": "Admin",
+      "id": 1
+    }
+  ],
   "orders": [],
   "reviews": [],
-  "carts": [],
+  "carts": [
+    {
+      "id": 1,
+      "userId": "1",
+      "product": {
+        "id": "abc123",
+        "name": "sofa",
+        "price": 100
+      },
+      "quantity": 2,
+      "color": "đen"
+    }
+  ],
   "cart_items": [],
+  "account": [
+    {
+      "id": "1",
+      "name": "Hoàng Duy",
+      "email": "hoangduy@gmail.com",
+      "role": "User",
+      "createdAt": "2025-07-07"
+    }
+  ],
   "favorites": [],
   "banners": [],
   "coupons": [],

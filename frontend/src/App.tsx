@@ -1,11 +1,11 @@
-import { Route, Routes } from "react-router";
+import { Outlet, Route, Routes } from "react-router";
 import LayoutAdmin from "./layouts/admin/LayoutAdmin";
 import CartPage from "./pages/user/CartPage";
 import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/user/HomePage";
 import Layout from "./components/layout/layout";
 import CheckoutPage from "./pages/user/CheckoutPage";
-import RegisterPage from "./pages/user/RegisterPage";
+import RegisterPage from "./pages/admin/user/RegisterPage";
 import LoginPage from "./pages/user/LoginPage";
 import { ConfigProvider } from "antd";
 import ProductsPage from "./pages/user/ProductsPage";
@@ -38,7 +38,7 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <Routes>
-            {/* ADMIN ROUTES */}
+            {/* ADMIN */}
             <Route path="/admin" element={<LayoutAdmin />}>
               <Route index element={<DashboardPage />} />
               <Route path="dashboard" element={<DashboardPage />} />
@@ -55,7 +55,7 @@ function App() {
               <Route path="account" element={<AccountInfo />} />
             </Route>
 
-            {/* USER ROUTES */}
+            {/* USER */}
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
               <Route path="products" element={<ProductsPage />} />

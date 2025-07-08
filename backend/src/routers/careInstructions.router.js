@@ -1,11 +1,11 @@
 import express from 'express';
-import { creatCareInstruction, deleteCareInstruction, getAllCareInstructions, updateCartIntruction } from '../controllers/careInstructions.controller.js';
+import { createCareInstruction, deleteCareInstruction, getAllCareInstructions, updateCareInstruction } from '../controllers/careInstructions.controller.js';
 
 const careInstructionsRouter = express.Router();
 
 careInstructionsRouter.get('/',getAllCareInstructions)
-careInstructionsRouter.post('/', creatCareInstruction)
-careInstructionsRouter.put('/:id', updateCartIntruction)
+careInstructionsRouter.post('/', createCareInstruction)
+careInstructionsRouter.put('/:id', updateCareInstruction)
 careInstructionsRouter.delete('/:id',deleteCareInstruction)
 
 export default careInstructionsRouter;
