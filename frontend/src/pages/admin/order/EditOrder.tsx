@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import {
   Button,
   Input,
-  Select,
   Form,
   InputNumber,
   Space,
   Card,
   DatePicker,
+  Select,
   App as AntdApp,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
@@ -22,13 +22,22 @@ const EditOrder = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [form] = Form.useForm();
-  const [userId, setUserId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [userNameDisplay, setUserNameDisplay] = useState("");
 
   useEffect(() => {
     const fetchOrder = async () => {
       try {
         const { data } = await instanceAxios.get(`/api/orders/${id}`);
-        setUserId(data.user_id); // lưu riêng user_id để đưa vào payload
+
+        if (data.user_id) {
+          // user_id là object chứa thông tin user
+          form.setFieldValue("user_id", data.user_id._id);
+          setUserNameDisplay(
+            `${data.user_id.customer_code} - ${data.user_id.name}`
+          );
+        }
+
         form.setFieldsValue({
           ...data,
           order_date: dayjs(data.order_date),
@@ -46,7 +55,6 @@ const EditOrder = () => {
       setLoading(true);
       const payload = {
         ...values,
-        user_id: userId, // dùng từ state
         order_date: values.order_date?.toISOString(),
       };
       await instanceAxios.put(`/api/orders/${id}`, payload);
@@ -58,8 +66,6 @@ const EditOrder = () => {
       setLoading(false);
     }
   };
-
-  const [loading, setLoading] = useState(false);
 
   return (
     <Card

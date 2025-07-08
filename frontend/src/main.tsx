@@ -15,13 +15,11 @@ createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
       <OrderProvider>
-        <BrowserRouter>
-          <StrictMode>
-            <AntdApp>
-              <App />
-            </AntdApp>
-          </StrictMode>
-        </BrowserRouter>
+        <StrictMode>
+          <AntdApp>
+            <App />
+          </AntdApp>
+        </StrictMode>
       </OrderProvider>
     </AuthProvider>
   </QueryClientProvider>
