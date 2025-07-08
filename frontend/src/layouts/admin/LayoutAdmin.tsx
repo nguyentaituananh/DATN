@@ -59,7 +59,7 @@ const LayoutAdmin: React.FC = () => {
      {
       key: "Danh mục",
       icon: <UserOutlined />,
-      label: <NavLink to="/danhmuc">Danh mục</NavLink>,
+      label: <NavLink to="category">Danh mục</NavLink>,
     },
   ];
 
