@@ -89,7 +89,7 @@ const ProductsPage: React.FC = () => {
   return (
     <div className="py-8 md:py-12">
       <div className="container mx-auto px-4">
-        <SectionHeading title={pageTitle} alignment="left" />
+        <SectionHeading title={pageTitle} />
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters - Desktop */}

@@ -1,4 +1,4 @@
-import { Outlet, Route, Routes } from "react-router";
+import { Route, Routes } from "react-router-dom";
 import LayoutAdmin from "./layouts/admin/LayoutAdmin";
 import CartPage from "./pages/user/CartPage";
 import { CartProvider } from "./context/CartContext";
@@ -16,13 +16,10 @@ import { DashboardPage } from "./pages/admin/DashboardPage";
 import CreateProducts from "./pages/admin/products/CreateProducts";
 import OrderList from "./pages/admin/order/OrderList";
 import UserList from "./pages/admin/account/UserList";
-import CommentList from "./pages/admin/comment/CommentList";
+import CommentList from "./pages/admin/reviews/reviewsList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
 import AboutPage from "./pages/user/AboutPage";
-import { AuthProvider } from "./context/AuthContext";
-import CreateOrder from "./pages/admin/order/CreateOder";
-import VoucherList from "./pages/admin/voucher/VoucherList";
-import CreateVoucher from "./pages/admin/voucher/CreateVoucher";
+import { AuthProvider } from "./pages/context/AuthContext";
 
 const theme = {
   token: {
@@ -38,7 +35,7 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <Routes>
-            {/* ADMIN */}
+            {/* ADMIN ROUTES */}
             <Route path="/admin" element={<LayoutAdmin />}>
               <Route index element={<DashboardPage />} />
               <Route path="dashboard" element={<DashboardPage />} />
@@ -46,16 +43,13 @@ function App() {
               <Route path="product/add" element={<CreateProducts />} />
               <Route path="product/edit/:id" element={<CreateProducts />} />
               <Route path="order" element={<OrderList />} />
-              <Route path="order/create" element={<CreateOrder />} />
               <Route path="user" element={<UserList />} />
               <Route path="comment" element={<CommentList />} />
               <Route path="import" element={<OrderList />} />
-              <Route path="voucher" element={<VoucherList />} />
-              <Route path="voucher/create" element={<CreateVoucher />} />
               <Route path="account" element={<AccountInfo />} />
             </Route>
 
-            {/* USER */}
+            {/* USER ROUTES */}
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
               <Route path="products" element={<ProductsPage />} />
