@@ -8,5 +8,5 @@ export const getUsers = () => axios.get(API_URL);
 
 export const deleteUser = (id: string) => axios.delete(`${API_URL}/${id}`);
 
-export const updateUser = (id: string, data: Partial<User>) =>
-  axios.put<User>(`${API_URL}/${id}`, data);
+// export const updateUser = (id: string, data: Partial<User>) =>
+//   axios.put<User>(`${API_URL}/${id}`, data);

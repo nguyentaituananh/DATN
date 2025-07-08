@@ -2,7 +2,7 @@
   "categories": [],
   "products": [
     {
-      "category": "Sofas",
+      "category": "Sofas 🛋️",
       "sofas": [
         {
           "id": 1,
@@ -41,7 +41,7 @@
       ]
     },
     {
-      "category": "Cabinet",
+      "category": "Cabinet 🪵",
       "cabinet": [
         {
           "id": 6,
@@ -78,7 +78,7 @@
       ]
     },
     {
-      "category": "Chairs",
+      "category": "Chairs 🪑",
       "chairs": [
         {
           "id": 11,
@@ -115,7 +115,7 @@
       ]
     },
     {
-      "category": "Tables",
+      "category": "Tables 🪑",
       "tables": [
         {
           "id": 16,
@@ -152,28 +152,24 @@
     }
   ],
   "users": [
-    {
-      "name": "Hoàng Duy2",
-      "email": "tuananh@gmail.com",
-      "role": "User",
-      "id": 1
+     {
+      "id": "1",
+      "name": "Hoàng Duy",
+      "email": "hoangduy@gmail.com",
+      "role": "Admin",
+      "createdAt": "2025-07-07"
+    },
+     {
+      "id": "2",
+      "name": "Hoàng Duy222",
+      "email": "hoangduy@gmail.com",
+      "role": "Admin",
+      "createdAt": "2025-07-07"
     }
   ],
   "orders": [],
   "reviews": [],
-  "carts": [
-    {
-      "id": 1,
-      "userId": "1",
-      "product": {
-        "id": "abc123",
-        "name": "sofa",
-        "price": 100
-      },
-      "quantity": 2,
-      "color": "đen"
-    }
-  ],
+  "carts": [],
   "cart_items": [],
   "account": [
     {
@@ -182,6 +178,13 @@
       "email": "hoangduy@gmail.com",
       "role": "Admin",
       "createdAt": "2025-07-07"
+    },
+     {
+      "id": "2",
+      "name": "Hoàng Duy222",
+      "email": "hoangduy@gmail.com",
+      "role": "Admin",
+      "createdAt": "2024-07-07"
     }
   ],
   "favorites": [],

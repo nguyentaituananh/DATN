@@ -226,7 +226,7 @@ const Header: React.FC = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-2">
-              {navigation.map((item) => (
+              {Navigation.map((item) => (
                 <div key={item.key}>
                   {item.hasDropdown ? (
                     <Dropdown

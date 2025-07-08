@@ -21,20 +21,15 @@ import { Table } from "antd";
 
 // export default UserList;
 import React, { useEffect, useState } from "react";
-import {  Tag, Spin, message, Button, Modal, Form, Input, Select, Space } from "antd";
+import { Tag, Spin, message, Button, Space,  } from "antd";
 import dayjs from "dayjs";
 import axios from "axios";
 import type { ColumnsType } from "antd/es/table";
 import { User } from "../../../types";
 
-const { Option } = Select;
-
 const UserList: React.FC = () => {
   const [data, setData] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [form] = Form.useForm();
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -57,30 +52,12 @@ const UserList: React.FC = () => {
   }, []);
 
   const handleDelete = async (id: string) => {
-  try {
-    await axios.delete(`http://localhost:5000/users/${id}`);
-    message.success("Xoá thành công");
-    fetchUsers();
-  } catch (error) {
-    message.error("Xoá thất bại");
-  }
-};
-
-  const handleEdit = (record: User) => {
-    setEditingUser(record);
-    form.setFieldsValue(record);
-    setIsModalVisible(true);
-  };
-
-  const handleUpdate = async () => {
     try {
-      const values = await form.validateFields();
-      await axios.put(`http://localhost:5000/users/${editingUser?.id}`, values);
-      message.success("Cập nhật thành công");
-      setIsModalVisible(false);
+      await axios.delete(`http://localhost:5000/users/${id}`);
+      message.success("Xoá thành công");
       fetchUsers();
     } catch (error) {
-      message.error("Cập nhật thất bại");
+      message.error("Xoá thất bại");
     }
   };
 
@@ -119,11 +96,8 @@ const UserList: React.FC = () => {
       align: "center",
       render: (_, record) => (
         <Space>
-          <Button type="primary" onClick={() => handleEdit(record)}>
-            Sửa
-          </Button>
           <Button danger onClick={() => handleDelete(record.id)}>
-             Xoá
+            Xoá
           </Button>
         </Space>
       ),
@@ -133,9 +107,7 @@ const UserList: React.FC = () => {
   return (
     <div className="p-6 w-full">
       <div className="bg-white shadow-xl rounded-2xl p-6">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">
-          📋 Danh sách người dùng
-        </h2>
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">📋 Danh sách người dùng</h2>
         {loading ? (
           <div className="flex justify-center items-center h-40">
             <Spin size="large" />
@@ -150,35 +122,8 @@ const UserList: React.FC = () => {
           />
         )}
       </div>
-
-      <Modal
-        title="Chỉnh sửa người dùng"
-        open={isModalVisible}
-        onOk={handleUpdate}
-        onCancel={() => setIsModalVisible(false)}
-        okText="Lưu"
-        cancelText="Huỷ"
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item name="name" label="Họ tên" rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}> 
-            <Input />
-          </Form.Item>
-          <Form.Item name="email" label="Email" rules={[{ required: true, type: "email" }]}> 
-            <Input />
-          </Form.Item>
-          <Form.Item name="role" label="Vai trò" rules={[{ required: true }]}> 
-            <Select>
-              <Option value="Admin">Admin</Option>
-              <Option value="User">User</Option>
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
     </div>
   );
 };
 
 export default UserList;
-
-
-

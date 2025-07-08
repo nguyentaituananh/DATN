@@ -6,10 +6,10 @@ export const getAccount = async () => {
   return res.data;
 };
 
-export const updateAccount = async (id: string, data: any) => {
-  const res = await axios.put(`${API_URL}/${id}`, data);
-  return res.data;
-};
+// export const updateAccount = async (id: string, data: any) => {
+//   const res = await axios.put(`${API_URL}/${id}`, data);
+//   return res.data;
+// };
 
 export const deleteAccount = async (id: string) => {
   const res = await axios.delete(`${API_URL}/${id}`);

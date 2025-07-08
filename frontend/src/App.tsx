@@ -1,18 +1,19 @@
 import { Route, Routes } from "react-router";
-import LayoutAdmin from "./layouts/admin/LayoutAdmin";
-import CartPage from "./pages/user/CartPage";
+
+
+
 import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/user/HomePage";
-import Layout from "./components/layout/layout";
+
 import CheckoutPage from "./pages/user/CheckoutPage";
-import RegisterPage from "./pages/admin/user/RegisterPage";
+import RegisterPage from "./pages/user/RegisterPage";
 import LoginPage from "./pages/user/LoginPage";
 import { ConfigProvider } from "antd";
-import ProductsPage from "./pages/user/ProductsPage";
-import ProductDetailPage from "./pages/user/ProductDetailPage";
 
-import ProductList from "./pages/admin/products/ProductList";
+
+
 import { DashboardPage } from "./pages/admin/DashboardPage";
+import ProductList from "./pages/admin/products/ProductList";
 import CreateProducts from "./pages/admin/products/CreateProducts";
 import OrderList from "./pages/admin/order/OrderList";
 import UserList from "./pages/admin/account/UserList";
@@ -20,6 +21,16 @@ import CommentList from "./pages/admin/comment/CommentList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
 import AboutPage from "./pages/user/AboutPage";
 import { AuthProvider } from "./pages/context/AuthContext";
+import ProductsPage from "./pages/admin/user/ProductsPage";
+import ProductDetailPage from "./pages/admin/user/ProductDetailPage";
+import CartPage from "./pages/admin/user/CartPage";
+import LayoutAdmin from "./layouts/admin/LayoutAdmin";
+import Layout from "./components/layout/layout";
+
+
+
+// import { User } from "./layouts/LayoutAdmin/User";
+
 
 const theme = {
   token: {
@@ -34,9 +45,11 @@ function App() {
     <ConfigProvider theme={theme}>
       <AuthProvider>
         <CartProvider>
+          
           <Routes>
+            {/* ADMIN ROUTES */}
             <Route path="/admin" element={<LayoutAdmin />}>
-              <Route index element={<DashboardPage />} />{" "}
+              <Route index element={<DashboardPage />} />
               <Route path="dashboard" element={<DashboardPage />} />
               <Route path="product" element={<ProductList />} />
               <Route path="product/add" element={<CreateProducts />} />

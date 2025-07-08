@@ -13,35 +13,41 @@
 
 import React, { useEffect, useState } from "react";
 import {
-  Card,
+  Table,
   Button,
-  Space,
   Tag,
   Modal,
-  Form,
-  Input,
-  Select,
   message,
   Spin,
 } from "antd";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined } from "@ant-design/icons";
 import axios from "axios";
 import dayjs from "dayjs";
+import type { ColumnsType } from "antd/es/table";
 
-const { Option } = Select;
+// ✅ Định nghĩa kiểu dữ liệu cho mỗi tài khoản
+interface Account {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  createdAt: string;
+}
+
 const API_URL = "http://localhost:5000/account"; // json-server
 
-const AccountInfo = () => {
-  const [account, setAccount] = useState<any>(null);
+const AccountInfo: React.FC = () => {
+  const [data, setData] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [form] = Form.useForm();
 
-  // Fetch account data
   const fetchAccount = async () => {
     try {
       const res = await axios.get(API_URL);
-      setAccount(res.data[0]); // Giả sử chỉ có 1 tài khoản
+      const accounts = res.data.map((account: Account) => ({
+        key: account.id,
+        ...account,
+      }));
+      setData(accounts);
     } catch (err) {
       message.error("Lỗi khi tải tài khoản");
     } finally {
@@ -53,12 +59,7 @@ const AccountInfo = () => {
     fetchAccount();
   }, []);
 
-  const handleEdit = () => {
-    form.setFieldsValue(account);
-    setEditModalOpen(true);
-  };
-
-  const handleDelete = async () => {
+  const handleDelete = async (id: string) => {
     Modal.confirm({
       title: "Bạn có chắc muốn xoá tài khoản này?",
       content: "Hành động này không thể hoàn tác.",
@@ -67,9 +68,9 @@ const AccountInfo = () => {
       cancelText: "Huỷ",
       onOk: async () => {
         try {
-          await axios.delete(`${API_URL}/${account.id}`);
+          await axios.delete(`${API_URL}/${id}`);
           message.success("Đã xoá tài khoản");
-          setAccount(null);
+          fetchAccount();
         } catch {
           message.error("Lỗi khi xoá tài khoản");
         }
@@ -77,112 +78,97 @@ const AccountInfo = () => {
     });
   };
 
-  const handleUpdate = async () => {
-    try {
-      const values = await form.validateFields();
-      const res = await axios.put(`${API_URL}/${account.id}`, {
-        ...account,
-        ...values,
-      });
-      setAccount(res.data);
-      message.success("Cập nhật thành công");
-      setEditModalOpen(false);
-    } catch {
-      message.error("Cập nhật thất bại");
-    }
-  };
+  const columns: ColumnsType<Account> = [
+    {
+      title: (
+        <span className="flex items-center justify-center gap-1 font-semibold text-purple-700">
+          👤 Họ tên
+        </span>
+      ),
+      dataIndex: "name",
+      align: "center",
+      render: (text: string) => <span className="font-semibold">{text}</span>,
+    },
+    {
+      title: (
+        <span className="flex items-center justify-center gap-1 font-semibold text-blue-600">
+          📧 Email
+        </span>
+      ),
+      dataIndex: "email",
+      align: "center",
+      render: (text: string) => <a className="text-blue-600">{text}</a>,
+    },
+    {
+      title: (
+        <span className="flex items-center justify-center gap-1 font-semibold text-yellow-700">
+          🔐 Vai trò
+        </span>
+      ),
+      dataIndex: "role",
+      align: "center",
+      render: (role: string) => (
+        <Tag
+          color="purple"
+          className="rounded-md px-3 py-1"
+          style={{ backgroundColor: "#f9f0ff", color: "#722ed1", border: "1px solid #d3adf7" }}
+        >
+          {role}
+        </Tag>
+      ),
+    },
+    {
+      title: (
+        <span className="flex items-center justify-center gap-1 font-semibold text-indigo-700">
+          🗓️ Ngày tạo
+        </span>
+      ),
+      dataIndex: "createdAt",
+      align: "center",
+      render: (date: string) => dayjs(date).format("DD/MM/YYYY"),
+    },
+    {
+      title: (
+        <span className="flex items-center justify-center gap-1 font-semibold text-gray-700">
+          🛠️ Thao tác
+        </span>
+      ),
+      dataIndex: "action",
+      align: "center",
+      render: (_: any, record: Account) => (
+        <Button
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => handleDelete(record.id)}
+          className="border border-red-500 text-red-500 hover:bg-red-100 rounded-md px-4"
+        >
+          Xoá
+        </Button>
+      ),
+    },
+  ];
 
-  if (loading) return <Spin size="large" className="block mx-auto mt-10" />;
-  if (!account) return <div>Không có dữ liệu người dùng.</div>;
+  if (loading)
+    return <Spin size="large" className="block mx-auto mt-10" />;
+
+  if (data.length === 0)
+    return <div className="text-center mt-6 text-gray-600">Không có dữ liệu người dùng.</div>;
 
   return (
-    <>
-      <Card
-        title="📋 Thông tin tài khoản"
-        bordered
-        className="shadow-md rounded-xl"
-      >
-        <div className="grid grid-cols-2 gap-4 text-base">
-          <div>
-            <strong>👤 Họ tên:</strong>
-            <div className="font-semibold">{account.name}</div>
-          </div>
-          <div>
-            <strong>📧 Email:</strong>
-            <div className="text-blue-600 font-medium">{account.email}</div>
-          </div>
-          <div>
-            <strong>🔐 Vai trò:</strong>
-            <div>
-              <Tag
-                color={account.role === "Admin" ? "purple" : "blue"}
-                className="rounded-md px-2 py-1"
-              >
-                {account.role}
-              </Tag>
-            </div>
-          </div>
-          <div>
-            <strong>📅 Ngày tạo:</strong>
-            <div>{dayjs(account.createdAt).format("DD/MM/YYYY")}</div>
-          </div>
-          <div className="col-span-2 mt-4">
-            <Space>
-              <Button
-                type="primary"
-                icon={<EditOutlined />}
-                onClick={handleEdit}
-              >
-                Sửa
-              </Button>
-              <Button
-                danger
-                icon={<DeleteOutlined />}
-                onClick={handleDelete}
-              >
-                Xoá
-              </Button>
-            </Space>
-          </div>
-        </div>
-      </Card>
-
-      <Modal
-        open={editModalOpen}
-        onCancel={() => setEditModalOpen(false)}
-        onOk={handleUpdate}
-        title="Chỉnh sửa tài khoản"
-        okText="Lưu"
-        cancelText="Huỷ"
-      >
-        <Form layout="vertical" form={form}>
-          <Form.Item
-            name="name"
-            label="Họ tên"
-            rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[{ required: true, type: "email" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="role"
-            label="Vai trò"
-            rules={[{ required: true, message: "Chọn vai trò" }]}
-          >
-            <Select>
-              <Option value="Admin">Admin</Option>
-              <Option value="User">User</Option>
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
-    </>
+    <div className="p-6 w-full">
+      <div className="bg-white shadow-xl rounded-2xl p-6">
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">
+          📋 Danh sách tài khoản
+        </h2>
+        <Table
+          columns={columns}
+          dataSource={data}
+          pagination={false}
+          bordered
+          className="rounded-xl overflow-hidden"
+        />
+      </div>
+    </div>
   );
 };
 
