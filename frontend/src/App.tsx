@@ -21,6 +21,9 @@ import AccountInfo from "./pages/admin/account/AccountInfo";
 import AboutPage from "./pages/user/AboutPage";
 import { AuthProvider } from "./pages/context/AuthContext";
 import { ReviewProvider } from "./context/reviewsContext"; // ✅ Thêm dòng này
+import OrderForm from "./pages/admin/order/CreateOder";
+import EditOrder from "./pages/admin/order/EditOrder";
+import OrderDetail from "./pages/admin/order/OrderDetail";
 
 const theme = {
   token: {
@@ -47,6 +50,9 @@ function App() {
                 <Route path="product/add" element={<CreateProducts />} />
                 <Route path="product/edit/:id" element={<CreateProducts />} />
                 <Route path="order" element={<OrderList />} />
+                <Route path="order/create" element={<OrderForm />} />
+                <Route path="order/edit/:id" element={<EditOrder />} />
+                <Route path="order/:id" element={<OrderDetail />} />
                 <Route path="user" element={<UserList />} />
                 <Route path="comment" element={<CommentList />} />
                 <Route path="import" element={<OrderList />} />
