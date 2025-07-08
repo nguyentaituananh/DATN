@@ -39,7 +39,7 @@ const UserList: React.FC = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await axios.get("http://localhost:3001/users");
+      const res = await axios.get("http://localhost:5000/users");
       const users = res.data.map((user: any) => ({
         key: user.id,
         ...user,
@@ -58,7 +58,7 @@ const UserList: React.FC = () => {
 
   const handleDelete = async (id: string) => {
   try {
-    await axios.delete(`http://localhost:3001/users/${id}`);
+    await axios.delete(`http://localhost:5000/users/${id}`);
     message.success("Xoá thành công");
     fetchUsers();
   } catch (error) {
@@ -75,7 +75,7 @@ const UserList: React.FC = () => {
   const handleUpdate = async () => {
     try {
       const values = await form.validateFields();
-      await axios.put(`http://localhost:3001/users/${editingUser?.id}`, values);
+      await axios.put(`http://localhost:5000/users/${editingUser?.id}`, values);
       message.success("Cập nhật thành công");
       setIsModalVisible(false);
       fetchUsers();

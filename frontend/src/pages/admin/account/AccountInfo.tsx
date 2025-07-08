@@ -29,7 +29,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 
 const { Option } = Select;
-const API_URL = "http://localhost:3001/account"; // json-server
+const API_URL = "http://localhost:5000/account"; // json-server
 
 const AccountInfo = () => {
   const [account, setAccount] = useState<any>(null);

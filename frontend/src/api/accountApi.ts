@@ -1,5 +1,5 @@
 import axios from "axios";
-const API_URL = "http://localhost:3001/account";
+const API_URL = "http://localhost:5000/account";
 
 export const getAccount = async () => {
   const res = await axios.get(API_URL);

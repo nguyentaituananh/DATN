@@ -153,9 +153,9 @@
   ],
   "users": [
     {
-      "name": "Hoàng Duy",
-      "email": "hoangduy@gmail.com",
-      "role": "Admin",
+      "name": "Hoàng Duy2",
+      "email": "tuananh@gmail.com",
+      "role": "User",
       "id": 1
     }
   ],
@@ -180,7 +180,7 @@
       "id": "1",
       "name": "Hoàng Duy",
       "email": "hoangduy@gmail.com",
-      "role": "User",
+      "role": "Admin",
       "createdAt": "2025-07-07"
     }
   ],
