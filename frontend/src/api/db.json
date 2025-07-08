@@ -151,7 +151,23 @@
       ]
     }
   ],
-  "users": [],
+  "users": [
+    {
+  "id": 1,
+  "name": "Hoàng Duy",
+  "email": "tuananh@gmail.com",
+  "role": "Admin",
+  "createdAt": "2024-06-01"
+},
+ {
+  "id": 2,
+  "name": "Tuấn anh",
+  "email": "tuananh@gmail.com",
+  "role": "Admin",
+  "createdAt": "2024-06-01"
+}
+  ],
+ 
   "orders": [],
   "reviews": [],
   "carts": [
@@ -199,6 +215,7 @@
   ],
   "cart_items": [],
   "favorites": [],
+
   "banners": [],
   "coupons": [],
   "product_variants": [],
