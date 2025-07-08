@@ -1,9 +1,9 @@
-import { Route, Routes } from "react-router";
+import { Route, Routes } from "react-router-dom";
 import LayoutAdmin from "./layouts/admin/LayoutAdmin";
 import CartPage from "./pages/user/CartPage";
 import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/user/HomePage";
-import Layout from "./components/layout/Layout";
+import Layout from "./components/layout/layout";
 import CheckoutPage from "./pages/user/CheckoutPage";
 import RegisterPage from "./pages/user/RegisterPage";
 import LoginPage from "./pages/user/LoginPage";
@@ -35,7 +35,9 @@ function App() {
     <ConfigProvider theme={theme}>
       <AuthProvider>
         <CartProvider>
-          <ReviewProvider> {/* ✅ Bọc thêm CommentProvider */}
+          <ReviewProvider>
+            {" "}
+            {/* ✅ Bọc thêm CommentProvider */}
             <Routes>
               {/* ADMIN ROUTES */}
               <Route path="/admin" element={<LayoutAdmin />}>
@@ -52,7 +54,7 @@ function App() {
               </Route>
 
               {/* USER ROUTES */}
-              <Route path="/" element={<Layout><HomePage /></Layout>} >
+              <Route path="/" element={<Layout></Layout>}>
                 <Route index element={<HomePage />} />
                 <Route path="products" element={<ProductsPage />} />
                 <Route path="products/:category" element={<ProductsPage />} />
@@ -64,7 +66,8 @@ function App() {
                 <Route path="about" element={<AboutPage />} />
               </Route>
             </Routes>
-          </ReviewProvider> {/* ✅ Đóng CommentProvider */}
+          </ReviewProvider>{" "}
+          {/* ✅ Đóng CommentProvider */}
         </CartProvider>
       </AuthProvider>
     </ConfigProvider>
