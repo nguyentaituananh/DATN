@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from "axios";
 import { User } from '../types';
 
 interface AuthContextType {
   user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
@@ -11,20 +13,20 @@ interface AuthContextType {
 }
 
 // Mock user data
-const mockUser: User = {
-  id: "user123",
-  name: "John Doe",
-  email: "john@example.com",
-  avatar: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg",
-  phone: "+1 (555) 123-4567",
-  address: {
-    street: "123 Main Street",
-    city: "New York",
-    state: "NY",
-    zipCode: "10001",
-    country: "USA"
-  }
-};
+// const mockUser: User = {
+//   id: "user123",
+//   name: "John Doe",
+//   email: "john@example.com",
+//   avatar: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg",
+//   phone: "+1 (555) 123-4567",
+//   address: {
+//     street: "123 Main Street",
+//     city: "New York",
+//     state: "NY",
+//     zipCode: "10001",
+//     country: "USA"
+//   }
+// };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -42,39 +44,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
-    // In a real app, this would make an API call to validate credentials
-    // For demo purposes, we'll accept any credentials and use mock data
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    setUser(mockUser);
-    setIsAuthenticated(true);
-    
-    // Save to localStorage
-    localStorage.setItem('auth', JSON.stringify({ user: mockUser }));
-  };
+  const login = async (email: string, password: string): Promise<User> => {
+  const res = await axios.post("http://localhost:5000/auth/login", { email, password });
+  setUser(res.data.user);
+  setIsAuthenticated(true);
+  localStorage.setItem('auth', JSON.stringify({ user: res.data.user }));
+  return res.data.user;
+};
 
-  const register = async (name: string, email: string, password: string) => {
-    // In a real app, this would make an API call to create the user
-    // For demo purposes, we'll accept any input and create a mock user
-    
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    const newUser = {
-      ...mockUser,
-      name,
-      email
-    };
-    
-    setUser(newUser);
-    setIsAuthenticated(true);
-    
-    // Save to localStorage
-    localStorage.setItem('auth', JSON.stringify({ user: newUser }));
-  };
+  const register = async (
+  name: string,
+  email: string,
+  password: string,
+  address: string,
+  phone_number: string
+) => {
+  const res = await axios.post("http://localhost:5000/auth/register", {
+    name,
+    email,
+    password,
+    address,
+    phone_number,
+  });
+  setUser(res.data.user);
+  setIsAuthenticated(true);
+  localStorage.setItem('auth', JSON.stringify({ user: res.data.user }));
+};
 
   const logout = () => {
     setUser(null);
@@ -84,14 +79,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateProfile = async (userData: Partial<User>) => {
     // In a real app, this would make an API call to update the user
-    
+
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 300));
-    
+
     if (user) {
       const updatedUser = { ...user, ...userData };
       setUser(updatedUser);
-      
+
       // Update localStorage
       localStorage.setItem('auth', JSON.stringify({ user: updatedUser }));
     }
@@ -101,6 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     <AuthContext.Provider
       value={{
         user,
+        setUser,
         isAuthenticated,
         login,
         register,

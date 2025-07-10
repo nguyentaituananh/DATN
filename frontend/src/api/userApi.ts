@@ -1,7 +1,7 @@
 import axios from "axios";
 import { User } from "../types";
 
-const API_URL = "http://localhost:5000/users";
+const API_URL = "http://localhost:5000/auth";
 
 export const getUsers = () => axios.get<User[]>(API_URL);
 
@@ -11,7 +11,7 @@ export const updateUser = (id: string, data: Partial<User>) =>
   axios.put<User>(`${API_URL}/${id}`, data);
 
 export const createUser = (data: Omit<User, "id" | "createdAt">) =>
-  axios.post<User>(API_URL, {
+  axios.post<User>(API_URL+'/register', {
     ...data,
     createdAt: new Date().toISOString(),
   });

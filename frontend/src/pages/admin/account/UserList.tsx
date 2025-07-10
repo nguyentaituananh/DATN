@@ -31,8 +31,12 @@ import {
   Input,
   Select,
   Checkbox,
+  Dropdown,
+  Menu
 } from "antd";
 import dayjs from "dayjs";
+import { Mail, Lock } from 'lucide-react';
+
 import type { ColumnsType } from "antd/es/table";
 import { User } from "../../../types";
 import {
@@ -57,8 +61,10 @@ const UserList: React.FC = () => {
     try {
       const res = await getUsers();
       const users = res.data.map((user) => ({
-        key: user.id,
         ...user,
+        id: user._id,
+        key: user._id,
+        role: user.role === "admin" ? "Admin" : "User",
       }));
       setData(users);
     } catch (err) {
@@ -69,16 +75,56 @@ const UserList: React.FC = () => {
   };
 
   useEffect(() => {
+    // setData([
+    //   {
+    //     id: "1",
+    //     name: "Nguyễn Văn A",
+    //     email: "vana@gmail.com",
+    //     password: "123456",
+    //     role: "Admin",
+    //     createdAt: "2024-06-01T10:00:00Z",
+    //     isDeleted: false,
+    //   },
+    //   {
+    //     id: "2",
+    //     name: "Trần Thị B",
+    //     email: "thib@gmail.com",
+    //     password: "abcdef",
+    //     role: "User",
+    //     createdAt: "2024-06-02T11:00:00Z",
+    //     isDeleted: false,
+    //   },
+    // ]);
     fetchUsers();
   }, []);
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteUser(id);
+      // setData((prev) =>
+      //   prev.map((u) =>
+      //     u.id === id ? { ...u, isDeleted: true } : u
+      //   )
+      // );
+      await updateUser(id, { is_active: false });
       message.success("Xoá thành công");
       fetchUsers();
     } catch (error) {
       message.error("Xoá thất bại");
+    }
+  };
+
+  const handleRestore = async (id: string) => {
+    try {
+      await updateUser(id, { is_active: true });
+      // setData((prev) =>
+      //   prev.map((u) =>
+      //     u.id === id ? { ...u, isDeleted: false } : u
+      //   )
+      // );
+      message.success("Khôi phục thành công");
+      fetchUsers();
+    } catch (error) {
+      message.error("Khôi phục thất bại");
     }
   };
 
@@ -99,16 +145,33 @@ const UserList: React.FC = () => {
   const handleSubmit = async (values: any) => {
     try {
       if (editingUser) {
-        const updatedData = { ...values };
+        // setData((prev) =>
+        //   prev.map((u) =>
+        //     u.id === editingUser.id
+        //       ? { ...u, ...values, password: values.password || u.password }
+        //       : u
+        //   )
+        // );
+        const updatedData = {
+          ...values,
+          ...values,
+          role: values.role === "Admin" ? "admin" : "customer",
+        };
         if (!values.password) {
           delete updatedData.password;
         }
         await updateUser(editingUser.id, updatedData);
         message.success("Cập nhật thành công");
       } else {
+        // const newUser: User = {
+        //   ...values,
+        //   id: Date.now().toString(),
+        //   createdAt: new Date().toISOString(),
+        // };
+        // setData((prev) => [...prev, newUser]);
         await createUser({
           ...values,
-          createdAt: new Date().toISOString(),
+          role: values.role === "Admin" ? "admin" : "customer",
         });
         message.success("Thêm người dùng thành công");
       }
@@ -135,14 +198,14 @@ const UserList: React.FC = () => {
         <span className="text-blue-600 font-medium">{text}</span>
       ),
     },
-      {
-    title: "🔑 Mật khẩu", // ✅ Mới thêm
-    dataIndex: "password",
-    align: "center",
-    render: (text) => (
-      <span className="text-gray-500 font-mono">{text}</span>
-    ),
-  },
+    {
+      title: "🔑 Mật khẩu", // ✅ Mới thêm
+      dataIndex: "password",
+      align: "center",
+      render: (text) => (
+        <span className="text-gray-500 font-mono">{text}</span>
+      ),
+    },
     {
       title: "🔐 Vai trò",
       dataIndex: "role",
@@ -166,16 +229,37 @@ const UserList: React.FC = () => {
       title: "🛠️ Thao tác",
       dataIndex: "action",
       align: "center",
-      render: (_, record) => (
-        <Space>
-          <Button type="primary" onClick={() => openEditModal(record)}>
-            Sửa
+      render: (_, record) =>
+        !record.is_active ? (
+          <Button type="link" onClick={() => handleRestore(record.id)}>
+            Khôi phục
           </Button>
-          <Button danger onClick={() => handleDelete(record.id)}>
-            Xoá
-          </Button>
-        </Space>
-      ),
+        ) : (
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item key="edit" onClick={() => openEditModal(record)}>
+                  Sửa
+                </Menu.Item>
+                <Menu.Item
+                  key="delete"
+                  danger
+                  onClick={() =>
+                    Modal.confirm({
+                      title: "Bạn có chắc muốn xoá người dùng này?",
+                      onOk: () => handleDelete(record.id),
+                    })
+                  }
+                >
+                  Xoá
+                </Menu.Item>
+              </Menu>
+            }
+            trigger={["click"]}
+          >
+            <Button>⋮</Button>
+          </Dropdown>
+        ),
     },
   ];
 
@@ -198,10 +282,10 @@ const UserList: React.FC = () => {
         ) : (
           <Table
             columns={columns}
-            dataSource={data}
+            dataSource={[...data.filter(u => u.is_active), ...data.filter(u => !u.is_active)].map(u => ({ ...u, key: u.id }))}
             pagination={false}
             bordered
-            className="rounded-xl overflow-hidden"
+            rowClassName={(record) => !record.is_active ? "bg-gray-100 text-gray-400 opacity-70" : ""}
           />
         )}
       </div>
@@ -240,27 +324,87 @@ const UserList: React.FC = () => {
           </Form.Item>
 
           <Form.Item
+            name="phone_number"
+            label="Phone Number"
+            rules={[
+              { required: true, message: "Vui lòng nhập số điện thoại" },
+              {
+                pattern: /^\d{10}$/,
+                message: "Số điện thoại phải gồm 10 chữ số",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            name="address"
+            label="Address"
+            rules={[
+              { required: true, message: "Vui lòng nhập địa chỉ" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
             name="password"
             label="Mật khẩu"
             rules={
               editingUser
-                ? []
-                : [{ required: true, message: "Vui lòng nhập mật khẩu" }]
+                ? [
+                  {
+                    pattern: /^(?=.*[A-Z]).{8,}$/,
+                    message: 'Mật khẩu phải có ít nhất 8 ký tự và 1 chữ hoa',
+                  }
+                ]
+                : [{ required: true, message: "Vui lòng nhập mật khẩu" },
+                {
+                  pattern: /^(?=.*[A-Z]).{8,}$/,
+                  message: 'Mật khẩu phải có ít nhất 8 ký tự và 1 chữ hoa',
+                },
+                ]
             }
           >
-            <Input
+            <Input.Password
               type={showPassword ? "text" : "password"}
               placeholder={editingUser ? "Để trống nếu không đổi" : ""}
+              prefix={<Lock size={16} className="text-gray-400 mr-2" />}
             />
           </Form.Item>
 
-          <Form.Item>
-            <Checkbox
-              checked={showPassword}
-              onChange={(e) => setShowPassword(e.target.checked)}
-            >
-              Hiện mật khẩu
-            </Checkbox>
+          <Form.Item
+            name="confirmPassword"
+            label="Confirm Password"
+            dependencies={["password"]}
+            rules={
+              editingUser ? [
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Passwords do not match"));
+                  },
+                }),
+
+              ] :
+                [
+                  { required: true, message: "Please confirm your password" },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Passwords do not match"));
+                    },
+                  }),
+                ]}
+          >
+            <Input.Password
+              prefix={<Lock size={16} className="text-gray-400 mr-2" />}
+              placeholder="Confirm password"
+            />
           </Form.Item>
 
           <Form.Item

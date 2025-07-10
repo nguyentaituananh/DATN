@@ -1,92 +1,27 @@
-// import { Descriptions } from "antd";
-
-// const AccountInfo = () => (
-//   <Descriptions title="Thông tin tài khoản" bordered>
-//     <Descriptions.Item label="Họ tên">Tuấn Anh</Descriptions.Item>
-//     <Descriptions.Item label="Email">tuananh@gmail.com</Descriptions.Item>
-//     <Descriptions.Item label="Vai trò">Admin</Descriptions.Item>
-//     <Descriptions.Item label="Ngày tạo">2024-01-01</Descriptions.Item>
-//   </Descriptions>
-// );
-
-// export default AccountInfo;
-
-import React, { useEffect, useState } from "react";
-import {
-  Table,
-  Button,
-  Tag,
-  Modal,
-  message,
-  Spin,
-  Space,
-  Form,
-  Input,
-  Select,
-} from "antd";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
-import axios from "axios";
+import React, { useState } from "react";
+import { Descriptions, Tag, Button, Space, Modal, Form, Input, Select, Checkbox, } from "antd";
 import dayjs from "dayjs";
-import type { ColumnsType } from "antd/es/table";
-
+import { EditOutlined } from "@ant-design/icons";
+import { useAuth } from "../../../context/AuthContext";
+import { User } from "../../../types";
+import { updateUser } from "../../../api/userApi";
+import { message } from "antd";
+import { Mail, Lock } from 'lucide-react';
 const { Option } = Select;
 
-interface Account {
-  id: string;
-  name: string;
-  email: string;
-  password?: string;
-  role: string;
-  createdAt: string;
-}
-
-const API_URL = "http://localhost:5000/users";
-
 const AccountInfo: React.FC = () => {
-  const [data, setData] = useState<Account[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<Account | null>(null);
+
   const [form] = Form.useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const fetchUsers = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(API_URL);
-      const users = res.data.map((user: any) => ({
-        key: user.id,
-        ...user,
-      }));
-      setData(users);
-    } catch (err) {
-      message.error("Không thể tải danh sách người dùng!");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const { user, setUser } = useAuth();
 
-  useEffect(() => {
-    fetchUsers();
-  }, []);
 
-  const handleDelete = async (id: string) => {
-    try {
-      await axios.delete(`${API_URL}/${id}`);
-      message.success("Xoá thành công");
-      fetchUsers();
-    } catch (error) {
-      message.error("Xoá thất bại");
-    }
-  };
-
-  const openAddModal = () => {
-    setEditingUser(null);
-    form.resetFields();
-    setIsModalOpen(true);
-  };
-
-  const openEditModal = (user: Account) => {
+  const openEditModal = () => {
     setEditingUser(user);
+    setShowPassword(false);
     form.setFieldsValue(user);
     setIsModalOpen(true);
   };
@@ -94,166 +29,203 @@ const AccountInfo: React.FC = () => {
   const handleSubmit = async (values: any) => {
     try {
       if (editingUser) {
-        await axios.put(`${API_URL}/${editingUser.id}`, {
-          ...editingUser,
+        const updatedData = {
           ...values,
-        });
-        message.success("Cập nhật tài khoản thành công");
-      } else {
-        await axios.post(API_URL, {
           ...values,
-          createdAt: new Date().toISOString(),
-        });
-        message.success("Thêm tài khoản thành công");
+          role: values.role === "admin" ? "admin" : "customer",
+        };
+        if (!values.password) {
+          delete updatedData.password;
+        }
+        await updateUser(editingUser._id, updatedData);
+        message.success("Cập nhật thành công");
+        setUser((prevUser) => ({
+          ...prevUser!,
+          ...updatedData
+        }));
+        localStorage.setItem('auth', JSON.stringify({ user: { ...user, ...updatedData } }));
       }
       setIsModalOpen(false);
-      fetchUsers();
+      form.resetFields();
     } catch (error) {
-      message.error("Thao tác thất bại");
+      message.error("Lưu thất bại");
     }
   };
-
-  const columns: ColumnsType<Account> = [
-    {
-      title: "👤 Họ tên",
-      dataIndex: "name",
-      align: "center",
-      render: (text) => <span className="font-semibold">{text}</span>,
-    },
-    {
-      title: "📧 Email",
-      dataIndex: "email",
-      align: "center",
-      render: (text) => (
-        <span className="text-blue-600 font-medium">{text}</span>
-      ),
-    },
-    {
-      title: "🔑 Mật khẩu", // ✅ thêm cột này
-      dataIndex: "password",
-      align: "center",
-      render: (text) => (
-        <span className="text-gray-600 font-mono">{text || "••••••••"}</span>
-      ),
-    },
-    {
-      title: "🔐 Vai trò",
-      dataIndex: "role",
-      align: "center",
-      render: (role) => (
-        <Tag color={role === "Admin" ? "purple" : "blue"} className="rounded-md">
-          {role}
-        </Tag>
-      ),
-    },
-    {
-      title: "📅 Ngày tạo",
-      dataIndex: "createdAt",
-      align: "center",
-      render: (date) => dayjs(date).format("DD/MM/YYYY"),
-    },
-    {
-      title: "🛠️ Thao tác",
-      dataIndex: "action",
-      align: "center",
-      render: (_, record) => (
-        <Space>
-          <Button icon={<EditOutlined />} onClick={() => openEditModal(record)}>
-            Sửa
-          </Button>
-          <Button
-            danger
-            icon={<DeleteOutlined />}
-            onClick={() => handleDelete(record.id)}
-          >
-            Xoá
-          </Button>
-        </Space>
-      ),
-    },
-  ];
 
   return (
     <div className="p-6 w-full">
       <div className="bg-white shadow-xl rounded-2xl p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold text-gray-800">📋 Danh sách người dùng</h2>
-          <Button type="primary" icon={<PlusOutlined />} onClick={openAddModal}>
-            Thêm tài khoản
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">👤 Thông tin tài khoản</h2>
+
+        <Space className="mb-4">
+          <Button type="primary" icon={<EditOutlined />} size="large" onClick={() => openEditModal()}>
+            Chỉnh sửa
           </Button>
-        </div>
+        </Space>
 
-        {loading ? (
-          <div className="flex justify-center items-center h-40">
-            <Spin size="large" />
-          </div>
-        ) : (
-          <Table
-            columns={columns}
-            dataSource={data}
-            pagination={false}
-            bordered
-            className="rounded-xl overflow-hidden"
-          />
-        )}
-      </div>
-
-      <Modal
-        title={editingUser ? "📝 Sửa tài khoản" : "➕ Thêm tài khoản"}
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        onOk={() => form.submit()}
-        okText="Lưu"
-        cancelText="Huỷ"
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmit}
-          initialValues={{ role: "User" }}
+        <Descriptions
+          bordered
+          column={1}
+          size="middle"
         >
-          <Form.Item
-            name="name"
-            label="Họ tên"
-            rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
-          >
-            <Input />
-          </Form.Item>
+          <Descriptions.Item label="Họ tên">
+            {user?.name || "Chưa có"}
+          </Descriptions.Item>
 
-          <Form.Item
-            name="email"
-            label="Email"
-            rules={[
-              { required: true, message: "Vui lòng nhập email" },
-              { type: "email", message: "Email không hợp lệ" },
-            ]}
-          >
-            <Input />
-          </Form.Item>
+          <Descriptions.Item label="Email">
+            {user?.email || "Chưa có"}
+          </Descriptions.Item>
 
-          <Form.Item
+          <Descriptions.Item label="Số điện thoại">
+            {user?.phone_number || "Chưa có"}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Địa chỉ">
+            {user?.address || "Chưa có"}
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Vai trò">
+            <Tag color={user?.role === "admin" ? "purple" : "blue"}>
+              {user?.role === "admin" ? "Admin" : "Customer"}
+            </Tag>
+          </Descriptions.Item>
+
+          <Descriptions.Item label="Ngày tạo">
+            {user?.createdAt ? dayjs(user.createdAt).format("DD/MM/YYYY") : "Không rõ"}
+          </Descriptions.Item>
+        </Descriptions>
+        <Modal
+          title={editingUser ? "📝 Sửa người dùng" : "➕ Thêm người dùng"}
+          open={isModalOpen}
+          onCancel={() => setIsModalOpen(false)}
+          onOk={() => form.submit()}
+          okText="Lưu"
+          cancelText="Huỷ"
+        >
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleSubmit}
+            initialValues={{ role: "User" }}
+          >
+            <Form.Item
+              name="name"
+              label="Họ tên"
+              rules={[{ required: true, message: "Vui lòng nhập họ tên" }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[
+                { required: true, message: "Vui lòng nhập email" },
+                { type: "email", message: "Email không hợp lệ" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              name="phone_number"
+              label="Phone Number"
+              rules={[
+                { required: true, message: "Vui lòng nhập số điện thoại" },
+                {
+                  pattern: /^\d{10}$/,
+                  message: "Số điện thoại phải gồm 10 chữ số",
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              name="address"
+              label="Address"
+              rules={[
+                { required: true, message: "Vui lòng nhập địa chỉ" },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
             name="password"
             label="Mật khẩu"
-            rules={[{ required: true, message: "Vui lòng nhập mật khẩu" }]}
+            rules={
+              editingUser
+                ? [
+                  {
+                    pattern: /^(?=.*[A-Z]).{8,}$/,
+                    message: 'Mật khẩu phải có ít nhất 8 ký tự và 1 chữ hoa',
+                  }
+                ]
+                : [{ required: true, message: "Vui lòng nhập mật khẩu" },
+                {
+                  pattern: /^(?=.*[A-Z]).{8,}$/,
+                  message: 'Mật khẩu phải có ít nhất 8 ký tự và 1 chữ hoa',
+                },
+                ]
+            }
           >
-            <Input.Password />
+            <Input.Password
+              type={showPassword ? "text" : "password"}
+              placeholder={editingUser ? "Để trống nếu không đổi" : ""}
+              prefix={<Lock size={16} className="text-gray-400 mr-2" />}
+            />
           </Form.Item>
 
           <Form.Item
-            name="role"
-            label="Vai trò"
-            rules={[{ required: true, message: "Chọn vai trò" }]}
+            name="confirmPassword"
+            label="Confirm Password"
+            dependencies={["password"]}
+            rules={
+              editingUser ? [
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Passwords do not match"));
+                  },
+                }),
+
+              ] :
+                [
+                  { required: true, message: "Please confirm your password" },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error("Passwords do not match"));
+                    },
+                  }),
+                ]}
           >
-            <Select>
-              <Option value="Admin">Admin</Option>
-              <Option value="User">User</Option>
-            </Select>
+            <Input.Password
+              prefix={<Lock size={16} className="text-gray-400 mr-2" />}
+              placeholder="Confirm password"
+            />
           </Form.Item>
-        </Form>
-      </Modal>
+
+            <Form.Item
+              name="role"
+              label="Vai trò"
+              rules={[{ required: true, message: "Chọn vai trò" }]}
+            >
+              <Select>
+                <Option value="admin">Admin</Option>
+                <Option value="customer">User</Option>
+              </Select>
+            </Form.Item>
+          </Form>
+        </Modal>
+      </div>
     </div>
   );
 };
 
 export default AccountInfo;
-

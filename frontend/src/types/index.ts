@@ -35,6 +35,9 @@ export interface User {
   avatar?: string;
   phone?: string;
   address?: Address;
+  role: 'Customer' | 'Admin';
+  createdAt: string;
+  is_active: boolean;
 }
 
 export interface Address {

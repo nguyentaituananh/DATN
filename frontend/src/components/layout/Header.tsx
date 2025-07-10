@@ -27,10 +27,9 @@ import {
 } from "@ant-design/icons";
 import { Sofa, Bed, Armchair, Archive, Lamp, Table } from "lucide-react";
 import { motion } from "framer-motion";
-
 const { Search } = Input;
 const { Text } = Typography;
-
+import { useAuth } from "../../context/AuthContext";
 // Menu navigation chính
 const navigation = [
   { key: "home", name: "Trang chủ", href: "/" },
@@ -53,17 +52,25 @@ const productMenuItems: MenuProps["items"] = [
   { key: "lighting", label: <Link to="/products/lighting">Đèn</Link> },
 ];
 
-// Menu user
-const userMenuItems = [
-  { key: "profile", label: "Tài khoản" },
-  { key: "orders", label: "Đơn hàng" },
-  { key: "logout", label: "Đăng xuất" },
-];
 
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+
+  const { user, logout } = useAuth();
+  // Menu user
+  const userMenuItems =
+    (user) ?
+      [
+        { key: "profile", label: "Tài khoản" },
+        { key: "orders", label: "Đơn hàng" },
+        { key: "logout", label: "Đăng xuất", onClick: logout },
+      ] :
+      [
+        { key: "login", label: <Link to="/login">Đăng nhập</Link> },
+        { key: "register", label: <Link to="/register">Đăng ký</Link> },
+      ];
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
@@ -73,9 +80,8 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`sticky top-0 z-50 ${
-        isScrolled ? "shadow-lg bg-white" : "bg-white"
-      }`}
+      className={`sticky top-0 z-50 ${isScrolled ? "shadow-lg bg-white" : "bg-white"
+        }`}
     >
       <div className="container mx-auto flex items-center justify-between py-4">
         <Link to="/" className="text-xl font-bold">
