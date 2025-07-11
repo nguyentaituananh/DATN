@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Descriptions, Tag, Button, Space, Modal, Form, Input, Select, Checkbox, } from "antd";
+import { Descriptions, Tag, Button, Space, Modal, Form, Input, Select, } from "antd";
 import dayjs from "dayjs";
 import { EditOutlined } from "@ant-design/icons";
 import { useAuth } from "../../../context/AuthContext";
 import { User } from "../../../types";
-import { updateUser } from "../../../api/userApi";
 import { message } from "antd";
-import { Mail, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
+import instanceAxios from "../../../utils/instanceAxios";
 const { Option } = Select;
 
 const AccountInfo: React.FC = () => {
@@ -28,7 +28,7 @@ const AccountInfo: React.FC = () => {
 
   const handleSubmit = async (values: any) => {
     try {
-      if (editingUser) {
+      if (editingUser && editingUser._id === user._id) {
         const updatedData = {
           ...values,
           ...values,
@@ -37,13 +37,16 @@ const AccountInfo: React.FC = () => {
         if (!values.password) {
           delete updatedData.password;
         }
-        await updateUser(editingUser._id, updatedData);
+        await instanceAxios.put(`/auth/${editingUser._id}`, updatedData);
         message.success("Cập nhật thành công");
         setUser((prevUser) => ({
           ...prevUser!,
-          ...updatedData
+          ...updatedData,
         }));
-        localStorage.setItem('auth', JSON.stringify({ user: { ...user, ...updatedData } }));
+        localStorage.setItem(
+          "auth",
+          JSON.stringify({ user: { ...user, ...updatedData } })
+        );
       }
       setIsModalOpen(false);
       form.resetFields();
@@ -133,6 +136,7 @@ const AccountInfo: React.FC = () => {
               rules={[
                 { required: true, message: "Vui lòng nhập số điện thoại" },
                 {
+                  transform: (value: string) => value.replace(/\s/g, ""),
                   pattern: /^\d{10}$/,
                   message: "Số điện thoại phải gồm 10 chữ số",
                 },

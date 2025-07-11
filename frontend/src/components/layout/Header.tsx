@@ -1,5 +1,3 @@
-// Header.tsx (đã viết lại hoàn chỉnh, sạch lỗi)
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -8,28 +6,24 @@ import {
   Dropdown,
   Button as AntButton,
   Drawer,
-  Space,
   Typography,
   Avatar,
-  Divider,
 } from "antd";
 import {
   ShoppingCartOutlined,
   HeartOutlined,
   UserOutlined,
   MenuOutlined,
-  PhoneOutlined,
-  MailOutlined,
   DownOutlined,
-  HomeOutlined,
-  GiftOutlined,
-  BellOutlined,
 } from "@ant-design/icons";
-import { Sofa, Bed, Armchair, Archive, Lamp, Table } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext";
+import type { MenuProps } from "antd";
+
 const { Search } = Input;
 const { Text } = Typography;
-import { useAuth } from "../../context/AuthContext";
+
 // Menu navigation chính
 const navigation = [
   { key: "home", name: "Trang chủ", href: "/" },
@@ -39,8 +33,6 @@ const navigation = [
 ];
 
 // Menu sản phẩm
-import type { MenuProps } from "antd";
-
 const productMenuItems: MenuProps["items"] = [
   { key: "all", label: <Link to="/products">Tất cả sản phẩm</Link> },
   { type: "divider" as const },
@@ -52,26 +44,27 @@ const productMenuItems: MenuProps["items"] = [
   { key: "lighting", label: <Link to="/products/lighting">Đèn</Link> },
 ];
 
-
 const Header: React.FC = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { items } = useCart();
+  const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
 
-  const { user, logout } = useAuth();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   // Menu user
-  const userMenuItems =
-    (user) ?
-      [
+  const userMenuItems = user
+    ? [
         { key: "profile", label: "Tài khoản" },
         { key: "orders", label:<Link to="/cart">Đơn hàng</Link>  },
         { key: "logout", label: "Đăng xuất", onClick: logout },
-      ] :
-      [
+      ]
+    : [
         { key: "login", label: <Link to="/login">Đăng nhập</Link> },
         { key: "register", label: <Link to="/register">Đăng ký</Link> },
       ];
 
+  // Scroll effect
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll);
@@ -80,8 +73,9 @@ const Header: React.FC = () => {
 
   return (
     <header
-      className={`sticky top-0 z-50 ${isScrolled ? "shadow-lg bg-white" : "bg-white"
-        }`}
+      className={`sticky top-0 z-50 ${
+        isScrolled ? "shadow-lg bg-white" : "bg-white"
+      }`}
     >
       <div className="container mx-auto flex items-center justify-between py-4">
         <Link to="/" className="text-xl font-bold">
@@ -109,7 +103,7 @@ const Header: React.FC = () => {
         </nav>
 
         <div className="flex items-center space-x-3">
-          <Badge count={2}>
+          <Badge count={items.length}>
             <ShoppingCartOutlined className="text-lg" />
           </Badge>
           <Badge count={1}>

@@ -39,14 +39,8 @@ import { Mail, Lock } from 'lucide-react';
 
 import type { ColumnsType } from "antd/es/table";
 import { User } from "../../../types";
-import {
-  getUsers,
-  deleteUser,
-  updateUser,
-  createUser,
-} from "../../../api/userApi";
-
-const { Option } = Select;
+import instanceAxios from "../../../utils/instanceAxios";
+import { useAuth } from "../../../context/AuthContext";
 
 const UserList: React.FC = () => {
   const [data, setData] = useState<User[]>([]);
@@ -55,11 +49,11 @@ const UserList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showPassword, setShowPassword] = useState(false); // ✅ Toggle hiện mật khẩu
-
+  const { user } = useAuth();
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const res = await getUsers();
+      const res = await instanceAxios.get("/auth");
       const users = res.data.map((user) => ({
         ...user,
         id: user._id,
@@ -75,39 +69,20 @@ const UserList: React.FC = () => {
   };
 
   useEffect(() => {
-    // setData([
-    //   {
-    //     id: "1",
-    //     name: "Nguyễn Văn A",
-    //     email: "vana@gmail.com",
-    //     password: "123456",
-    //     role: "Admin",
-    //     createdAt: "2024-06-01T10:00:00Z",
-    //     isDeleted: false,
-    //   },
-    //   {
-    //     id: "2",
-    //     name: "Trần Thị B",
-    //     email: "thib@gmail.com",
-    //     password: "abcdef",
-    //     role: "User",
-    //     createdAt: "2024-06-02T11:00:00Z",
-    //     isDeleted: false,
-    //   },
-    // ]);
     fetchUsers();
   }, []);
 
   const handleDelete = async (id: string) => {
     try {
-      // setData((prev) =>
-      //   prev.map((u) =>
-      //     u.id === id ? { ...u, isDeleted: true } : u
-      //   )
-      // );
-      await updateUser(id, { is_active: false });
-      message.success("Xoá thành công");
-      fetchUsers();
+      console.log(user._id !== id);
+      
+      if (user._id !== id) {
+        await instanceAxios.put(`/auth/${id}`, { is_active: false });
+        message.success("Xoá thành công");
+        fetchUsers();
+      }else{
+        message.error("Bạn không thể xoá chính mình");
+      }
     } catch (error) {
       message.error("Xoá thất bại");
     }
@@ -115,12 +90,7 @@ const UserList: React.FC = () => {
 
   const handleRestore = async (id: string) => {
     try {
-      await updateUser(id, { is_active: true });
-      // setData((prev) =>
-      //   prev.map((u) =>
-      //     u.id === id ? { ...u, isDeleted: false } : u
-      //   )
-      // );
+      await instanceAxios.put(`/auth/${id}`, { is_active: true });
       message.success("Khôi phục thành công");
       fetchUsers();
     } catch (error) {
@@ -145,13 +115,6 @@ const UserList: React.FC = () => {
   const handleSubmit = async (values: any) => {
     try {
       if (editingUser) {
-        // setData((prev) =>
-        //   prev.map((u) =>
-        //     u.id === editingUser.id
-        //       ? { ...u, ...values, password: values.password || u.password }
-        //       : u
-        //   )
-        // );
         const updatedData = {
           ...values,
           ...values,
@@ -160,19 +123,14 @@ const UserList: React.FC = () => {
         if (!values.password) {
           delete updatedData.password;
         }
-        await updateUser(editingUser.id, updatedData);
+        await instanceAxios.put(`/auth/${editingUser.id}`, updatedData);
         message.success("Cập nhật thành công");
       } else {
-        // const newUser: User = {
-        //   ...values,
-        //   id: Date.now().toString(),
-        //   createdAt: new Date().toISOString(),
-        // };
-        // setData((prev) => [...prev, newUser]);
-        await createUser({
+        const userData = {
           ...values,
           role: values.role === "Admin" ? "admin" : "customer",
-        });
+        };
+        await instanceAxios.post(`/auth/register`, userData);
         message.success("Thêm người dùng thành công");
       }
       setIsModalOpen(false);
@@ -182,6 +140,29 @@ const UserList: React.FC = () => {
       message.error("Lưu thất bại");
     }
   };
+
+  const handleFilterChange = async (value: string) => {
+    if (value === "all") {
+      fetchUsers();
+    } else {
+      const role = value === "admin" ? "Admin" : "User";
+      const res = await instanceAxios.get("/auth");
+
+      const users = res.data.map((user) => ({
+        ...user,
+        id: user._id,
+        key: user._id,
+        role: user.role === "admin" ? "Admin" : "User",
+      }));
+
+      const filteredUsers = users.filter(
+        (user) => user.role === role && user.is_active
+      );
+
+      setData(filteredUsers);
+
+    }
+  }
 
   const columns: ColumnsType<User> = [
     {
@@ -244,6 +225,7 @@ const UserList: React.FC = () => {
                 <Menu.Item
                   key="delete"
                   danger
+                  disabled={record.id === user._id}
                   onClick={() =>
                     Modal.confirm({
                       title: "Bạn có chắc muốn xoá người dùng này?",
@@ -274,6 +256,18 @@ const UserList: React.FC = () => {
             ➕ Thêm người dùng
           </Button>
         </div>
+        <div className="mb-4 float-end">
+          <Select
+            defaultValue="all"
+            style={{ width: 120 }}
+            onChange={handleFilterChange}
+            options={[
+              { value: "all", label: "Tất cả" },
+              { value: "admin", label: "Admin" },
+              { value: "customer", label: "Customer" },
+            ]}
+          />
+        </div>
 
         {loading ? (
           <div className="flex justify-center items-center h-40">
@@ -282,10 +276,15 @@ const UserList: React.FC = () => {
         ) : (
           <Table
             columns={columns}
-            dataSource={[...data.filter(u => u.is_active), ...data.filter(u => !u.is_active)].map(u => ({ ...u, key: u.id }))}
+            dataSource={[
+              ...data.filter((u) => u.is_active),
+              ...data.filter((u) => !u.is_active),
+            ].map((u) => ({ ...u, key: u.id }))}
             pagination={false}
             bordered
-            rowClassName={(record) => !record.is_active ? "bg-gray-100 text-gray-400 opacity-70" : ""}
+            rowClassName={(record) =>
+              !record.is_active ? "bg-gray-100 text-gray-400 opacity-70" : ""
+            }
           />
         )}
       </div>
@@ -329,6 +328,7 @@ const UserList: React.FC = () => {
             rules={[
               { required: true, message: "Vui lòng nhập số điện thoại" },
               {
+                transform: (value: string) => value.replace(/\s/g, ""),
                 pattern: /^\d{10}$/,
                 message: "Số điện thoại phải gồm 10 chữ số",
               },
@@ -340,9 +340,7 @@ const UserList: React.FC = () => {
           <Form.Item
             name="address"
             label="Address"
-            rules={[
-              { required: true, message: "Vui lòng nhập địa chỉ" },
-            ]}
+            rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
           >
             <Input />
           </Form.Item>
@@ -355,14 +353,15 @@ const UserList: React.FC = () => {
                 ? [
                   {
                     pattern: /^(?=.*[A-Z]).{8,}$/,
-                    message: 'Mật khẩu phải có ít nhất 8 ký tự và 1 chữ hoa',
-                  }
+                    message: "Mật khẩu phải có ít nhất 8 ký tự và 1 chữ hoa",
+                  },
                 ]
-                : [{ required: true, message: "Vui lòng nhập mật khẩu" },
-                {
-                  pattern: /^(?=.*[A-Z]).{8,}$/,
-                  message: 'Mật khẩu phải có ít nhất 8 ký tự và 1 chữ hoa',
-                },
+                : [
+                  { required: true, message: "Vui lòng nhập mật khẩu" },
+                  {
+                    pattern: /^(?=.*[A-Z]).{8,}$/,
+                    message: "Mật khẩu phải có ít nhất 8 ký tự và 1 chữ hoa",
+                  },
                 ]
             }
           >
@@ -378,28 +377,33 @@ const UserList: React.FC = () => {
             label="Confirm Password"
             dependencies={["password"]}
             rules={
-              editingUser ? [
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue("password") === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error("Passwords do not match"));
-                  },
-                }),
-
-              ] :
-                [
+              editingUser
+                ? [
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("Passwords do not match")
+                      );
+                    },
+                  }),
+                ]
+                : [
                   { required: true, message: "Please confirm your password" },
                   ({ getFieldValue }) => ({
                     validator(_, value) {
                       if (!value || getFieldValue("password") === value) {
                         return Promise.resolve();
                       }
-                      return Promise.reject(new Error("Passwords do not match"));
+                      return Promise.reject(
+                        new Error("Passwords do not match")
+                      );
                     },
                   }),
-                ]}
+                ]
+            }
           >
             <Input.Password
               prefix={<Lock size={16} className="text-gray-400 mr-2" />}
