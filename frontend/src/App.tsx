@@ -6,7 +6,7 @@ import HomePage from "./pages/user/HomePage";
 import Layout from "./components/layout/layout";
 import { AuthProvider } from "./pages/context/AuthContext";
 import CheckoutPage from "./pages/user/CheckoutPage";
-import RegisterPage from "./pages/admin/user/RegisterPage";
+import RegisterPage from "./pages/user/RegisterPage";
 import LoginPage from "./pages/user/LoginPage";
 import { ConfigProvider } from "antd";
 import ProductsPage from "./pages/user/ProductsPage";
@@ -21,6 +21,7 @@ import CommentList from "./pages/admin/comment/CommentList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
 import AboutPage from "./pages/user/AboutPage";
 import AccountInfoPage from "./pages/user/DeitailUser";
+import ChangePasswordPage from "./pages/user/ChangePasswordPage";
 
 const theme = {
   token: {
@@ -61,6 +62,7 @@ function App() {
               <Route path="checkout" element={<CheckoutPage />} />
               <Route path="about" element={<AboutPage />} />
               <Route path="userDeitail/:id" element={<AccountInfoPage />} />
+              <Route path="change-password" element={<ChangePasswordPage />} />
             </Route>
           </Routes>
         </CartProvider>
