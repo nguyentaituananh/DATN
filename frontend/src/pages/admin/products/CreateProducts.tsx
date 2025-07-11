@@ -12,11 +12,14 @@ const CreateProducts = () => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
-    price: 0,
-    discount_price: 0,
     category_id: "",
     images: [] as File[],
+  });
+  const [variants, setVariants] = useState<any[]>([]);
+  const [variantForm, setVariantForm] = useState({
     sku: "",
+    import_price: 0,
+    price: 0,
     stock_quantity: 0,
     size: "",
     color: "",
@@ -48,36 +51,43 @@ const CreateProducts = () => {
     } else {
       setFormData((prev) => ({
         ...prev,
-        [name]: type === "number" ? Number(value) : value,
+        [name]: value,
       }));
     }
   };
 
+  const addVariant = () => {
+    const { sku, import_price, price, stock_quantity } = variantForm;
+    if (!sku) return alert("Vui lòng nhập Mã SKU.");
+    if (import_price <= 0) return alert("Giá nhập phải lớn hơn 0.");
+    if (price <= 0) return alert("Giá bán phải lớn hơn 0.");
+    if (stock_quantity <= 0) return alert("Tồn kho phải lớn hơn 0.");
+    setVariants([...variants, { ...variantForm }]);
+    setVariantForm({
+      sku: "",
+      import_price: 0,
+      price: 0,
+      stock_quantity: 0,
+      size: "",
+      color: "",
+      dimensions: "",
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Validate sản phẩm
-    if (
-      !formData.name ||
-      !formData.description ||
-      !formData.price ||
-      !formData.category_id
-    ) {
-      alert("Vui lòng nhập đủ Tên, Mô tả, Giá và Danh mục.");
+    if (!formData.name || !formData.description || !formData.category_id) {
+      alert("Vui lòng nhập đầy đủ thông tin sản phẩm.");
       return;
     }
 
     try {
-      // Tạo form data cho product
       const productData = new FormData();
       productData.append("name", formData.name);
       productData.append("description", formData.description);
-      productData.append("price", formData.price.toString());
-      productData.append("discount_price", formData.discount_price.toString());
       productData.append("category_id", formData.category_id);
       formData.images.forEach((file) => productData.append("images", file));
 
-      // Gửi product
       const productRes = await instanceAxios.post(
         "/api/products",
         productData,
@@ -87,49 +97,27 @@ const CreateProducts = () => {
       );
       const productId = productRes.data._id;
 
-      // Nếu có variant
-      if (showVariants) {
-        // Validate variant
-        if (!formData.sku.trim()) {
-          alert("SKU không được để trống.");
-          return;
-        }
-        if (formData.stock_quantity <= 0) {
-          alert("Số lượng tồn kho phải lớn hơn 0.");
-          return;
-        }
-
-        // Tạo attributes cho variant
+      for (const variant of variants) {
         const attributes = {
-          size: formData.size,
-          color: formData.color,
-          dimensions: formData.dimensions,
+          size: variant.size,
+          color: variant.color,
+          dimensions: variant.dimensions,
         };
-
-        // In log payload kiểm tra trước khi gửi
-        console.log("Payload gửi variant:", {
-          product_id: productId,
-          attributes,
-          price: formData.price,
-          sku: formData.sku,
-          stock_quantity: formData.stock_quantity,
-        });
-
-        // Gửi product-variant
         await instanceAxios.post("/api/product-variant", {
           product_id: productId,
           attributes,
-          price: formData.price,
-          sku: formData.sku,
-          stock_quantity: formData.stock_quantity,
+          price: variant.price,
+          import_price: variant.import_price,
+          sku: variant.sku,
+          stock_quantity: variant.stock_quantity,
         });
       }
 
-      alert("Tạo sản phẩm thành công!");
+      alert("Thêm sản phẩm thành công!");
       navigate("/admin/product");
     } catch (err: any) {
-      console.error("❌ Lỗi:", err.response?.data || err);
-      alert(err.response?.data.message || "Có lỗi khi thêm sản phẩm.");
+      console.error(err.response?.data || err);
+      alert(err.response?.data.message || "Có lỗi xảy ra.");
     }
   };
 
@@ -138,146 +126,245 @@ const CreateProducts = () => {
   );
 
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white rounded-xl shadow">
+    <div className="max-w-6xl mx-auto p-6 bg-white rounded-xl shadow">
       <h2 className="text-2xl font-bold mb-4">Thêm Sản phẩm mới</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="name"
-          placeholder="Tên sản phẩm"
-          value={formData.name}
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-          required
-        />
-        <textarea
-          name="description"
-          placeholder="Mô tả"
-          value={formData.description}
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-          required
-        />
-        <input
-          type="number"
-          name="price"
-          placeholder="Giá"
-          value={formData.price}
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-          required
-        />
-        <input
-          type="number"
-          name="discount_price"
-          placeholder="Giá khuyến mãi"
-          value={formData.discount_price}
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-        />
-        <select
-          name="category_id"
-          value={formData.category_id}
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-          required
-        >
-          <option value="">-- Chọn danh mục --</option>
-          {categories.map((c) => (
-            <option key={c._id} value={c._id}>
-              {c.name}
-            </option>
-          ))}
-        </select>
-
-        <input
-          type="file"
-          name="images"
-          multiple
-          accept="image/*"
-          onChange={handleChange}
-          className="border p-3 w-full rounded"
-        />
-        <div className="flex gap-2 flex-wrap">
-          {imagePreviews.map((src, idx) => (
-            <img
-              key={idx}
-              src={src}
-              alt=""
-              className="w-20 h-20 object-cover rounded"
-            />
-          ))}
+        {/* Tên sản phẩm */}
+        <div>
+          <label className="block mb-1 font-semibold">Tên sản phẩm</label>
+          <input
+            type="text"
+            name="name"
+            placeholder="Nhập tên sản phẩm"
+            value={formData.name}
+            onChange={handleChange}
+            className="border p-3 w-full rounded"
+            required
+          />
         </div>
 
+        {/* Mô tả */}
+        <div>
+          <label className="block mb-1 font-semibold">Mô tả</label>
+          <textarea
+            name="description"
+            placeholder="Nhập mô tả sản phẩm"
+            value={formData.description}
+            onChange={handleChange}
+            className="border p-3 w-full rounded"
+            required
+          />
+        </div>
+
+        {/* Danh mục */}
+        <div>
+          <label className="block mb-1 font-semibold">Danh mục</label>
+          <select
+            name="category_id"
+            value={formData.category_id}
+            onChange={handleChange}
+            className="border p-3 w-full rounded"
+            required
+          >
+            <option value="">-- Chọn danh mục --</option>
+            {categories.map((c) => (
+              <option key={c._id} value={c._id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Ảnh */}
+        <div>
+          <label className="block mb-1 font-semibold">Ảnh sản phẩm</label>
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleChange}
+            className="border p-3 w-full rounded"
+          />
+          <div className="flex gap-2 flex-wrap mt-2">
+            {imagePreviews.map((src, idx) => (
+              <img
+                key={idx}
+                src={src}
+                alt=""
+                className="w-20 h-20 object-cover rounded"
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Biến thể */}
         {showVariants && (
           <>
-            <select
-              name="size"
-              value={formData.size}
-              onChange={handleChange}
-              className="border p-3 w-full rounded"
+            <h3 className="font-semibold text-lg mt-6">Thông tin Biến thể</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
+                <label className="block mb-1 font-semibold">Mã SKU</label>
+                <input
+                  type="text"
+                  value={variantForm.sku}
+                  onChange={(e) =>
+                    setVariantForm({ ...variantForm, sku: e.target.value })
+                  }
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">
+                  Giá nhập (Giá vốn)
+                </label>
+                <input
+                  type="number"
+                  value={variantForm.import_price}
+                  onChange={(e) =>
+                    setVariantForm({
+                      ...variantForm,
+                      import_price: Number(e.target.value),
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">Giá bán</label>
+                <input
+                  type="number"
+                  value={variantForm.price}
+                  onChange={(e) =>
+                    setVariantForm({
+                      ...variantForm,
+                      price: Number(e.target.value),
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">
+                  Số lượng tồn kho
+                </label>
+                <input
+                  type="number"
+                  value={variantForm.stock_quantity}
+                  onChange={(e) =>
+                    setVariantForm({
+                      ...variantForm,
+                      stock_quantity: Number(e.target.value),
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">Size</label>
+                <select
+                  value={variantForm.size}
+                  onChange={(e) =>
+                    setVariantForm({ ...variantForm, size: e.target.value })
+                  }
+                  className="border p-2 rounded w-full"
+                >
+                  <option value="">Chọn size</option>
+                  <option value="S">S</option>
+                  <option value="M">M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                  <option value="XXL">XXL</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">Màu sắc</label>
+                <select
+                  value={variantForm.color}
+                  onChange={(e) =>
+                    setVariantForm({ ...variantForm, color: e.target.value })
+                  }
+                  className="border p-2 rounded w-full"
+                >
+                  <option value="">Chọn màu</option>
+                  <option value="Đỏ">Đỏ</option>
+                  <option value="Xanh">Xanh</option>
+                  <option value="Vàng">Vàng</option>
+                  <option value="Nâu">Nâu</option>
+                  <option value="Xám">Xám</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block mb-1 font-semibold">
+                  Kích thước (Dimensions)
+                </label>
+                <select
+                  value={variantForm.dimensions}
+                  onChange={(e) =>
+                    setVariantForm({
+                      ...variantForm,
+                      dimensions: e.target.value,
+                    })
+                  }
+                  className="border p-2 rounded w-full"
+                >
+                  <option value="">Chọn kích thước</option>
+                  <option value="180x80x90cm">180x80x90cm</option>
+                  <option value="200x90x75cm">200x90x75cm</option>
+                  <option value="120x60x75cm">120x60x75cm</option>
+                  <option value="100x50x70cm">100x50x70cm</option>
+                  <option value="250x100x80cm">250x100x80cm</option>
+                </select>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={addVariant}
+              className="bg-green-600 text-white px-4 py-2 rounded mt-4"
             >
-              <option value="">Chọn Size</option>
-              <option value="S">S</option>
-              <option value="M">M</option>
-              <option value="L">L</option>
-              <option value="XL">XL</option>
-              <option value="XXL">XXL</option>
-            </select>
+              Thêm biến thể
+            </button>
 
-            <select
-              name="color"
-              value={formData.color}
-              onChange={handleChange}
-              className="border p-3 w-full rounded"
-            >
-              <option value="">Chọn Màu</option>
-              <option value="Đen">Đen</option>
-              <option value="Trắng">Trắng</option>
-              <option value="Xám">Xám</option>
-              <option value="Nâu">Nâu</option>
-              <option value="Xanh">Xanh</option>
-            </select>
-
-            <select
-              name="dimensions"
-              value={formData.dimensions}
-              onChange={handleChange}
-              className="border p-3 w-full rounded"
-            >
-              <option value="">Chọn Kích thước</option>
-              <option value="180x80x90cm">180x80x90cm</option>
-              <option value="200x90x75cm">200x90x75cm</option>
-              <option value="120x60x75cm">120x60x75cm</option>
-              <option value="100x50x70cm">100x50x70cm</option>
-              <option value="250x100x80cm">250x100x80cm</option>
-            </select>
-
-            <input
-              type="text"
-              name="sku"
-              placeholder="SKU"
-              value={formData.sku}
-              onChange={handleChange}
-              className="border p-3 w-full rounded"
-              required
-            />
-
-            <input
-              type="number"
-              name="stock_quantity"
-              placeholder="Số lượng tồn kho"
-              value={formData.stock_quantity}
-              onChange={handleChange}
-              className="border p-3 w-full rounded"
-              required
-            />
+            {variants.length > 0 && (
+              <table className="w-full border mt-4">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border p-2">SKU</th>
+                    <th className="border p-2">Giá nhập</th>
+                    <th className="border p-2">Giá bán</th>
+                    <th className="border p-2">Kho</th>
+                    <th className="border p-2">Size</th>
+                    <th className="border p-2">Màu</th>
+                    <th className="border p-2">Kích thước</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {variants.map((v, i) => (
+                    <tr key={i}>
+                      <td className="border p-2">{v.sku}</td>
+                      <td className="border p-2">{v.import_price}</td>
+                      <td className="border p-2">{v.price}</td>
+                      <td className="border p-2">{v.stock_quantity}</td>
+                      <td className="border p-2">{v.size}</td>
+                      <td className="border p-2">{v.color}</td>
+                      <td className="border p-2">{v.dimensions}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </>
         )}
 
         <button
           type="submit"
-          className="bg-blue-600 text-white py-3 px-6 rounded hover:bg-blue-700"
+          className="bg-blue-600 text-white py-3 px-6 rounded mt-6"
         >
           Tạo sản phẩm
         </button>

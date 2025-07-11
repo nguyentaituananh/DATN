@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Form, Input, Checkbox, Divider, message } from "antd";
+import { useAuth } from "../../context/AuthContext";
 import Button from "../../components/ui/Button";
-import { Mail, Lock, User, Phone, Home } from "lucide-react";
+import { Mail, Lock, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../pages/context/AuthContext";
 
 const RegisterPage: React.FC = () => {
   const { register } = useAuth();
@@ -11,32 +11,26 @@ const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onFinish = async (values: {
-  name: string;
-  email: string;
-  password: string;
-  address: string;
-  phone_number: string;
-}) => {
-  setIsLoading(true);
-  try {
-    await register({
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      address: values.address,
-      phone_number: values.phone_number,
-    });
-    message.success("Registration successful!");
-    navigate("/");
-  } catch (error: any) {
-  const msg = error?.message || error?.response?.data?.message || "Registration failed.";
-  message.error(msg);
-}
- finally {
-    setIsLoading(false);
-  }
-};
-
+    name: string;
+    email: string;
+    password: string;
+    address: string;
+    phone_number: string;
+  }) => {
+    const { name, email, password, address, phone_number } = values;
+    setIsLoading(true);
+    try {
+      await register(name, email, password, address, phone_number);
+      message.success("Đăng ký tài khoản thành công!");
+      navigate("/login");
+    } catch (error: any) {
+      message.error(
+        error.response?.data?.message || "Đăng ký thất bại, thử lại."
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="py-12 md:py-16">
@@ -72,12 +66,36 @@ const RegisterPage: React.FC = () => {
               label="Email"
               rules={[
                 { required: true, message: "Please enter your email" },
-                { type: "email", message: "Please enter a valid email" },
+                { type: "email", message: "Invalid email format" },
               ]}
             >
               <Input
                 prefix={<Mail size={16} className="text-gray-400 mr-2" />}
                 placeholder="your@email.com"
+              />
+            </Form.Item>
+            <Form.Item
+              name="phone_number"
+              label="Phone Number"
+              rules={[
+                { required: true, message: "Please enter your phone number" },
+                {
+                  transform: (value: string) => value.replace(/\s/g, ""),
+                  pattern: /^\d{10}$/,
+                  message: "Phone number must be 10 digits",
+                },
+              ]}
+            >
+              <Input placeholder="Phone Number" />
+            </Form.Item>
+
+            <Form.Item
+              name="address"
+              label="Address"
+              rules={[{ required: true, message: "Please enter your address" }]}
+            >
+              <Input
+                placeholder="Address"
               />
             </Form.Item>
 
@@ -86,13 +104,15 @@ const RegisterPage: React.FC = () => {
               label="Password"
               rules={[
                 { required: true, message: "Please enter your password" },
-                { min: 8, message: "Password must be at least 8 characters" },
+                {
+                  pattern: /^(?=.*[A-Z]).{8,}$/,
+                  message: 'Mật khẩu phải có ít nhất 8 ký tự và 1 chữ hoa',
+                }
               ]}
             >
               <Input.Password
                 prefix={<Lock size={16} className="text-gray-400 mr-2" />}
-                placeholder="Password (min. 8 characters)"
-                autoComplete="new-password"
+                placeholder="Min. 8 characters"
               />
             </Form.Item>
 
@@ -107,9 +127,7 @@ const RegisterPage: React.FC = () => {
                     if (!value || getFieldValue("password") === value) {
                       return Promise.resolve();
                     }
-                    return Promise.reject(
-                      new Error("The two passwords do not match")
-                    );
+                    return Promise.reject(new Error("Passwords do not match"));
                   },
                 }),
               ]}
@@ -121,34 +139,6 @@ const RegisterPage: React.FC = () => {
             </Form.Item>
 
             <Form.Item
-              name="address"
-              label="Address"
-              rules={[{ required: true, message: "Please enter your address" }]}
-            >
-              <Input
-                prefix={<Home size={16} className="text-gray-400 mr-2" />}
-                placeholder="Your address"
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="phone_number"
-              label="Phone Number"
-              rules={[
-                { required: true, message: "Please enter your phone number" },
-                {
-                  pattern: /^[0-9]{10,11}$/,
-                  message: "Phone number must be 10-11 digits",
-                },
-              ]}
-            >
-              <Input
-                prefix={<Phone size={16} className="text-gray-400 mr-2" />}
-                placeholder="Your phone number"
-              />
-            </Form.Item>
-
-            <Form.Item
               name="agreement"
               valuePropName="checked"
               rules={[
@@ -156,9 +146,7 @@ const RegisterPage: React.FC = () => {
                   validator: (_, value) =>
                     value
                       ? Promise.resolve()
-                      : Promise.reject(
-                          new Error("You must accept the terms and conditions")
-                        ),
+                      : Promise.reject(new Error("You must accept the terms")),
                 },
               ]}
             >
@@ -169,7 +157,7 @@ const RegisterPage: React.FC = () => {
                 </Link>{" "}
                 and{" "}
                 <Link to="/privacy" className="text-amber-700">
-                  Chính sách bảo mật
+                  Privacy Policy
                 </Link>
               </Checkbox>
             </Form.Item>
@@ -182,13 +170,12 @@ const RegisterPage: React.FC = () => {
                 fullWidth
                 isLoading={isLoading}
               >
-                Tạo tài khoản
+                Create Account
               </Button>
             </Form.Item>
           </Form>
 
           <Divider plain>or sign up with</Divider>
-
           <div className="grid grid-cols-3 gap-3 mt-6">
             <button className="flex justify-center items-center py-2 border rounded-md hover:bg-gray-50">
               Google

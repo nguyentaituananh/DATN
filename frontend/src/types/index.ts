@@ -35,6 +35,9 @@ export interface User {
   avatar?: string;
   phone?: string;
   address?: Address;
+  role: 'Customer' | 'Admin';
+  createdAt: string;
+  is_active: boolean;
 }
 
 export interface Address {
@@ -59,3 +62,11 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
 }
+export interface Store{
+  city: string;
+  name: string;
+  address: string;
+  hours: string;
+  phone: string;
+  mapEmbedUrl: string;
+};

@@ -9,6 +9,7 @@ import {
   CommentOutlined,
   DollarOutlined,
   FileAddOutlined,
+  GiftOutlined,
 } from "@ant-design/icons";
 import { Button, Layout, Menu } from "antd";
 import { NavLink, Outlet } from "react-router-dom";
@@ -41,6 +42,12 @@ const LayoutAdmin: React.FC = () => {
       icon: <FileTextOutlined />,
       label: <NavLink to="order">Quản lý đơn hàng</NavLink>,
     },
+
+    {
+      key: "voucher",
+      icon: <GiftOutlined />,
+      label: <NavLink to="voucher">Quản lý voucher</NavLink>,
+    },
     {
       key: "import",
       icon: <FileAddOutlined />,
@@ -56,16 +63,15 @@ const LayoutAdmin: React.FC = () => {
       icon: <DollarOutlined />,
       label: <NavLink to="account">Thông tin tài khoản</NavLink>,
     },
-     {
-      key: "Danh mục",
+    {
+      key: "category",
       icon: <UserOutlined />,
-      label: <NavLink to="/danhmuc">Danh mục</NavLink>,
+      label: <NavLink to="/category">Danh mục</NavLink>,
     },
   ];
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      {/* Sidebar */}
       <Sider
         collapsible
         collapsed={collapsed}
@@ -100,9 +106,7 @@ const LayoutAdmin: React.FC = () => {
         />
       </Sider>
 
-      {/* Main layout */}
       <Layout>
-        {/* Header */}
         <Header
           style={{
             padding: "0 24px",
@@ -135,7 +139,6 @@ const LayoutAdmin: React.FC = () => {
           </div>
         </Header>
 
-        {/* Main Content */}
         <Outlet />
       </Layout>
     </Layout>

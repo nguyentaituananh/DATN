@@ -29,7 +29,6 @@
 
 // export default OrderList;
 
-
 import { Table, Tag, Card } from "antd";
 import type { ColumnsType } from "antd/es/table";
 
@@ -100,8 +99,6 @@ const columns: ColumnsType<Order> = [
     ),
   },
 ];
-
-
 
 const data = [
   {
