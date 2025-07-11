@@ -1,5 +1,12 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { CartItem, Product } from '../types';
+import {
+  addToCartApi,
+  removeCartItemApi,
+  updateCartItemApi,
+  getCart,
+  clearCartApi
+} from '../api/cartApi';
 
 interface CartState {
   items: CartItem[];
@@ -9,28 +16,28 @@ interface CartState {
   total: number;
 }
 
-type CartAction = 
-  | { type: 'ADD_ITEM'; payload: { product: Product, quantity: number, color: string } }
-  | { type: 'REMOVE_ITEM'; payload: { productId: string, color: string } }
-  | { type: 'UPDATE_QUANTITY'; payload: { productId: string, color: string, quantity: number } }
+type CartAction =
+  | { type: 'SET_CART'; payload: CartItem[] }
+  | { type: 'ADD_ITEM'; payload: { product: Product; quantity: number; color: string } }
+  | { type: 'REMOVE_ITEM'; payload: { productId: string; color: string } }
+  | { type: 'UPDATE_QUANTITY'; payload: { productId: string; color: string; quantity: number } }
   | { type: 'CLEAR_CART' };
 
 interface CartContextType extends CartState {
-  addToCart: (product: Product, quantity: number, color: string) => void;
-  removeFromCart: (productId: string, color: string) => void;
-  updateQuantity: (productId: string, color: string, quantity: number) => void;
-  clearCart: () => void;
+  addToCart: (product: Product, quantity: number, color: string) => Promise<void>;
+  removeFromCart: (productId: string, color: string) => Promise<void>;
+  updateQuantity: (productId: string, color: string, quantity: number) => Promise<void>;
+  clearCart: () => Promise<void>;
 }
 
 const calculateCartTotals = (items: CartItem[]) => {
   const subtotal = items.reduce(
-    (sum, item) => sum + (item.product.salePrice || item.product.price) * item.quantity, 
+    (sum, item) => sum + (item.product.salePrice || item.product.price) * item.quantity,
     0
   );
   const shipping = items.length > 0 ? 15 : 0;
-  const tax = subtotal * 0.1; // 10% tax
+  const tax = subtotal * 0.1;
   const total = subtotal + shipping + tax;
-
   return { subtotal, shipping, tax, total };
 };
 
@@ -44,20 +51,24 @@ const initialState: CartState = {
 
 const cartReducer = (state: CartState, action: CartAction): CartState => {
   switch (action.type) {
+    case 'SET_CART':
+      return {
+        ...state,
+        items: action.payload,
+        ...calculateCartTotals(action.payload)
+      };
+
     case 'ADD_ITEM': {
       const { product, quantity, color } = action.payload;
-      const existingItemIndex = state.items.findIndex(
+      const existingIndex = state.items.findIndex(
         item => item.product.id === product.id && item.color === color
       );
-      let newItems;
-      if (existingItemIndex >= 0) {
-        newItems = [...state.items];
-        newItems[existingItemIndex] = {
-          ...newItems[existingItemIndex],
-          quantity: newItems[existingItemIndex].quantity + quantity
-        };
+      const newItems = [...state.items];
+
+      if (existingIndex >= 0) {
+        newItems[existingIndex].quantity += quantity;
       } else {
-        newItems = [...state.items, { product, quantity, color }];
+        newItems.push({ product, quantity, color });
       }
 
       return {
@@ -67,33 +78,28 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       };
     }
 
-    case 'REMOVE_ITEM': {
+    case 'REMOVE_ITEM':
       const { productId, color } = action.payload;
-      const newItems = state.items.filter(
+      const filteredItems = state.items.filter(
         item => !(item.product.id === productId && item.color === color)
       );
-
       return {
         ...state,
-        items: newItems,
-        ...calculateCartTotals(newItems)
+        items: filteredItems,
+        ...calculateCartTotals(filteredItems)
       };
-    }
 
-    case 'UPDATE_QUANTITY': {
-      const { productId, color, quantity } = action.payload;
-      const newItems = state.items.map(item => 
-        item.product.id === productId && item.color === color
-          ? { ...item, quantity }
+    case 'UPDATE_QUANTITY':
+      const updatedItems = state.items.map(item =>
+        item.product.id === action.payload.productId && item.color === action.payload.color
+          ? { ...item, quantity: action.payload.quantity }
           : item
       );
-
       return {
         ...state,
-        items: newItems,
-        ...calculateCartTotals(newItems)
+        items: updatedItems,
+        ...calculateCartTotals(updatedItems)
       };
-    }
 
     case 'CLEAR_CART':
       return initialState;
@@ -106,29 +112,81 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, dispatch] = useReducer(cartReducer, initialState, () => {
-    const savedCart = localStorage.getItem('cart');
-    return savedCart ? JSON.parse(savedCart) : initialState;
-  });
+  const [state, dispatch] = useReducer(cartReducer, initialState);
+
+  const userId = localStorage.getItem('user_id');
 
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(state));
-  }, [state]);
+    if (!userId) return;
 
-  const addToCart = (product: Product, quantity: number, color: string) => {
-    dispatch({ type: 'ADD_ITEM', payload: { product, quantity, color } });
+    const fetchCart = async () => {
+      try {
+        const response = await getCart(userId);
+        const data = response.data;
+
+        // map data into CartItem[] format
+        const cartItems: CartItem[] = data.map((item: any) => ({
+          product: item.product, // ensure populated in backend or fetch separately
+          quantity: item.quantity,
+          color: item.color || 'default'
+        }));
+
+        dispatch({ type: 'SET_CART', payload: cartItems });
+      } catch (error) {
+        console.error('Failed to fetch cart from server:', error);
+      }
+    };
+
+    fetchCart();
+  }, [userId]);
+
+  const addToCart = async (product: Product, quantity: number, color: string) => {
+    if (!userId) return;
+
+    try {
+      await addToCartApi({
+        user_id: userId,
+        product_id: product.id,
+        quantity
+      });
+
+      dispatch({ type: 'ADD_ITEM', payload: { product, quantity, color } });
+    } catch (error) {
+      console.error('Failed to add item to cart:', error);
+    }
   };
 
-  const removeFromCart = (productId: string, color: string) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: { productId, color } });
+  const removeFromCart = async (productId: string, color: string) => {
+    if (!userId) return;
+
+    try {
+      await removeCartItemApi(userId, productId);
+      dispatch({ type: 'REMOVE_ITEM', payload: { productId, color } });
+    } catch (error) {
+      console.error('Failed to remove item from cart:', error);
+    }
   };
 
-  const updateQuantity = (productId: string, color: string, quantity: number) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, color, quantity } });
+  const updateQuantity = async (productId: string, color: string, quantity: number) => {
+    if (!userId) return;
+
+    try {
+      await updateCartItemApi(userId, productId, quantity);
+      dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, color, quantity } });
+    } catch (error) {
+      console.error('Failed to update cart item:', error);
+    }
   };
 
-  const clearCart = () => {
-    dispatch({ type: 'CLEAR_CART' });
+  const clearCart = async () => {
+    if (!userId) return;
+
+    try {
+      await clearCartApi(userId);
+      dispatch({ type: 'CLEAR_CART' });
+    } catch (error) {
+      console.error('Failed to clear cart:', error);
+    }
   };
 
   return (
@@ -145,10 +203,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     </CartContext.Provider>
   );
 };
+
 export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
-  if (context === undefined) {
-    throw new Error('useCart must be used within a CartProvider');
-  }
+  if (!context) throw new Error('useCart must be used within a CartProvider');
   return context;
 };

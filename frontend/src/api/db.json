@@ -151,16 +151,45 @@
       ]
     }
   ],
-  "users": [],
+  "users": [
+    {
+      "email": "ducpv50953@gmail.com",
+      "password": "$2a$10$6p./aXjnhDBONXWM7In4heFp0gDtwU53usrPutO1BbVpaDKZ8PCX.",
+      "name": "aaaaa",
+      "id": 1
+    },
+    {
+      "email": "ducpv50953@gmail.coma",
+      "password": "$2a$10$P.cKGEjd7n3wSUmg8mjjxerMdrcBkfL1HmOv3JrHL39a23W0v/ZqK",
+      "name": "ttttt",
+      "id": 2
+    }
+  ],
   "orders": [],
   "reviews": [],
   "carts": [
     {
       "id": 1,
       "userId": "1",
-      "product": { "id": "abc123", "name": "sofa", "price": 100 },
+      "product": {
+        "id": "abc123",
+        "name": "sofa",
+        "price": 100
+      },
       "quantity": 2,
       "color": "đen"
+    },
+    {
+      "user_id": "user123",
+      "product_id": "4",
+      "quantity": 1,
+      "id": 2
+    },
+    {
+      "user_id": "user123",
+      "product_id": "3",
+      "quantity": 1,
+      "id": 3
     }
   ],
   "cart_items": [],
@@ -174,7 +203,6 @@
     }
   ],
   "favorites": [],
-
   "banners": [],
   "coupons": [],
   "product_variants": [],

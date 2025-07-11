@@ -30,7 +30,7 @@ router.use("/api/products", productRouter);
 router.use("/api/product-variant", product_variants);
 router.use("/api/categories", categoryRouter);
 router.use("/api/orders", orderRouter);
-router.use("/api/reviews", reviewRouter);
+router.use("/reviews", reviewRouter); 
 router.use("/api/favorites", favoriteRouter);
 router.use("/api/banners", bannersRouter);
 router.use("/api/coupons", couponsRouter);

@@ -64,7 +64,7 @@ const Header: React.FC = () => {
     (user) ?
       [
         { key: "profile", label: "Tài khoản" },
-        { key: "orders", label: "Đơn hàng" },
+        { key: "orders", label:<Link to="/cart">Đơn hàng</Link>  },
         { key: "logout", label: "Đăng xuất", onClick: logout },
       ] :
       [
