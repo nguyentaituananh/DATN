@@ -6,8 +6,15 @@ interface AuthContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   isAuthenticated: boolean;
+  isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  register: (
+    name: string,
+    email: string,
+    password: string,
+    address: string,
+    phone_number: string
+  ) => Promise<void>;
   logout: () => void;
   updateProfile: (userData: Partial<User>) => Promise<void>;
 }
@@ -33,43 +40,44 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for saved auth in localStorage
     const savedAuth = localStorage.getItem('auth');
     if (savedAuth) {
       const parsedAuth = JSON.parse(savedAuth);
       setUser(parsedAuth.user);
       setIsAuthenticated(true);
     }
+    setIsLoading(false);
   }, []);
 
   const login = async (email: string, password: string): Promise<User> => {
-  const res = await axios.post("http://localhost:5000/auth/login", { email, password });
-  setUser(res.data.user);
-  setIsAuthenticated(true);
-  localStorage.setItem('auth', JSON.stringify({ user: res.data.user }));
-  return res.data.user;
-};
+    const res = await axios.post("http://localhost:5000/auth/login", { email, password });
+    setUser(res.data.user);
+    setIsAuthenticated(true);
+    localStorage.setItem('auth', JSON.stringify({ user: res.data.user }));
+    return res.data.user;
+  };
 
   const register = async (
-  name: string,
-  email: string,
-  password: string,
-  address: string,
-  phone_number: string
-) => {
-  const res = await axios.post("http://localhost:5000/auth/register", {
-    name,
-    email,
-    password,
-    address,
-    phone_number,
-  });
-  setUser(res.data.user);
-  setIsAuthenticated(true);
-  localStorage.setItem('auth', JSON.stringify({ user: res.data.user }));
-};
+    name: string,
+    email: string,
+    password: string,
+    address: string,
+    phone_number: string
+  ) => {
+    await axios.post("http://localhost:5000/auth/register", {
+      name,
+      email,
+      password,
+      address,
+      phone_number,
+    });
+    // setUser(res.data.user);
+    // setIsAuthenticated(true);
+    // localStorage.setItem('auth', JSON.stringify({ user: res.data.user }));
+  };
 
   const logout = () => {
     setUser(null);
@@ -98,6 +106,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user,
         setUser,
         isAuthenticated,
+        isLoading,
         login,
         register,
         logout,

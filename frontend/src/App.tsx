@@ -21,6 +21,7 @@ import OrderList from "./pages/admin/order/OrderList";
 import UserList from "./pages/admin/account/UserList";
 import CommentList from "./pages/admin/reviews/reviewsList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
+import ProtectedRouteAdmin from "./components/ProtectedRouteAdmin";
 
 // User Pages
 import HomePage from "./pages/user/HomePage";
@@ -30,7 +31,7 @@ import CartPage from "./pages/user/CartPage";
 import CheckoutPage from "./pages/user/CheckoutPage";
 import AboutPage from "./pages/user/AboutPage";
 import LoginPage from "./pages/user/LoginPage";
-import RegisterPage from "./pages/admin/user/RegisterPage";
+import RegisterPage from "./pages/user/RegisterPage";
 
 // Ant Design Theme
 const theme = {
@@ -56,7 +57,11 @@ function App() {
                   <ReviewProvider>
                     <Routes>
                       {/* ADMIN ROUTES */}
-                      <Route path="/admin" element={<LayoutAdmin />}>
+                      <Route path="/admin" element={
+                        <ProtectedRouteAdmin>
+                          <LayoutAdmin />
+                        </ProtectedRouteAdmin>
+                      }>
                         <Route index element={<DashboardPage />} />
                         <Route path="dashboard" element={<DashboardPage />} />
                         <Route path="product" element={<ProductList />} />
@@ -79,14 +84,8 @@ function App() {
                       <Route path="/" element={<Layout />}>
                         <Route index element={<HomePage />} />
                         <Route path="products" element={<ProductsPage />} />
-                        <Route
-                          path="products/:category"
-                          element={<ProductsPage />}
-                        />
-                        <Route
-                          path="product/:id"
-                          element={<ProductDetailPage />}
-                        />
+                        <Route path="products/:category" element={<ProductsPage />} />
+                        <Route path="product/:id" element={<ProductDetailPage />} />
                         <Route path="cart" element={<CartPage />} />
                         <Route path="checkout" element={<CheckoutPage />} />
                         <Route path="about" element={<AboutPage />} />
