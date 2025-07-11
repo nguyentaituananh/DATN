@@ -34,3 +34,23 @@ export const registerSchema = Joi.object({
 
   role: Joi.string().optional(),
 });
+
+
+export const changePasswordSchema = Joi.object({
+  currentPassword: Joi.string().required().messages({
+    "string.empty": "Vui lòng nhập mật khẩu hiện tại",
+  }),
+
+  newPassword: Joi.string()
+    .min(8)
+    .pattern(/[A-Z]/, "uppercase")
+    .pattern(/[0-9]/, "number")
+    .pattern(/[!@#$%^&*(),.?":{}|<>]/, "special")
+    .required()
+    .messages({
+      "string.empty": "Vui lòng nhập mật khẩu mới",
+      "string.min": "Mật khẩu phải có ít nhất 8 ký tự",
+      "string.pattern.name": "Mật khẩu phải chứa ít nhất 1 ký tự {#name}",
+    }),
+});
+

@@ -1,5 +1,3 @@
-// src/pages/user/ChangePasswordPage.tsx
-
 import React, { useState } from 'react';
 import {
   Form,
@@ -21,10 +19,6 @@ const ChangePasswordPage = () => {
 
   const handleChangePassword = async (values: any) => {
     const token = localStorage.getItem('token');
-    if (values.newPassword !== values.confirmPassword) {
-      message.error('Mật khẩu xác nhận không khớp!');
-      return;
-    }
 
     setLoading(true);
     try {
@@ -71,16 +65,54 @@ const ChangePasswordPage = () => {
                 <Form.Item
                   name="newPassword"
                   label="Mật khẩu mới"
-                  rules={[{ required: true, message: 'Vui lòng nhập mật khẩu mới' }]}
+                  rules={[
+                    { required: true, message: 'Vui lòng nhập mật khẩu mới' },
+                    { min: 8, message: 'Mật khẩu phải có ít nhất 8 ký tự' },
+                    {
+                      validator: (_, value) => {
+                        if (!value) return Promise.resolve();
+
+                        const hasUpperCase = /[A-Z]/.test(value);
+                        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+                        const hasNumber = /[0-9]/.test(value);
+
+                        if (!hasUpperCase) {
+                          return Promise.reject('Mật khẩu phải chứa ít nhất một chữ cái in hoa');
+                        }
+
+                        if (!hasSpecialChar) {
+                          return Promise.reject('Mật khẩu phải chứa ít nhất một ký tự đặc biệt');
+                        }
+
+                        if (!hasNumber) {
+                          return Promise.reject('Mật khẩu phải chứa ít nhất một chữ số');
+                        }
+
+                        return Promise.resolve();
+                      },
+                    },
+                  ]}
                 >
                   <Input.Password placeholder="Nhập mật khẩu mới" />
                 </Form.Item>
               </Col>
+
               <Col span={12}>
                 <Form.Item
                   name="confirmPassword"
                   label="Nhập lại mật khẩu mới"
-                  rules={[{ required: true, message: 'Vui lòng xác nhận lại mật khẩu' }]}
+                  dependencies={['newPassword']}
+                  rules={[
+                    { required: true, message: 'Vui lòng xác nhận lại mật khẩu' },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue('newPassword') === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(new Error('Mật khẩu xác nhận không khớp'));
+                      },
+                    }),
+                  ]}
                 >
                   <Input.Password placeholder="Nhập lại mật khẩu mới" />
                 </Form.Item>
