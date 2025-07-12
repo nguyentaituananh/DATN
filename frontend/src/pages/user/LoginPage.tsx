@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Form, Input, Checkbox, Divider, message } from 'antd';
 import { Mail, Lock } from 'lucide-react';
 import Button from '../../components/ui/Button';
-import { useAuth } from '../../pages/context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
 const LoginPage: React.FC = () => {
   const { login } = useAuth();
@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
     setIsLoading(true);
     
     try {
-      await login({email , password});
+      await login(email, password);
       message.success('Login successful!');
       navigate(returnTo);
     } catch (error) {

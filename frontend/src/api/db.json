@@ -158,47 +158,23 @@
     {
       "id": 1,
       "userId": "1",
-      "product": {
-        "id": "abc123",
-        "name": "sofa",
-        "price": 100
-      },
+      "product": { "id": "abc123", "name": "sofa", "price": 100 },
       "quantity": 2,
       "color": "đen"
-    },
-    {
-      "user_id": "1",
-      "product_id": "4",
-      "quantity": 1,
-      "id": 2
-    },
-    {
-      "user_id": "1",
-      "product_id": "4",
-      "quantity": 1,
-      "id": 3
-    },
-    {
-      "user_id": "1",
-      "product_id": "5",
-      "quantity": 1,
-      "id": 4
-    },
-    {
-      "user_id": "1",
-      "product_id": "1",
-      "quantity": 1,
-      "id": 5
-    },
-    {
-      "user_id": "1",
-      "product_id": "3",
-      "quantity": 1,
-      "id": 6
     }
   ],
   "cart_items": [],
+  "account": [
+    {
+      "id": "1",
+      "name": "Hoàng Duy",
+      "email": "hoangduy@gmail.com",
+      "role": "User",
+      "createdAt": "2025-07-07"
+    }
+  ],
   "favorites": [],
+
   "banners": [],
   "coupons": [],
   "product_variants": [],

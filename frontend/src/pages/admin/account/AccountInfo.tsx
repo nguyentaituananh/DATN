@@ -24,23 +24,38 @@ interface DataType {
 
 const columns: TableColumnsType<DataType> = [
   {
-    title: <span className="flex items-center gap-2 text-purple-700 font-semibold">👤 Họ tên</span>,
+    title: (
+      <span className="flex items-center gap-2 text-purple-700 font-semibold">
+        👤 Họ tên
+      </span>
+    ),
     dataIndex: "name",
     align: "center",
     render: (text: string) => <span className="font-semibold">{text}</span>,
   },
   {
-    title: <span className="flex items-center gap-2 text-blue-700 font-semibold">📧 Email</span>,
+    title: (
+      <span className="flex items-center gap-2 text-blue-700 font-semibold">
+        📧 Email
+      </span>
+    ),
     dataIndex: "email",
     align: "center",
     render: (text: string) => (
-      <a href={`mailto:${text}`} className="text-blue-600 hover:underline font-medium">
+      <a
+        href={`mailto:${text}`}
+        className="text-blue-600 hover:underline font-medium"
+      >
         {text}
       </a>
     ),
   },
   {
-    title: <span className="flex items-center gap-2 text-yellow-600 font-semibold">🔒 Vai trò</span>,
+    title: (
+      <span className="flex items-center gap-2 text-yellow-600 font-semibold">
+        🔒 Vai trò
+      </span>
+    ),
     dataIndex: "role",
     align: "center",
     render: (role: string) => (
@@ -50,7 +65,11 @@ const columns: TableColumnsType<DataType> = [
     ),
   },
   {
-    title: <span className="flex items-center gap-2 text-cyan-700 font-semibold">📅 Ngày tạo</span>,
+    title: (
+      <span className="flex items-center gap-2 text-cyan-700 font-semibold">
+        📅 Ngày tạo
+      </span>
+    ),
     dataIndex: "createdAt",
     align: "center",
   },
@@ -84,5 +103,3 @@ const AccountInfo = () => {
 };
 
 export default AccountInfo;
-
-

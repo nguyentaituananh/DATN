@@ -33,7 +33,9 @@ const EditOrder = () => {
         if (data.user_id) {
           // user_id là object chứa thông tin user
           form.setFieldValue("user_id", data.user_id._id);
-          setUserNameDisplay(`${data.user_id.customer_code} - ${data.user_id.name}`);
+          setUserNameDisplay(
+            `${data.user_id.customer_code} - ${data.user_id.name}`
+          );
         }
 
         form.setFieldsValue({
@@ -66,30 +68,29 @@ const EditOrder = () => {
   };
 
   return (
-    <Card title="✏️ Sửa đơn hàng" bordered={false} className="shadow-lg rounded-xl">
+    <Card
+      title="✏️ Sửa đơn hàng"
+      bordered={false}
+      className="shadow-lg rounded-xl"
+    >
       <Form form={form} onFinish={handleSubmit} layout="vertical">
-        {/* ✅ Trường user_id ẩn để gửi kèm khi cập nhật */}
-        <Form.Item name="user_id" hidden>
-          <Input />
-        </Form.Item>
-
-        {/* ✅ Hiển thị tên khách hàng (không cho sửa) */}
-        <Form.Item label="Khách hàng">
-          <Input value={userNameDisplay} disabled />
+        {/* ✅ Hiển thị user_id nhưng disabled */}
+        <Form.Item label="ID người dùng">
+          <Input value={userId} disabled />
         </Form.Item>
 
         <Form.Item
           label="Địa chỉ giao hàng"
           name="shipping_address"
-          rules={[{ required: true, message: "Vui lòng nhập địa chỉ" }]}
+          rules={[{ required: true }]}
         >
-          <Input placeholder="VD: 123 Nguyễn Huệ, Q1" />
+          <Input />
         </Form.Item>
 
         <Form.Item
           label="Ngày đặt hàng"
           name="order_date"
-          rules={[{ required: true, message: "Chọn ngày đặt hàng" }]}
+          rules={[{ required: true }]}
         >
           <DatePicker format="YYYY-MM-DD" className="w-full" />
         </Form.Item>
@@ -107,30 +108,39 @@ const EditOrder = () => {
             <>
               <label className="font-medium text-base">Sản phẩm</label>
               {fields.map(({ key, name, ...rest }) => (
-                <Space key={key} align="baseline" wrap style={{ marginBottom: 8 }}>
+                <Space
+                  key={key}
+                  align="baseline"
+                  wrap
+                  style={{ marginBottom: 8 }}
+                >
                   <Form.Item
                     {...rest}
                     name={[name, "product_id"]}
-                    rules={[{ required: true, message: "Nhập ID sản phẩm" }]}
+                    rules={[{ required: true }]}
                   >
                     <Input placeholder="Product ID" />
                   </Form.Item>
                   <Form.Item
                     {...rest}
                     name={[name, "quantity"]}
-                    rules={[{ required: true, message: "Nhập số lượng" }]}
+                    rules={[{ required: true }]}
                   >
                     <InputNumber min={1} placeholder="SL" />
                   </Form.Item>
                   <Form.Item
                     {...rest}
                     name={[name, "price"]}
-                    rules={[{ required: true, message: "Nhập giá sản phẩm" }]}
+                    rules={[{ required: true }]}
                   >
                     <InputNumber
                       min={0}
                       placeholder="Giá (VNĐ)"
-                      formatter={(v) => v!.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                      formatter={(v) =>
+                        v != null
+                          ? String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                          : ""
+                      }
                     />
                   </Form.Item>
                   <MinusCircleOutlined
@@ -140,7 +150,12 @@ const EditOrder = () => {
                 </Space>
               ))}
               <Form.Item>
-                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
                   Thêm sản phẩm
                 </Button>
               </Form.Item>

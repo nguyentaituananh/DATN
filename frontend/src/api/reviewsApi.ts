@@ -1,7 +1,7 @@
 // src/api/reviewApi.ts
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = 'http://localhost:5000/reviews';
+const API_URL = "http://localhost:5000/api/reviews";
 
 export const getAllReviews = () => axios.get(API_URL);
 

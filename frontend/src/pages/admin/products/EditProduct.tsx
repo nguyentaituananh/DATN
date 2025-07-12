@@ -1,262 +1,274 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import instanceAxios from "../../../utils/instanceAxios";
 
-type FormData = {
+type Category = {
+  _id: string;
   name: string;
-  description: string;
-  price: number;
-  discount_price: number;
-  images: File[];
-  oldImages: string[];
-  category_id: string;
-  type: string;
-  size: string;
-  color: string;
-  dimensions: string;
-  related_products: string[];
 };
 
-type Props = {
-  product: FormData;
-};
+const EditProducts = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-const EditProduct = ({ product }: Props) => {
-  const [formData, setFormData] = useState<FormData>({
-    ...product,
-    images: [],
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    category_id: "",
+    images: [] as string[],
   });
 
-  useEffect(() => {
-    setFormData({ ...product, images: [] });
-  }, [product]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [variants, setVariants] = useState<any[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
 
-  const handleChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-      | React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const { name, value, type, files, checked } = e.target as HTMLInputElement;
-    if (type === "file") {
-      setFormData({ ...formData, images: files ? Array.from(files) : [] });
-    } else if (type === "checkbox") {
-      const selected = [...formData.related_products];
-      if (checked) {
-        selected.push(value);
-      } else {
-        const index = selected.indexOf(value);
-        if (index > -1) selected.splice(index, 1);
+  // Tải dữ liệu khi vào trang
+  useEffect(() => {
+    fetchCategories();
+    fetchProductDetail();
+  }, []);
+
+  const fetchCategories = async () => {
+    const res = await instanceAxios.get("/api/categories");
+    setCategories(res.data);
+  };
+
+  const fetchProductDetail = async () => {
+    const res = await instanceAxios.get(`/api/products/${id}`);
+    const product = res.data;
+
+    setFormData({
+      name: product.name,
+      description: product.description,
+      category_id: product.category_id?._id || "",
+      images: product.images,
+    });
+
+    setImagePreviews(product.images);
+    setVariants(product.variants);
+  };
+
+  const handleChange = (e: React.ChangeEvent<any>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleVariantChange = (index: number, field: string, value: any) => {
+    const updatedVariants = [...variants];
+    updatedVariants[index][field] = value;
+    setVariants(updatedVariants);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      // Update product
+      await instanceAxios.put(`/api/products/${id}`, {
+        name: formData.name,
+        description: formData.description,
+        category_id: formData.category_id,
+      });
+
+      // Update variants
+      for (const variant of variants) {
+        await instanceAxios.put(`/api/product-variant/${variant._id}`, {
+          price: variant.price,
+          import_price: variant.import_price,
+          sku: variant.sku,
+          stock_quantity: variant.stock_quantity,
+          attributes: variant.attributes,
+        });
       }
-      setFormData({ ...formData, related_products: selected });
-    } else {
-      setFormData({ ...formData, [name]: value });
+
+      alert("Cập nhật sản phẩm thành công!");
+      navigate("/admin/product");
+    } catch (err: any) {
+      console.error(err.response?.data || err);
+      alert(err.response?.data.message || "Có lỗi xảy ra.");
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Updated product data:", formData);
-    // TODO: call PUT API
-  };
-
   return (
-    <div className="bg-gray-100 min-h-screen p-6">
-      <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center">
-          Chỉnh sửa sản phẩm
-        </h2>
+    <div className="max-w-6xl mx-auto p-6 bg-white rounded-xl shadow">
+      <h2 className="text-2xl font-bold mb-4">Chỉnh sửa sản phẩm</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block mb-1 font-semibold">Tên sản phẩm</label>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            className="border p-3 w-full rounded"
+          />
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          {/* Tên sản phẩm */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Tên sản phẩm
-            </label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full border rounded-xl px-4 py-3"
-            />
-          </div>
+        <div>
+          <label className="block mb-1 font-semibold">Mô tả</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            className="border p-3 w-full rounded"
+          />
+        </div>
 
-          {/* Mô tả */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Mô tả
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              rows={3}
-              className="w-full border rounded-xl px-4 py-3"
-            />
-          </div>
+        <div>
+          <label className="block mb-1 font-semibold">Danh mục</label>
+          <select
+            name="category_id"
+            value={formData.category_id}
+            onChange={handleChange}
+            className="border p-3 w-full rounded"
+          >
+            <option value="">-- Chọn danh mục --</option>
+            {categories.map((c) => (
+              <option key={c._id} value={c._id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          {/* Loại sản phẩm */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Loại sản phẩm
-            </label>
-            <select
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              className="w-full border rounded-xl px-4 py-3"
-            >
-              <option value="">Chọn loại</option>
-              <option value="sofa">Sofa</option>
-              <option value="cabinet">Cabinet</option>
-              <option value="chair">Chair</option>
-              <option value="table">Table</option>
-            </select>
-          </div>
-
-          {/* Các trường chi tiết */}
-          {formData.type && (
-            <>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Size
-                </label>
-                <input
-                  type="text"
-                  name="size"
-                  value={formData.size}
-                  onChange={handleChange}
-                  className="w-full border rounded-xl px-4 py-3"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Màu sắc
-                </label>
-                <input
-                  type="text"
-                  name="color"
-                  value={formData.color}
-                  onChange={handleChange}
-                  className="w-full border rounded-xl px-4 py-3"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Kích thước
-                </label>
-                <input
-                  type="text"
-                  name="dimensions"
-                  value={formData.dimensions}
-                  onChange={handleChange}
-                  className="w-full border rounded-xl px-4 py-3"
-                />
-              </div>
-            </>
-          )}
-
-          {/* Giá */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Giá
-              </label>
-              <input
-                type="number"
-                name="price"
-                value={formData.price}
-                onChange={handleChange}
-                className="w-full border rounded-xl px-4 py-3"
+        <div>
+          <label className="block mb-1 font-semibold">Ảnh sản phẩm</label>
+          <div className="flex gap-2 flex-wrap mt-2">
+            {imagePreviews.map((src, idx) => (
+              <img
+                key={idx}
+                src={src}
+                alt=""
+                className="w-20 h-20 object-cover rounded"
               />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Giá khuyến mãi
-              </label>
-              <input
-                type="number"
-                name="discount_price"
-                value={formData.discount_price}
-                onChange={handleChange}
-                className="w-full border rounded-xl px-4 py-3"
-              />
-            </div>
+            ))}
           </div>
+        </div>
 
-          {/* Ảnh cũ */}
-          {formData.oldImages.length > 0 && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Ảnh hiện tại
-              </label>
-              <div className="flex gap-4 flex-wrap">
-                {formData.oldImages.map((url, index) => (
-                  <img
-                    key={index}
-                    src={url}
-                    alt="old"
-                    className="w-24 h-24 object-cover rounded border"
-                  />
+        {/* Biến thể */}
+        {variants.length > 0 && (
+          <>
+            <h3 className="font-semibold text-lg mt-6">Danh sách Biến thể</h3>
+            <table className="w-full border text-sm mt-2">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="border p-2">SKU</th>
+                  <th className="border p-2">Giá nhập</th>
+                  <th className="border p-2">Giá bán</th>
+                  <th className="border p-2">Kho</th>
+                  <th className="border p-2">Size</th>
+                  <th className="border p-2">Màu</th>
+                  <th className="border p-2">Kích thước</th>
+                </tr>
+              </thead>
+              <tbody>
+                {variants.map((v, index) => (
+                  <tr key={v._id}>
+                    <td className="border p-2">
+                      <input
+                        value={v.sku}
+                        onChange={(e) =>
+                          handleVariantChange(index, "sku", e.target.value)
+                        }
+                        className="border p-1 rounded w-24"
+                      />
+                    </td>
+                    <td className="border p-2">
+                      <input
+                        type="number"
+                        value={v.import_price}
+                        onChange={(e) =>
+                          handleVariantChange(
+                            index,
+                            "import_price",
+                            Number(e.target.value)
+                          )
+                        }
+                        className="border p-1 rounded w-20"
+                      />
+                    </td>
+                    <td className="border p-2">
+                      <input
+                        type="number"
+                        value={v.price}
+                        onChange={(e) =>
+                          handleVariantChange(
+                            index,
+                            "price",
+                            Number(e.target.value)
+                          )
+                        }
+                        className="border p-1 rounded w-20"
+                      />
+                    </td>
+                    <td className="border p-2">
+                      <input
+                        type="number"
+                        value={v.stock_quantity}
+                        onChange={(e) =>
+                          handleVariantChange(
+                            index,
+                            "stock_quantity",
+                            Number(e.target.value)
+                          )
+                        }
+                        className="border p-1 rounded w-16"
+                      />
+                    </td>
+                    <td className="border p-2">
+                      <input
+                        value={v.attributes.size}
+                        onChange={(e) =>
+                          handleVariantChange(index, "attributes", {
+                            ...v.attributes,
+                            size: e.target.value,
+                          })
+                        }
+                        className="border p-1 rounded w-16"
+                      />
+                    </td>
+                    <td className="border p-2">
+                      <input
+                        value={v.attributes.color}
+                        onChange={(e) =>
+                          handleVariantChange(index, "attributes", {
+                            ...v.attributes,
+                            color: e.target.value,
+                          })
+                        }
+                        className="border p-1 rounded w-16"
+                      />
+                    </td>
+                    <td className="border p-2">
+                      <input
+                        value={v.attributes.dimensions}
+                        onChange={(e) =>
+                          handleVariantChange(index, "attributes", {
+                            ...v.attributes,
+                            dimensions: e.target.value,
+                          })
+                        }
+                        className="border p-1 rounded w-24"
+                      />
+                    </td>
+                  </tr>
                 ))}
-              </div>
-            </div>
-          )}
+              </tbody>
+            </table>
+          </>
+        )}
 
-          {/* Thêm ảnh mới */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Thêm ảnh mới
-            </label>
-            <input
-              type="file"
-              name="images"
-              multiple
-              onChange={handleChange}
-              className="w-full border rounded-xl px-4 py-3"
-            />
-          </div>
-
-          {/* Sản phẩm liên quan */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Sản phẩm liên quan
-            </label>
-            <div className="flex flex-wrap gap-4">
-              {[
-                // giả lập danh sách liên quan
-                { id: "1", name: "Sofa Teddy" },
-                { id: "2", name: "Chair Classic" },
-                { id: "3", name: "Cabinet Oak" },
-              ].map((item) => (
-                <label key={item.id} className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    value={item.id}
-                    checked={formData.related_products.includes(item.id)}
-                    onChange={handleChange}
-                    className="text-blue-600 rounded"
-                  />
-                  {item.name}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Submit */}
-          <div className="text-center">
-            <button
-              type="submit"
-              className="bg-amber-600 text-white px-6 py-3 rounded-full hover:bg-amber-700 transition"
-            >
-              Lưu chỉnh sửa
-            </button>
-          </div>
-        </form>
-      </div>
+        <button
+          type="submit"
+          className="bg-blue-600 text-white py-3 px-6 rounded mt-6"
+        >
+          Cập nhật sản phẩm
+        </button>
+      </form>
     </div>
   );
 };
 
-export default EditProduct;
+export default EditProducts;

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Form, Input, Checkbox, Divider, message } from "antd";
+import { useAuth } from "../../context/AuthContext";
 import Button from "../../components/ui/Button";
 import { Mail, Lock, User, Phone, Home } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../pages/context/AuthContext";
 
 const RegisterPage: React.FC = () => {
   const { register } = useAuth();
@@ -11,32 +11,23 @@ const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onFinish = async (values: {
-  name: string;
-  email: string;
-  password: string;
-  address: string;
-  phone_number: string;
-}) => {
-  setIsLoading(true);
-  try {
-    await register({
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      address: values.address,
-      phone_number: values.phone_number,
-    });
-    message.success("Registration successful!");
-    navigate("/");
-  } catch (error: any) {
-  const msg = error?.message || error?.response?.data?.message || "Registration failed.";
-  message.error(msg);
-}
- finally {
-    setIsLoading(false);
-  }
-};
-
+    name: string;
+    email: string;
+    password: string;
+    address: string;
+    phone_number: string;
+  }) => {
+    setIsLoading(true);
+    try {
+      await register(values.name, values.email, values.password);
+      message.success("Registration successful!");
+      navigate("/");
+    } catch (error) {
+      message.error("Registration failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="py-12 md:py-16">

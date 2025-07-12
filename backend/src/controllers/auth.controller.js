@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 
-
 // Hàm tạo mã KH
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -32,9 +31,9 @@ export const generateCustomerCode = async () => {
     return "AA00000"; // Khởi tạo ban đầu
   }
 
-  const prevCode = latestUser.customer_code; 
-  const prefix = prevCode.slice(0, 2);        
-  const number = parseInt(prevCode.slice(2)); 
+  const prevCode = latestUser.customer_code;
+  const prefix = prevCode.slice(0, 2);
+  const number = parseInt(prevCode.slice(2));
   let newPrefix = prefix;
   let newNumber = number + 1;
 
@@ -44,29 +43,24 @@ export const generateCustomerCode = async () => {
   }
 
   const paddedNumber = String(newNumber).padStart(5, "0");
-  return `${newPrefix}${paddedNumber}`; 
+  return `${newPrefix}${paddedNumber}`;
 };
 
 // Tạo token
 const generateToken = (userId) => {
-
   return jwt.sign({ id: userId }, "SECRET_KEY", { expiresIn: "7d" }); // Thay "SECRET_KEY" bằng biến môi trường thực tế
-
 };
 
 // Đăng ký
 export const register = async (req, res) => {
   const { name, email, password, address, phone_number, role } = req.body;
 
-  if (!name || !email || !password || !address || !phone_number) {
-    return res.status(400).json({ message: "Thiếu thông tin bắt buộc." });
-  }
-
   try {
+    // Kiểm tra xem email đã tồn tại chưa
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "Email đã tồn tại." });
+    if (existingUser)
+      return res.status(400).json({ message: "Email đã tồn tại." });
 
-    const customer_code = await generateCustomerCode(); 
     const newUser = new User({
       name,
       customer_code,
@@ -74,36 +68,30 @@ export const register = async (req, res) => {
       password,
       address,
       phone_number,
-      role: role || "customer",
+      role,
     });
 
+    // Mã hóa mật khẩu trước khi lưu vào DB
     await newUser.save();
 
+    // Tạo JWT token
     const token = generateToken(newUser._id);
     res.status(201).json({ user: newUser.name, token });
-
   } catch (err) {
-    console.error("Lỗi khi đăng ký:", err);
     res.status(500).json({ message: err.message });
-    console.error("Register Error:", err);
-res.status(500).json({ message: err.message, error: err });
-
   }
 };
 
 // Đăng nhập
 export const login = async (req, res) => {
-
   const { email, password } = req.body;
 
   try {
     // Tìm người dùng theo email
     const user = await User.findOne({ email });
-
     if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ message: "Sai tài khoản hoặc mật khẩu" });
     }
-
 
     // Kiểm tra trạng thái người dùng (is_active)
     if (!user.is_active) {
@@ -117,7 +105,6 @@ export const login = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
 
 // Lấy tất cả người dùng
 export const getAllUsers = async (req, res) => {
@@ -143,9 +130,14 @@ export const getUserById = async (req, res) => {
 // Cập nhật người dùng
 export const updateUser = async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     if (updatedUser) res.json(updatedUser);
-    else res.status(404).json({ message: "Không tìm thấy người dùng để cập nhật" });
+    else
+      res
+        .status(404)
+        .json({ message: "Không tìm thấy người dùng để cập nhật" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -157,7 +149,6 @@ export const deleteUser = async (req, res) => {
     const user = await User.findByIdAndDelete(req.params.id);
     if (user) res.json({ message: "Người dùng đã bị xóa" });
     else res.status(404).json({ message: "Không tìm thấy người dùng để xóa" });
-
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
