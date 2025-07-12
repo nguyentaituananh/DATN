@@ -38,7 +38,11 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   };
 
   return (
-    <Card title="➕ Thêm mới đơn hàng" bordered={false} className="shadow-lg rounded-xl">
+    <Card
+      title="➕ Thêm mới đơn hàng"
+      bordered={false}
+      className="shadow-lg rounded-xl"
+    >
       <Form
         onFinish={handleFinish}
         layout="vertical"
@@ -49,17 +53,33 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
         }}
       >
         {/* --- thông tin người dùng & địa chỉ --- */}
-        <Form.Item label="ID người dùng" name="user_id" rules={[{ required: true }]}>
+        <Form.Item
+          label="ID người dùng"
+          name="user_id"
+          rules={[{ required: true }]}
+        >
           <Input placeholder="ObjectId người dùng" />
         </Form.Item>
 
-        <Form.Item label="Địa chỉ giao hàng" name="shipping_address" rules={[{ required: true }]}>
+        <Form.Item
+          label="Địa chỉ giao hàng"
+          name="shipping_address"
+          rules={[{ required: true }]}
+        >
           <Input placeholder="123 Nguyễn Huệ, Q1" />
         </Form.Item>
 
         {/* --- ngày đặt hàng --- */}
-        <Form.Item label="Ngày đặt hàng" name="order_date" rules={[{ required: true }]}>
-          <DatePicker format="YYYY-MM-DD" className="w-full" placeholder="Chọn ngày" />
+        <Form.Item
+          label="Ngày đặt hàng"
+          name="order_date"
+          rules={[{ required: true }]}
+        >
+          <DatePicker
+            format="YYYY-MM-DD"
+            className="w-full"
+            placeholder="Chọn ngày"
+          />
         </Form.Item>
 
         {/* --- trạng thái --- */}
@@ -77,11 +97,16 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
             <>
               <label className="font-medium text-base">Sản phẩm</label>
               {fields.map(({ key, name, ...restField }) => (
-                <div key={key} className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 items-end">
+                <div
+                  key={key}
+                  className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 items-end"
+                >
                   <Form.Item
                     {...restField}
                     name={[name, "product_id"]}
-                    rules={[{ required: true, message: "Vui lòng nhập ID sản phẩm" }]}
+                    rules={[
+                      { required: true, message: "Vui lòng nhập ID sản phẩm" },
+                    ]}
                   >
                     <Input placeholder="Product ID" />
                   </Form.Item>
@@ -89,7 +114,9 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                   <Form.Item
                     {...restField}
                     name={[name, "quantity"]}
-                    rules={[{ required: true, message: "Vui lòng nhập số lượng" }]}
+                    rules={[
+                      { required: true, message: "Vui lòng nhập số lượng" },
+                    ]}
                   >
                     <InputNumber placeholder="SL" min={1} className="w-full" />
                   </Form.Item>
@@ -119,7 +146,12 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                 </div>
               ))}
               <Form.Item>
-                <Button type="dashed" onClick={() => add()} block icon={<PlusOutlined />}>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
                   Thêm sản phẩm
                 </Button>
               </Form.Item>
@@ -137,4 +169,4 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   );
 };
 
-export default OrderForm;
+export default CreateOrder;

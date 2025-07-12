@@ -11,7 +11,7 @@ const Layout: React.FC = () => {
       <Header />
       <main className="flex-grow pt-16 md:pt-20">
         <Outlet/>
-      </main>
+
       <Footer />
     </div>
   );

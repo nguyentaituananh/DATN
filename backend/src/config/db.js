@@ -1,6 +1,6 @@
 // db.js
 import mongoose from "mongoose";
-import dotenv from "dotenv" 
+import dotenv from "dotenv";
 dotenv.config(); // nạp biến từ .env
 
 const mongoURI = process.env.MONGO_URI;
@@ -18,5 +18,4 @@ const connectDB = async () => {
   }
 };
 
-export default connectDB
-
+export default connectDB;

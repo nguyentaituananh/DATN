@@ -4,13 +4,13 @@ import mongoose from 'mongoose';
 const orderSchema = new mongoose.Schema(
   {
     user_id: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: String,
       ref: 'User',
       required: true,
     },
     products: [
       {
-        product_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+        product_id: { type: String, required: true },
         quantity: { type: Number, required: true },
         price: { type: Number, required: true },
       }
@@ -27,7 +27,12 @@ const orderSchema = new mongoose.Schema(
     shipping_address: {
       type: String,
       required: true,
-    }
+    },
+     billing_address: { 
+      type: String,
+      required: true,
+    },
+    
   },
   { timestamps: true }
 );

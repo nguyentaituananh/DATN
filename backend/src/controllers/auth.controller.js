@@ -7,6 +7,51 @@ import { changePasswordSchema } from "../validates/user.validate.js"; // hoặc 
 
 
 
+// Hàm tạo mã KH
+const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+function getNextPrefix(current) {
+  const [firstChar, secondChar] = current;
+  const firstIndex = LETTERS.indexOf(firstChar);
+  const secondIndex = LETTERS.indexOf(secondChar);
+
+  if (secondIndex < LETTERS.length - 1) {
+    // Tăng ký tự thứ 2 (B -> C)
+    return firstChar + LETTERS[secondIndex + 1];
+  }
+
+  if (firstIndex < LETTERS.length - 1) {
+    // Tăng ký tự thứ 1 (A -> B), reset ký tự 2 về A
+    return LETTERS[firstIndex + 1] + "A";
+  }
+
+  throw new Error("Đã đạt giới hạn mã khách hàng (ZZ99999)");
+}
+
+export const generateCustomerCode = async () => {
+  const latestUser = await User.findOne({ customer_code: { $exists: true } })
+    .sort({ customer_code: -1 })
+    .lean();
+
+  if (!latestUser || !latestUser.customer_code) {
+    return "AA00000"; // Khởi tạo ban đầu
+  }
+
+  const prevCode = latestUser.customer_code;
+  const prefix = prevCode.slice(0, 2);
+  const number = parseInt(prevCode.slice(2));
+  let newPrefix = prefix;
+  let newNumber = number + 1;
+
+  if (newNumber >= 100000) {
+    newPrefix = getNextPrefix(prefix);
+    newNumber = 0;
+  }
+
+  const paddedNumber = String(newNumber).padStart(5, "0");
+  return `${newPrefix}${paddedNumber}`;
+};
+
 // Tạo token
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, "SECRET_KEY", { expiresIn: "7d" }); // Thay "SECRET_KEY" bằng biến môi trường thực tế
@@ -16,6 +61,7 @@ const generateToken = (userId) => {
 
 export const register = async (req, res) => {
   try {
+<<<<<<< HEAD
     const { error } = registerSchema.validate(req.body, { abortEarly: false });
     if (error) {
       const messages = error.details.map((detail) => detail.message);
@@ -29,10 +75,18 @@ export const register = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: "Email đã tồn tại." });
     }
+=======
+    const existingUser = await User.findOne({ email });
+    if (existingUser)
+      return res.status(400).json({ message: "Email đã tồn tại." });
 
-    // Tạo người dùng mới
+    // Thêm dòng này để sinh mã tự động
+    const customer_code = await generateCustomerCode();
+>>>>>>> 4972f81020297a60c800d3060049d31b85e1d23b
+
     const newUser = new User({
       name,
+      customer_code, // Giờ đã có giá trị!
       email,
       password,
       address,
@@ -43,7 +97,7 @@ export const register = async (req, res) => {
     await newUser.save();
 
     const token = generateToken(newUser._id);
-    res.status(201).json({ user: newUser.name, token });
+    res.status(201).json({ user: newUser, token }); // Nên trả về toàn bộ user
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -68,12 +122,15 @@ export const login = async (req, res) => {
 
     // Tạo JWT token
     const token = generateToken(user._id);
+<<<<<<< HEAD
     res.status(200).json({ user: user.name, token ,id :user.id});
+=======
+    res.status(200).json({ user: user, token });
+>>>>>>> 4972f81020297a60c800d3060049d31b85e1d23b
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
-
 
 // Lấy tất cả người dùng
 export const getAllUsers = async (req, res) => {
@@ -99,9 +156,14 @@ export const getUserById = async (req, res) => {
 // Cập nhật người dùng
 export const updateUser = async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     if (updatedUser) res.json(updatedUser);
-    else res.status(404).json({ message: "Không tìm thấy người dùng để cập nhật" });
+    else
+      res
+        .status(404)
+        .json({ message: "Không tìm thấy người dùng để cập nhật" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -118,6 +180,7 @@ export const deleteUser = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 
 export const changePassword = async (req, res) => {
   const { error } = changePasswordSchema.validate(req.body, { abortEarly: false });
@@ -153,3 +216,24 @@ export const changePassword = async (req, res) => {
   }
 };
 
+=======
+// Tìm kiếm theo mã khách hàng (autocomplete)
+export const searchUsersByCustomerCode = async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q || q.length < 1) {
+      return res.status(400).json({ message: "Thiếu tham số tìm kiếm" });
+    }
+
+    const users = await User.find({
+      customer_code: { $regex: `^${q}`, $options: "i" },
+    })
+      .limit(10)
+      .select("name customer_code _id");
+
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+>>>>>>> 4972f81020297a60c800d3060049d31b85e1d23b
