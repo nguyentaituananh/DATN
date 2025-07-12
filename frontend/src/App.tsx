@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom"; 
 import LayoutAdmin from "./layouts/admin/LayoutAdmin";
 import CartPage from "./pages/user/CartPage";
-// import { CartProvider } from "./context/CartContext";
+import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/user/HomePage";
 import Layout from "./components/layout/Layout";
 import { AuthProvider } from "./pages/context/AuthContext";
@@ -35,7 +35,7 @@ function App() {
   return (
     <ConfigProvider theme={theme}>
       <AuthProvider>
-        {/* <CartProvider> */}
+        <CartProvider>
         <Routes>
           <Route path="/admin" element={<LayoutAdmin />}>
             <Route index element={<DashboardPage />} />
@@ -64,7 +64,7 @@ function App() {
             <Route path="change-password" element={<ChangePasswordPage />} />
           </Route>
         </Routes>
-        {/* </CartProvider> */}
+        </CartProvider>
       </AuthProvider>
     </ConfigProvider>
   );
