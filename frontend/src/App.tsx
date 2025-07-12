@@ -18,6 +18,9 @@ import { DashboardPage } from "./pages/admin/DashboardPage";
 import ProductList from "./pages/admin/products/ProductList";
 import CreateProducts from "./pages/admin/products/CreateProducts";
 import OrderList from "./pages/admin/order/OrderList";
+import EditOrder from "./pages/admin/order/EditOrder";
+import OrderDetail from "./pages/admin/order/OrderDetail";
+import OrderForm from "./pages/admin/order/CreateOder";
 import UserList from "./pages/admin/account/UserList";
 import CommentList from "./pages/admin/reviews/reviewsList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
@@ -71,7 +74,10 @@ function App() {
                         <Route path="order" element={<OrderList />} />
                         <Route path="user" element={<UserList />} />
                         <Route path="comment" element={<CommentList />} />
-                        <Route path="import" element={<OrderList />} />
+                        <Route path="order" element={<OrderList />} />
+                        <Route path="order/create" element={<OrderForm />} />
+                        <Route path="order/edit/:id" element={<EditOrder />} />
+                        <Route path="order/:id" element={<OrderDetail />} />
                         <Route path="account" element={<AccountInfo />} />
                       </Route>
 
