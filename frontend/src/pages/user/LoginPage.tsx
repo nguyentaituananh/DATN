@@ -10,20 +10,15 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
-
+  
   // Extract returnTo from location state if available
   const returnTo = location.state?.returnTo || '/';
 
-<<<<<<< HEAD
  const onFinish = async (values: { email: string; password: string }) => {
-=======
-  const onFinish = async (values: { email: string; password: string }) => {
->>>>>>> 4972f81020297a60c800d3060049d31b85e1d23b
   const { email, password } = values;
   setIsLoading(true);
 
   try {
-<<<<<<< HEAD
     const response = await login({ email, password });
 
     console.log("Login response:", response);
@@ -43,26 +38,13 @@ const LoginPage: React.FC = () => {
   } catch (error) {
     console.error("Login error:", error);
     message.error("Login failed. Please check your credentials.");
-=======
-    const loggedInUser = await login(email, password);
-    message.success('Login successful!');
-    if (loggedInUser.role === 'admin' || loggedInUser.role === 'Admin') {
-      window.open('/admin', '_blank'); 
-    }
-    navigate(returnTo);
-  } catch (error) {
-    message.error('Login failed. Please check your credentials.');
->>>>>>> 4972f81020297a60c800d3060049d31b85e1d23b
   } finally {
     setIsLoading(false);
   }
 };
-<<<<<<< HEAD
 
 
 
-=======
->>>>>>> 4972f81020297a60c800d3060049d31b85e1d23b
 
   return (
     <div className="py-12 md:py-16">
@@ -72,7 +54,7 @@ const LoginPage: React.FC = () => {
             <h1 className="text-3xl font-serif font-medium">Welcome Back</h1>
             <p className="text-gray-600 mt-2">Đăng nhập để tiếp tục vào tài khoản của bạn</p>
           </div>
-
+          
           <Form
             name="login"
             layout="vertical"
@@ -89,9 +71,9 @@ const LoginPage: React.FC = () => {
                 { type: 'email', message: 'Please enter a valid email' }
               ]}
             >
-              <Input
-                prefix={<Mail size={16} className="text-gray-400 mr-2" />}
-                placeholder="your@email.com"
+              <Input 
+                prefix={<Mail size={16} className="text-gray-400 mr-2" />} 
+                placeholder="your@email.com" 
               />
             </Form.Item>
 
@@ -100,9 +82,9 @@ const LoginPage: React.FC = () => {
               label="Password"
               rules={[{ required: true, message: 'Please enter your password' }]}
             >
-              <Input.Password
-                prefix={<Lock size={16} className="text-gray-400 mr-2" />}
-                placeholder="Password"
+              <Input.Password 
+                prefix={<Lock size={16} className="text-gray-400 mr-2" />} 
+                placeholder="Password" 
               />
             </Form.Item>
 
@@ -117,11 +99,11 @@ const LoginPage: React.FC = () => {
             </div>
 
             <Form.Item>
-              <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                fullWidth
+              <Button 
+                type="submit" 
+                variant="primary" 
+                size="lg" 
+                fullWidth 
                 isLoading={isLoading}
               >
                 Đăng nhập
@@ -131,7 +113,7 @@ const LoginPage: React.FC = () => {
 
           {/* Social Login Options would go here in a real implementation */}
           <Divider plain>hoặc tiếp tục với</Divider>
-
+          
           <div className="grid grid-cols-3 gap-3 mt-6">
             <button className="flex justify-center items-center py-2 border rounded-md hover:bg-gray-50">
               Google
@@ -143,10 +125,10 @@ const LoginPage: React.FC = () => {
               Apple
             </button>
           </div>
-
+          
           <div className="text-center mt-8">
             <p className="text-gray-600">
-              Bạn chưa có tài khoản?{' '}
+             Bạn chưa có tài khoản?{' '}
               <Link to="/register" className="text-amber-700 hover:text-amber-800 font-medium">
                 Tạo mới
               </Link>

@@ -86,7 +86,7 @@ export const register = async (req, res) => {
 
     const newUser = new User({
       name,
-      customer_code, // Giờ đã có giá trị!
+      customer_code,
       email,
       password,
       address,
@@ -97,7 +97,7 @@ export const register = async (req, res) => {
     await newUser.save();
 
     const token = generateToken(newUser._id);
-    res.status(201).json({ user: newUser, token }); // Nên trả về toàn bộ user
+    res.status(201).json({ user: newUser, token }); 
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
