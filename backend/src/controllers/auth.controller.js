@@ -1,5 +1,11 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
+import bcrypt from "bcryptjs";
+import { registerSchema } from "../validates/user.validate.js";
+import { changePasswordSchema } from "../validates/user.validate.js"; // hoặc path tương ứng
+
+
+
 
 // Hàm tạo mã KH
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -52,20 +58,29 @@ const generateToken = (userId) => {
 };
 
 // Đăng ký
+
 export const register = async (req, res) => {
-  const { name, email, password, address, phone_number, role } = req.body;
-
   try {
-    const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return res.status(400).json({ message: "Email đã tồn tại." });
+    const { error } = registerSchema.validate(req.body, { abortEarly: false });
+    if (error) {
+      const messages = error.details.map((detail) => detail.message);
+      return res.status(400).json({ message: messages });
+    }
 
-    // Thêm dòng này để sinh mã tự động
+    const { name, email, password, address, phone_number, role } = req.body;
+
+    // Kiểm tra email đã tồn tại
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email đã tồn tại." });
+    }
+
+
     const customer_code = await generateCustomerCode();
 
     const newUser = new User({
       name,
-      customer_code, // Giờ đã có giá trị!
+      customer_code,
       email,
       password,
       address,
@@ -76,11 +91,12 @@ export const register = async (req, res) => {
     await newUser.save();
 
     const token = generateToken(newUser._id);
-    res.status(201).json({ user: newUser, token }); // Nên trả về toàn bộ user
+    res.status(201).json({ user: newUser, token }); 
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 // Đăng nhập
 export const login = async (req, res) => {
@@ -100,7 +116,8 @@ export const login = async (req, res) => {
 
     // Tạo JWT token
     const token = generateToken(user._id);
-    res.status(200).json({ user: user, token });
+    res.status(200).json({ user: user.name, token ,id :user.id});
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -151,6 +168,41 @@ export const deleteUser = async (req, res) => {
     else res.status(404).json({ message: "Không tìm thấy người dùng để xóa" });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+
+
+export const changePassword = async (req, res) => {
+  const { error } = changePasswordSchema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    const messages = error.details.map((detail) => detail.message);
+    return res.status(400).json({ message: "Dữ liệu không hợp lệ", errors: messages });
+  }
+
+  const { currentPassword, newPassword } = req.body;
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ message: "Không tìm thấy người dùng." });
+
+    const isMatch = await user.matchPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Mật khẩu hiện tại không đúng." });
+    }
+
+    if (currentPassword === newPassword) {
+      return res.status(400).json({ message: "Mật khẩu mới không được trùng với mật khẩu cũ." });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    res.json({ message: "Đổi mật khẩu thành công." });
+  } catch (err) {
+    console.error("Lỗi khi đổi mật khẩu:", err);
+    res.status(500).json({ message: "Lỗi server khi đổi mật khẩu.", error: err.message });
   }
 };
 
