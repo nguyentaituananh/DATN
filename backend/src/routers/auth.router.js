@@ -7,7 +7,8 @@ import {
   getUserById,
   updateUser,
   deleteUser,
-  changePassword
+  changePassword,
+  searchUsersByCustomerCode
 } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
 
