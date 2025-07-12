@@ -25,6 +25,10 @@ import UserList from "./pages/admin/account/UserList";
 import CommentList from "./pages/admin/reviews/reviewsList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
 import ProtectedRouteAdmin from "./components/ProtectedRouteAdmin";
+import CategoryList from "./pages/admin/category/CategoryList";
+import CategoryCreate from "./pages/admin/category/CategoryCreate";
+import EditCategory from "./pages/admin/category/CategoryEdit";
+
 
 // User Pages
 import HomePage from "./pages/user/HomePage";
@@ -86,6 +90,9 @@ function App() {
                         <Route path="order/create" element={<OrderForm />} />
                         <Route path="order/edit/:id" element={<EditOrder />} />
                         <Route path="order/:id" element={<OrderDetail />} />
+                        <Route path="category" element={<CategoryList />} />
+                        <Route path="category/create" element={<CategoryCreate />} />
+                        <Route path="category/edit/:id" element={<EditCategory />} />
                         <Route path="account" element={<AccountInfo />} />
                       </Route>
 

@@ -14,8 +14,9 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import debounce from "lodash.debounce";
 import instanceAxios from "../../../utils/instanceAxios";
-import { createOrder } from "../../../api/oderAPI";
+
 import { useNavigate } from "react-router-dom";
+import { createOrder } from "../../../api/orderAPI";
 
 
 const { Option } = Select;
