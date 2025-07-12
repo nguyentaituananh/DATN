@@ -3,10 +3,12 @@ import Order from '../models/order.model.js';
 // Tạo đơn hàng
 export const createOrder = async (req, res) => {
   try {
+    console.log("🟡 Đã nhận order body:", req.body);
     const newOrder = new Order(req.body);
     const savedOrder = await newOrder.save();
     res.status(201).json(savedOrder);
   } catch (err) {
+    console.error("❌ Lỗi tạo order:", err);
     res.status(500).json({ message: err.message });
   }
 };

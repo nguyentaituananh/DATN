@@ -166,7 +166,7 @@ const RegisterPage: React.FC = () => {
                 to="/login"
                 className="text-amber-700 hover:text-amber-800 font-medium"
               >
-                Sign in
+                Đăng ký
               </Link>
             </p>
           </div>

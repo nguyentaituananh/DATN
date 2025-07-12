@@ -5,7 +5,7 @@ import { StrictMode } from "react";
 
 // Layouts
 import LayoutAdmin from "./layouts/admin/LayoutAdmin";
-import Layout from "./components/layout/layout";
+import Layout from "./components/layout/Layout";
 
 // Context Providers
 import { CartProvider } from "./context/CartContext";
@@ -24,6 +24,7 @@ import OrderForm from "./pages/admin/order/CreateOder";
 import UserList from "./pages/admin/account/UserList";
 import CommentList from "./pages/admin/reviews/reviewsList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
+import ProtectedRouteAdmin from "./components/ProtectedRouteAdmin";
 
 // User Pages
 import HomePage from "./pages/user/HomePage";
@@ -33,7 +34,7 @@ import CartPage from "./pages/user/CartPage";
 import CheckoutPage from "./pages/user/CheckoutPage";
 import AboutPage from "./pages/user/AboutPage";
 import LoginPage from "./pages/user/LoginPage";
-import RegisterPage from "./pages/admin/user/RegisterPage";
+import RegisterPage from "./pages/user/RegisterPage";
 
 // Ant Design Theme
 const theme = {
@@ -59,7 +60,14 @@ function App() {
                   <ReviewProvider>
                     <Routes>
                       {/* ADMIN ROUTES */}
-                      <Route path="/admin" element={<LayoutAdmin />}>
+                      <Route
+                        path="/admin"
+                        element={
+                          <ProtectedRouteAdmin>
+                            <LayoutAdmin />
+                          </ProtectedRouteAdmin>
+                        }
+                      >
                         <Route index element={<DashboardPage />} />
                         <Route path="dashboard" element={<DashboardPage />} />
                         <Route path="product" element={<ProductList />} />

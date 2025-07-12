@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { Order } from '../types';
 const API_URL = 'http://localhost:5000/api/orders';
 
 export const getAllOrders = () => {
@@ -20,10 +20,9 @@ export const createOrder = (data: {
     quantity: number;
     price: number;
   }[];
-}) => {
+}): Promise<{ data: Order }> => {
   return axios.post(API_URL, data);
 };
-
 export const updateOrder = (
   orderId: string,
   data: Partial<{

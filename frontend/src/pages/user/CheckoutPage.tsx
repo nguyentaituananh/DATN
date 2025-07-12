@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { notification } from 'antd';
 import { Form, Input, Select, Checkbox, Steps, Radio, Divider, message } from 'antd';
 import { CreditCard, ShoppingBag, Truck, Check } from 'lucide-react';
 import Button from '../../components/ui/Button';
@@ -16,6 +17,7 @@ const CheckoutPage: React.FC = () => {
   const { items, subtotal, shipping, tax, total, clearCart } = useCart();
   const { isAuthenticated, user } = useAuth();
   const { createOrder } = useOrders();
+  // console.log(user);
   
   const [currentStep, setCurrentStep] = useState(0);
   const [shippingAddress, setShippingAddress] = useState<Address>({
@@ -127,15 +129,28 @@ Bạn cần phải đăng nhập để tiến hành quá trình thanh toán.
         billingAddress,
         paymentMethod
       );
-      
-      clearCart();
+      notification.success({
+      message: '🎉 Đặt hàng thành công!',
+      description: 'Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đang được xử lý.',
+      placement: 'topRight',
+      duration: 2,
+    });
+
+    setTimeout(() => {
       nextStep();
-    } catch (error) {
-      message.error('There was an error processing your order. Please try again.');
-    } finally {
-      setIsPlacingOrder(false);
-    }
-  };
+    }, 300);
+
+    clearCart();
+    nextStep();
+  } catch (error) {
+    notification.error({
+      message: 'Đặt hàng thất bại',
+      description: 'Đã xảy ra lỗi khi đặt hàng. Vui lòng thử lại.',
+    });
+  } finally {
+    setIsPlacingOrder(false);
+  }
+};
 
   const renderAddressForm = (
     type: 'shipping' | 'billing',

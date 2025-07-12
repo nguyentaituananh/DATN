@@ -56,14 +56,16 @@ export const register = async (req, res) => {
   const { name, email, password, address, phone_number, role } = req.body;
 
   try {
-    // Kiểm tra xem email đã tồn tại chưa
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).json({ message: "Email đã tồn tại." });
 
+    // Thêm dòng này để sinh mã tự động
+    const customer_code = await generateCustomerCode();
+
     const newUser = new User({
       name,
-      customer_code,
+      customer_code, // Giờ đã có giá trị!
       email,
       password,
       address,
@@ -71,12 +73,10 @@ export const register = async (req, res) => {
       role,
     });
 
-    // Mã hóa mật khẩu trước khi lưu vào DB
     await newUser.save();
 
-    // Tạo JWT token
     const token = generateToken(newUser._id);
-    res.status(201).json({ user: newUser.name, token });
+    res.status(201).json({ user: newUser, token }); // Nên trả về toàn bộ user
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -100,7 +100,7 @@ export const login = async (req, res) => {
 
     // Tạo JWT token
     const token = generateToken(user._id);
-    res.status(200).json({ user: user.name, token });
+    res.status(200).json({ user: user, token });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -1,17 +1,19 @@
 import axios from "axios";
-const API_URL = "http://localhost:5000/auth/users";
+import { User } from "../types";
 
-export const getAccount = async () => {
-  const res = await axios.get(API_URL);
-  return res.data;
-};
+const API_URL = "http://localhost:5000/api/users";
 
-// export const updateAccount = async (id: string, data: any) => {
-//   const res = await axios.put(`${API_URL}/${id}`, data);
-//   return res.data;
-// };
+export const getUsers = () => axios.get<User[]>(API_URL);
 
-export const deleteAccount = async (id: string) => {
-  const res = await axios.delete(`${API_URL}/${id}`);
-  return res.data;
-};
+export const deleteUser = (id: string) => axios.delete(`${API_URL}/${id}`);
+
+export const updateUser = (id: string, data: Partial<User>) =>
+  axios.put<User>(`${API_URL}/${id}`, data);
+
+export const createUser = (data: Omit<User, "id" | "createdAt">) =>
+  axios.post<User>(API_URL, {
+    ...data,
+    createdAt: new Date().toISOString(),
+  });
+
+
