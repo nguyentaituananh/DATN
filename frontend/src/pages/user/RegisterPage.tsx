@@ -11,55 +11,33 @@ const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onFinish = async (values: {
-<<<<<<< HEAD
-  name: string;
-  email: string;
-  password: string;
-  address: string;
-  phone_number: string;
-}) => {
-  setIsLoading(true);
-  try {
-    await register({
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      address: values.address,
-      phone_number: values.phone_number,
-    });
-    message.success("Registration successful!");
-    navigate("/login");
-  } catch (error: any) {
-  const msg = error?.message || error?.response?.data?.message || "Registration failed.";
-  message.error(msg);
-}
- finally {
-    setIsLoading(false);
-  }
-};
-
-=======
     name: string;
     email: string;
     password: string;
     address: string;
     phone_number: string;
   }) => {
-    const { name, email, password, address, phone_number } = values;
     setIsLoading(true);
     try {
-      await register(name, email, password, address, phone_number);
-      message.success("Đăng ký tài khoản thành công!");
+      await register({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        address: values.address,
+        phone_number: values.phone_number,
+      });
+      message.success("Registration successful!");
       navigate("/login");
     } catch (error: any) {
-      message.error(
-        error.response?.data?.message || "Đăng ký thất bại, thử lại."
-      );
+      const msg =
+        error?.message ||
+        error?.response?.data?.message ||
+        "Registration failed.";
+      message.error(msg);
     } finally {
       setIsLoading(false);
     }
   };
->>>>>>> 4972f81020297a60c800d3060049d31b85e1d23b
 
   return (
     <div className="py-12 md:py-16">
@@ -123,67 +101,52 @@ const RegisterPage: React.FC = () => {
               label="Address"
               rules={[{ required: true, message: "Please enter your address" }]}
             >
-              <Input
-                placeholder="Address"
-              />
+              <Input placeholder="Address" />
             </Form.Item>
 
             <Form.Item
-<<<<<<< HEAD
-  name="password"
-  label="Mật khẩu"
-  rules={[
-    { required: true, message: "Vui lòng nhập mật khẩu" },
-    { min: 8, message: "Mật khẩu phải có ít nhất 8 ký tự" },
-    {
-      validator: (_, value) => {
-        if (!value) return Promise.resolve();
-
-        const hasUpperCase = /[A-Z]/.test(value);
-        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
-        const hasNumber = /[0-9]/.test(value);
-
-        if (!hasUpperCase) {
-          return Promise.reject("Mật khẩu phải chứa ít nhất một chữ cái in hoa");
-        }
-
-        if (!hasSpecialChar) {
-          return Promise.reject("Mật khẩu phải chứa ít nhất một ký tự đặc biệt");
-        }
-
-        if (!hasNumber) {
-          return Promise.reject("Mật khẩu phải chứa ít nhất một chữ số");
-        }
-
-        return Promise.resolve();
-      },
-    },
-  ]}
->
-  <Input.Password
-    prefix={<Lock size={16} className="text-gray-400 mr-2" />}
-    placeholder="Mật khẩu (ít nhất 8 ký tự, 1 chữ hoa, 1 ký tự đặc biệt, 1 chữ số)"
-    autoComplete="new-password"
-  />
-</Form.Item>
-
-=======
               name="password"
-              label="Password"
+              label="Mật khẩu"
               rules={[
-                { required: true, message: "Please enter your password" },
+                { required: true, message: "Vui lòng nhập mật khẩu" },
+                { min: 8, message: "Mật khẩu phải có ít nhất 8 ký tự" },
                 {
-                  pattern: /^(?=.*[A-Z]).{8,}$/,
-                  message: 'Mật khẩu phải có ít nhất 8 ký tự và 1 chữ hoa',
-                }
+                  validator: (_, value) => {
+                    if (!value) return Promise.resolve();
+
+                    const hasUpperCase = /[A-Z]/.test(value);
+                    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+                    const hasNumber = /[0-9]/.test(value);
+
+                    if (!hasUpperCase) {
+                      return Promise.reject(
+                        "Mật khẩu phải chứa ít nhất một chữ cái in hoa"
+                      );
+                    }
+
+                    if (!hasSpecialChar) {
+                      return Promise.reject(
+                        "Mật khẩu phải chứa ít nhất một ký tự đặc biệt"
+                      );
+                    }
+
+                    if (!hasNumber) {
+                      return Promise.reject(
+                        "Mật khẩu phải chứa ít nhất một chữ số"
+                      );
+                    }
+
+                    return Promise.resolve();
+                  },
+                },
               ]}
             >
               <Input.Password
                 prefix={<Lock size={16} className="text-gray-400 mr-2" />}
-                placeholder="Min. 8 characters"
+                placeholder="Mật khẩu (ít nhất 8 ký tự, 1 chữ hoa, 1 ký tự đặc biệt, 1 chữ số)"
+                autoComplete="new-password"
               />
             </Form.Item>
->>>>>>> 4972f81020297a60c800d3060049d31b85e1d23b
 
             <Form.Item
               name="confirmPassword"
