@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Checkbox, Divider, message } from "antd";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../pages/context/AuthContext";
 import Button from "../../components/ui/Button";
 import { Mail, Lock, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,6 +11,34 @@ const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const onFinish = async (values: {
+<<<<<<< HEAD
+  name: string;
+  email: string;
+  password: string;
+  address: string;
+  phone_number: string;
+}) => {
+  setIsLoading(true);
+  try {
+    await register({
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      address: values.address,
+      phone_number: values.phone_number,
+    });
+    message.success("Registration successful!");
+    navigate("/login");
+  } catch (error: any) {
+  const msg = error?.message || error?.response?.data?.message || "Registration failed.";
+  message.error(msg);
+}
+ finally {
+    setIsLoading(false);
+  }
+};
+
+=======
     name: string;
     email: string;
     password: string;
@@ -31,6 +59,7 @@ const RegisterPage: React.FC = () => {
       setIsLoading(false);
     }
   };
+>>>>>>> 4972f81020297a60c800d3060049d31b85e1d23b
 
   return (
     <div className="py-12 md:py-16">
@@ -100,6 +129,45 @@ const RegisterPage: React.FC = () => {
             </Form.Item>
 
             <Form.Item
+<<<<<<< HEAD
+  name="password"
+  label="Mật khẩu"
+  rules={[
+    { required: true, message: "Vui lòng nhập mật khẩu" },
+    { min: 8, message: "Mật khẩu phải có ít nhất 8 ký tự" },
+    {
+      validator: (_, value) => {
+        if (!value) return Promise.resolve();
+
+        const hasUpperCase = /[A-Z]/.test(value);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+        const hasNumber = /[0-9]/.test(value);
+
+        if (!hasUpperCase) {
+          return Promise.reject("Mật khẩu phải chứa ít nhất một chữ cái in hoa");
+        }
+
+        if (!hasSpecialChar) {
+          return Promise.reject("Mật khẩu phải chứa ít nhất một ký tự đặc biệt");
+        }
+
+        if (!hasNumber) {
+          return Promise.reject("Mật khẩu phải chứa ít nhất một chữ số");
+        }
+
+        return Promise.resolve();
+      },
+    },
+  ]}
+>
+  <Input.Password
+    prefix={<Lock size={16} className="text-gray-400 mr-2" />}
+    placeholder="Mật khẩu (ít nhất 8 ký tự, 1 chữ hoa, 1 ký tự đặc biệt, 1 chữ số)"
+    autoComplete="new-password"
+  />
+</Form.Item>
+
+=======
               name="password"
               label="Password"
               rules={[
@@ -115,6 +183,7 @@ const RegisterPage: React.FC = () => {
                 placeholder="Min. 8 characters"
               />
             </Form.Item>
+>>>>>>> 4972f81020297a60c800d3060049d31b85e1d23b
 
             <Form.Item
               name="confirmPassword"

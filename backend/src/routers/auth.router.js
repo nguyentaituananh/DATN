@@ -7,13 +7,18 @@ import {
   getUserById,
   updateUser,
   deleteUser,
-  searchUsersByCustomerCode,
+  changePassword
 } from "../controllers/auth.controller.js";
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+
 
 const authRouter = express.Router();
 
 authRouter.post("/register", register);
 authRouter.post("/login", login);
+
+authRouter.put("/change-password", authMiddleware, changePassword); 
+
 authRouter.get("/", getAllUsers); // Lấy tất cả người dùng
 authRouter.get("/search", searchUsersByCustomerCode);
 authRouter.get("/:id", getUserById); // Lấy người dùng theo ID
