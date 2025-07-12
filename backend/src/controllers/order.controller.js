@@ -41,6 +41,7 @@ export const getOrderById = async (req, res) => {
   }
 };
 
+
 // ✅ Cập nhật đơn hàng theo ID
 export const updateOrder = async (req, res) => {
   try {
@@ -66,5 +67,17 @@ export const deleteOrder = async (req, res) => {
     res.json({ message: 'Xóa đơn hàng thành công.' });
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+};
+export const getOrdersByUser = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const orders = await Order.find({ user_id: userId })
+      .populate('user_id')
+      .populate('products.product_id');
+
+    res.status(200).json({ orders });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

@@ -32,6 +32,8 @@ import CheckoutPage from "./pages/user/CheckoutPage";
 import AboutPage from "./pages/user/AboutPage";
 import LoginPage from "./pages/user/LoginPage";
 import RegisterPage from "./pages/user/RegisterPage";
+import AccountPage from "./pages/user/AccountPage";
+import MyOrdersPage from "./pages/user/MyOrdersPage";
 
 // Ant Design Theme
 const theme = {
@@ -89,6 +91,8 @@ function App() {
                         <Route path="cart" element={<CartPage />} />
                         <Route path="checkout" element={<CheckoutPage />} />
                         <Route path="about" element={<AboutPage />} />
+                        <Route path="account" element={<AccountPage />} />
+                        <Route path="/my-orders" element={<MyOrdersPage />} />
                         <Route path="login" element={<LoginPage />} />
                         <Route path="register" element={<RegisterPage />} />
                       </Route>

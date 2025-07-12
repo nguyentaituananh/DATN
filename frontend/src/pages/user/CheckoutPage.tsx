@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { notification } from 'antd';
+import { App as AntdApp } from 'antd';
+
 import { Form, Input, Select, Checkbox, Steps, Radio, Divider, message } from 'antd';
 import { CreditCard, ShoppingBag, Truck, Check } from 'lucide-react';
 import Button from '../../components/ui/Button';
@@ -37,7 +38,8 @@ const CheckoutPage: React.FC = () => {
   const [useShippingForBilling, setUseShippingForBilling] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState('credit_card');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
-  
+  const { notification } = AntdApp.useApp();
+
   // Redirect to login if not authenticated
   if (!isAuthenticated && currentStep === 0) {
     return (

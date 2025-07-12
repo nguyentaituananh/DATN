@@ -40,6 +40,7 @@ const navigation = [
 
 // Menu sản phẩm
 import type { MenuProps } from "antd";
+import { useCart } from "../../context/CartContext";
 
 const productMenuItems: MenuProps["items"] = [
   { key: "all", label: <Link to="/products">Tất cả sản phẩm</Link> },
@@ -55,16 +56,18 @@ const productMenuItems: MenuProps["items"] = [
 
 const Header: React.FC = () => {
   const { items } = useCart();
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const location = useLocation();
 
-  const { user, logout } = useAuth();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   // Menu user
   const userMenuItems =
     (user) ?
       [
         { key: "profile", label: "Tài khoản" },
-        { key: "orders", label: "Đơn hàng" },
+        { key: "orders", label: <Link to="/my-orders">Đơn hàng</Link>},
         { key: "logout", label: "Đăng xuất", onClick: logout },
       ] :
       [
@@ -109,9 +112,11 @@ const Header: React.FC = () => {
         </nav>
 
         <div className="flex items-center space-x-3">
+         <Link to={"/cart"}>
           <Badge count={2}>
             <ShoppingCartOutlined className="text-lg" />
           </Badge>
+           </Link>
           <Badge count={1}>
             <HeartOutlined className="text-lg" />
           </Badge>
