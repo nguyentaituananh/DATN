@@ -8,7 +8,19 @@ const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [user, setUser] = useState<any>(null);
+  const [id, setId] = useState<any>(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const User_id = localStorage.getItem("id");
+    if (storedUser) {
+      setUser(storedUser);
+    }
+    if (User_id) {
+      setId(User_id);
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,7 +39,7 @@ const Header: React.FC = () => {
     { to: "/", label: "Trang chủ" },
     {
       to: "/products",
-      label: " Sản phẩm",
+      label: "Sản phẩm",
       children: [
         { to: "/products/sofas", label: "Sofa" },
         { to: "/products/tables", label: "Bàn" },
@@ -37,7 +49,7 @@ const Header: React.FC = () => {
     },
     { to: "/about", label: "Về chúng tôi" },
     { to: "/blogs/news", label: "Tin tức" },
-    { to: "/Store", label: "Cửa hàng" },
+    { to: "/store", label: "Cửa hàng" },
   ];
 
   return (
@@ -97,9 +109,64 @@ const Header: React.FC = () => {
               </Badge>
             </Link>
 
-            <Link to="/login" className="flex items-center justify-center text-slate-700 hover:text-amber-700 transition-colors">
-              <User size={20} />
-            </Link>
+            {user ? (
+              <div className="relative group">
+                <div className="flex items-center space-x-2 text-slate-700 hover:text-amber-700 cursor-pointer">
+ <img
+  src="https://i.pravatar.cc/300"
+  alt="user"
+  className="w-6 h-6 rounded-full object-cover"
+/>
+
+  <span className="text-sm font-medium">{user || "User"}</span>
+</div>
+
+                <div className="absolute right-0 mt-2 w-48 bg-white border rounded-md shadow-md z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <Link
+                    to={`/userDeitail/${id}`}
+                    className="block px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  >
+                    Thông tin cá nhân
+                  </Link>
+                  <Link
+                    to="/order-history"
+                    className="block px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  >
+                    Lịch sử mua hàng
+                  </Link>
+                  <button
+                    onClick={() => {
+                      localStorage.clear();
+                      setUser(null);
+                      window.location.href = "/";
+                    }}
+                    className="w-full text-left px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  >
+                    Đăng xuất
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="relative group">
+                <div className="flex items-center justify-center text-slate-700 hover:text-amber-700 cursor-pointer">
+                  <User size={20} />
+                </div>
+                <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-md z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <Link
+                    to="/login"
+                    className="block px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  >
+                    Đăng nhập
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="block px-4 py-2 text-slate-700 hover:bg-amber-50 hover:text-amber-700"
+                  >
+                    Đăng ký
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="flex items-center space-x-4 md:hidden">
@@ -114,7 +181,6 @@ const Header: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* Drawer hoặc phần mở rộng menu (nếu có) giữ nguyên ở đây */}
     </header>
   );
 };
