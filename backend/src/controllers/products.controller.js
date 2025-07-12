@@ -71,14 +71,12 @@ export const createProduct = async (req, res) => {
 
     // Upload ảnh
     const images = [];
-    if (req.files && req.files.length > 0) {
-      for (const file of req.files) {
-        const result = await cloudinary.uploader.upload(file.path, {
-          folder: "products",
-        });
-        images.push(result.secure_url);
-        fs.unlinkSync(file.path); // Xóa file tạm trên máy
-      }
+    for (const file of req.files) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: "products",
+      });
+      images.push(result.secure_url);
+      fs.unlinkSync(file.path);
     }
 
     const newProduct = new Product({
