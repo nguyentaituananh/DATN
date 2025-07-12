@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Input, Checkbox, Divider, message } from "antd";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../pages/context/AuthContext";
 import Button from "../../components/ui/Button";
 import { Mail, Lock, User } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,16 +17,23 @@ const RegisterPage: React.FC = () => {
     address: string;
     phone_number: string;
   }) => {
-    const { name, email, password, address, phone_number } = values;
     setIsLoading(true);
     try {
-      await register(name, email, password, address, phone_number);
-      message.success("Đăng ký tài khoản thành công!");
+      await register({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        address: values.address,
+        phone_number: values.phone_number,
+      });
+      message.success("Registration successful!");
       navigate("/login");
     } catch (error: any) {
-      message.error(
-        error.response?.data?.message || "Đăng ký thất bại, thử lại."
-      );
+      const msg =
+        error?.message ||
+        error?.response?.data?.message ||
+        "Registration failed.";
+      message.error(msg);
     } finally {
       setIsLoading(false);
     }
@@ -94,25 +101,50 @@ const RegisterPage: React.FC = () => {
               label="Address"
               rules={[{ required: true, message: "Please enter your address" }]}
             >
-              <Input
-                placeholder="Address"
-              />
+              <Input placeholder="Address" />
             </Form.Item>
 
             <Form.Item
               name="password"
-              label="Password"
+              label="Mật khẩu"
               rules={[
-                { required: true, message: "Please enter your password" },
+                { required: true, message: "Vui lòng nhập mật khẩu" },
+                { min: 8, message: "Mật khẩu phải có ít nhất 8 ký tự" },
                 {
-                  pattern: /^(?=.*[A-Z]).{8,}$/,
-                  message: 'Mật khẩu phải có ít nhất 8 ký tự và 1 chữ hoa',
-                }
+                  validator: (_, value) => {
+                    if (!value) return Promise.resolve();
+
+                    const hasUpperCase = /[A-Z]/.test(value);
+                    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(value);
+                    const hasNumber = /[0-9]/.test(value);
+
+                    if (!hasUpperCase) {
+                      return Promise.reject(
+                        "Mật khẩu phải chứa ít nhất một chữ cái in hoa"
+                      );
+                    }
+
+                    if (!hasSpecialChar) {
+                      return Promise.reject(
+                        "Mật khẩu phải chứa ít nhất một ký tự đặc biệt"
+                      );
+                    }
+
+                    if (!hasNumber) {
+                      return Promise.reject(
+                        "Mật khẩu phải chứa ít nhất một chữ số"
+                      );
+                    }
+
+                    return Promise.resolve();
+                  },
+                },
               ]}
             >
               <Input.Password
                 prefix={<Lock size={16} className="text-gray-400 mr-2" />}
-                placeholder="Min. 8 characters"
+                placeholder="Mật khẩu (ít nhất 8 ký tự, 1 chữ hoa, 1 ký tự đặc biệt, 1 chữ số)"
+                autoComplete="new-password"
               />
             </Form.Item>
 
