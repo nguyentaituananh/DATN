@@ -1,28 +1,57 @@
-import { Route, Routes } from "react-router-dom"; 
+<<<<<<<<< Temporary merge branch 1
+import { Route, Routes } from "react-router";
 import LayoutAdmin from "./layouts/admin/LayoutAdmin";
 import CartPage from "./pages/user/CartPage";
 import { CartProvider } from "./context/CartContext";
 import HomePage from "./pages/user/HomePage";
-import Layout from "./components/layout/Layout";
+import Layout from "./components/layout/layout";
 import { AuthProvider } from "./pages/context/AuthContext";
 import CheckoutPage from "./pages/user/CheckoutPage";
-import RegisterPage from "./pages/user/RegisterPage";
+import RegisterPage from "./pages/admin/user/RegisterPage";
 import LoginPage from "./pages/user/LoginPage";
+=========
+import { Route, Routes, BrowserRouter } from "react-router-dom";
+>>>>>>>>> Temporary merge branch 2
 import { ConfigProvider } from "antd";
-import ProductsPage from "./pages/user/ProductsPage";
-import ProductDetailPage from "./pages/user/ProductDetailPage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { StrictMode } from "react";
 
-import ProductList from "./pages/admin/products/ProductList";
+// Layouts
+import LayoutAdmin from "./layouts/admin/LayoutAdmin";
+import Layout from "./components/layout/Layout";
+
+// Context Providers
+import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from "./pages/context/AuthContext";
+import { OrderProvider } from "./context/OrderContext";
+import { ReviewProvider } from "./context/reviewsContext";
+
+// Admin Pages
 import { DashboardPage } from "./pages/admin/DashboardPage";
+import ProductList from "./pages/admin/products/ProductList";
 import CreateProducts from "./pages/admin/products/CreateProducts";
 import OrderList from "./pages/admin/order/OrderList";
 import UserList from "./pages/admin/account/UserList";
-import CommentList from "./pages/admin/comment/CommentList";
+import CommentList from "./pages/admin/reviews/reviewsList";
 import AccountInfo from "./pages/admin/account/AccountInfo";
+<<<<<<<<< Temporary merge branch 1
 import AboutPage from "./pages/user/AboutPage";
 import AccountInfoPage from "./pages/user/DeitailUser";
-import ChangePasswordPage from "./pages/user/ChangePasswordPage";
+=========
+import ProtectedRouteAdmin from "./components/ProtectedRouteAdmin";
+>>>>>>>>> Temporary merge branch 2
 
+// User Pages
+import HomePage from "./pages/user/HomePage";
+import ProductsPage from "./pages/user/ProductsPage";
+import ProductDetailPage from "./pages/user/ProductDetailPage";
+import CartPage from "./pages/user/CartPage";
+import CheckoutPage from "./pages/user/CheckoutPage";
+import AboutPage from "./pages/user/AboutPage";
+import LoginPage from "./pages/user/LoginPage";
+import RegisterPage from "./pages/user/RegisterPage";
+
+// Ant Design Theme
 const theme = {
   token: {
     colorPrimary: "#B45309",
@@ -31,39 +60,42 @@ const theme = {
   },
 };
 
+// React Query Client
+const queryClient = new QueryClient();
+
 function App() {
   return (
     <ConfigProvider theme={theme}>
       <AuthProvider>
         <CartProvider>
-        <Routes>
-          <Route path="/admin" element={<LayoutAdmin />}>
-            <Route index element={<DashboardPage />} />
-            <Route path="dashboard" element={<DashboardPage />} />
-            <Route path="product" element={<ProductList />} />
-            <Route path="product/add" element={<CreateProducts />} />
-            <Route path="product/edit/:id" element={<CreateProducts />} />
-            <Route path="order" element={<OrderList />} />
-            <Route path="user" element={<UserList />} />
-            <Route path="comment" element={<CommentList />} />
-            <Route path="import" element={<OrderList />} />
-            <Route path="account" element={<AccountInfo />} />
-          </Route>
+          <Routes>
+            <Route path="/admin" element={<LayoutAdmin />}>
+              <Route index element={<DashboardPage />} />{" "}
+              <Route path="dashboard" element={<DashboardPage />} />
+              <Route path="product" element={<ProductList />} />
+              <Route path="product/add" element={<CreateProducts />} />
+              <Route path="product/edit/:id" element={<CreateProducts />} />
+              <Route path="order" element={<OrderList />} />
+              <Route path="user" element={<UserList />} />
+              <Route path="comment" element={<CommentList />} />
+              <Route path="import" element={<OrderList />} />
+              <Route path="account" element={<AccountInfo />} />
+            </Route>
 
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="products" element={<ProductsPage />} />
-            <Route path="products/:category" element={<ProductsPage />} />
-            <Route path="product/:id" element={<ProductDetailPage />} />
-            <Route path="register" element={<RegisterPage />} />
-            <Route path="login" element={<LoginPage />} />
-            <Route path="cart" element={<CartPage />} />
-            <Route path="checkout" element={<CheckoutPage />} />
-            <Route path="about" element={<AboutPage />} />
-            <Route path="userDeitail/:id" element={<AccountInfoPage />} />
-            <Route path="change-password" element={<ChangePasswordPage />} />
-          </Route>
-        </Routes>
+            {/* USER ROUTES */}
+            <Route path="/" element={<Layout />}>
+              <Route index element={<HomePage />} />
+              <Route path="products" element={<ProductsPage />} />
+              <Route path="products/:category" element={<ProductsPage />} />
+              <Route path="product/:id" element={<ProductDetailPage />} />
+              <Route path="register" element={<RegisterPage />} />
+              <Route path="login" element={<LoginPage />} />
+              <Route path="cart" element={<CartPage />} />
+              <Route path="checkout" element={<CheckoutPage />} />
+              <Route path="about" element={<AboutPage />} />
+              <Route path="userDeitail/:id" element={<AccountInfoPage />} />
+            </Route>
+          </Routes>
         </CartProvider>
       </AuthProvider>
     </ConfigProvider>

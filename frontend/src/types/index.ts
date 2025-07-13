@@ -1,25 +1,58 @@
-export interface Product {
-  id: string;
-  name: string;
-  category: string;
+export interface ProductVariant {
+  _id: string;
+  sku: string;
   price: number;
-  salePrice?: number;
+  discount_price?: number;
+  stock_quantity: number;
+  attributes?: {
+    color?: string;
+    material?: string;
+  };
+  images?: string[];
+  is_active?: boolean;
+}
+
+export interface Product {
+  _id: string;
+  name: string;
   description: string;
-  shortDescription: string;
+  shortDescription?: string;
+  category_id?: { _id: string; name: string } | string;
+  price?: number;
+  salePrice?: number;
   images: string[];
-  features: string[];
-  dimensions: {
+  features?: string[];
+  dimensions?: {
     width: number;
     height: number;
     depth: number;
   };
-  colors: string[];
-  materials: string[];
-  inStock: boolean;
-  rating: number;
-  reviews: number;
+  colors?: string[];
+  materials?: string[];
+  inStock?: boolean;
+  rating?: number;
+  reviews?: number;
   isNew?: boolean;
   isBestseller?: boolean;
+  variants?: ProductVariant[];
+}
+
+export interface FetchProductsParams {
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  colors?: string;
+  materials?: string;
+  sortBy?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface FetchProductsResponse {
+  total: number;
+  page: number;
+  limit: number;
+  data: Product[];
 }
 
 export interface CartItem {
@@ -47,6 +80,7 @@ export interface Address {
   zipCode: string;
   country: string;
 }
+
 export interface Order {
   id: string;
   userId: string;
@@ -62,11 +96,12 @@ export interface Order {
   createdAt: string;
   updatedAt: string;
 }
-export interface Store{
+
+export interface Store {
   city: string;
   name: string;
   address: string;
   hours: string;
   phone: string;
   mapEmbedUrl: string;
-};
+}

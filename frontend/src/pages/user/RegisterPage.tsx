@@ -89,8 +89,7 @@ const RegisterPage: React.FC = () => {
                 {
                   transform: (value: string) => value.replace(/\s/g, ""),
                   pattern: /^\d{10}$/,
-                  message: "Phone number must be 10 digits",
-                },
+                  message: "Phone number must be 10 digits",},
               ]}
             >
               <Input placeholder="Phone Number" />
@@ -175,8 +174,7 @@ const RegisterPage: React.FC = () => {
               valuePropName="checked"
               rules={[
                 {
-                  validator: (_, value) =>
-                    value
+                  validator: (_, value) =>value
                       ? Promise.resolve()
                       : Promise.reject(new Error("You must accept the terms")),
                 },

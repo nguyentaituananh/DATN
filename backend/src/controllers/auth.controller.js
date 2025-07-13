@@ -2,8 +2,6 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { registerSchema } from "../validates/user.validate.js";
-import { changePasswordSchema } from "../validates/user.validate.js"; // hoặc path tương ứng
-
 
 
 
@@ -58,24 +56,21 @@ const generateToken = (userId) => {
 };
 
 // Đăng ký
-
 export const register = async (req, res) => {
+  const { name, email, password, address, phone_number, role } = req.body;
+
   try {
-    const { error } = registerSchema.validate(req.body, { abortEarly: false });
-    if (error) {
-      const messages = error.details.map((detail) => detail.message);
-      return res.status(400).json({ message: messages });
-    }
-
-    const { name, email, password, address, phone_number, role } = req.body;
-
-    // Kiểm tra email đã tồn tại
+    // Kiểm tra xem email đã tồn tại chưa
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email đã tồn tại." });
     }
+=========
+    const existingUser = await User.findOne({ email });
+    if (existingUser)
+      return res.status(400).json({ message: "Email đã tồn tại." });
 
-
+    // Thêm dòng này để sinh mã tự động
     const customer_code = await generateCustomerCode();
 
     const newUser = new User({
@@ -97,7 +92,6 @@ export const register = async (req, res) => {
   }
 };
 
-
 // Đăng nhập
 export const login = async (req, res) => {
   const { email, password } = req.body;
@@ -116,8 +110,11 @@ export const login = async (req, res) => {
 
     // Tạo JWT token
     const token = generateToken(user._id);
+<<<<<<<<< Temporary merge branch 1
     res.status(200).json({ user: user.name, token ,id :user.id});
-
+=========
+    res.status(200).json({ user: user, token });
+>>>>>>>>> Temporary merge branch 2
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -171,15 +168,9 @@ export const deleteUser = async (req, res) => {
   }
 };
 
+<<<<<<<<< Temporary merge branch 1
 
 export const changePassword = async (req, res) => {
-  const { error } = changePasswordSchema.validate(req.body, { abortEarly: false });
-
-  if (error) {
-    const messages = error.details.map((detail) => detail.message);
-    return res.status(400).json({ message: "Dữ liệu không hợp lệ", errors: messages });
-  }
-
   const { currentPassword, newPassword } = req.body;
   const userId = req.user._id;
 
@@ -192,11 +183,7 @@ export const changePassword = async (req, res) => {
       return res.status(400).json({ message: "Mật khẩu hiện tại không đúng." });
     }
 
-    if (currentPassword === newPassword) {
-      return res.status(400).json({ message: "Mật khẩu mới không được trùng với mật khẩu cũ." });
-    }
-
-    user.password = newPassword;
+    user.password = newPassword; // sẽ được mã hóa bởi pre-save
     await user.save();
 
     res.json({ message: "Đổi mật khẩu thành công." });
@@ -206,6 +193,7 @@ export const changePassword = async (req, res) => {
   }
 };
 
+=========
 // Tìm kiếm theo mã khách hàng (autocomplete)
 export const searchUsersByCustomerCode = async (req, res) => {
   try {
@@ -225,3 +213,4 @@ export const searchUsersByCustomerCode = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+>>>>>>>>> Temporary merge branch 2
