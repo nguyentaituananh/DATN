@@ -163,13 +163,19 @@
       "password": "$2a$10$P.cKGEjd7n3wSUmg8mjjxerMdrcBkfL1HmOv3JrHL39a23W0v/ZqK",
       "name": "ttttt",
       "id": 2
+    },
+    {
+      "email": "ducpv509553@gmail.com",
+      "password": "$2a$10$0NCusLNOiVTrltFISOCvBeCHfP9Idqi38sge9n4MYq9eI69GVmiWK",
+      "name": "aaaaaaaa",
+      "address": "qqqqq",
+      "phone_number": "4555555542",
+      "id": 3
     }
   ],
   "orders": [],
   "reviews": [],
-
   "carts": [],
-
   "cart_items": [],
   "favorites": [],
   "banners": [],
@@ -184,7 +190,4 @@
   "assemblies": [],
   "payments": [],
   "order_items": []
-
 }
-
-

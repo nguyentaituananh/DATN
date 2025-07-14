@@ -6,12 +6,20 @@ export const getCart = (userId: string) => {
 };
 
 
-export const addToCartApi = (data: {
-  user_id: string;
-  product_id: string;
+export const addToCartApi = async ({
+  userId,
+  productId,
+  quantity
+}: {
+  userId: string;
+  productId: string;
   quantity: number;
 }) => {
-  return axios.post(API_URL, data);
+  return await axios.post(`http://localhost:5000/api/cart/add`, {
+    userId,
+    productId,
+    quantity
+  });
 };
 
 export const updateCartItemApi = (

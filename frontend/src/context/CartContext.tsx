@@ -145,8 +145,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     try {
       await addToCartApi({
-        user_id: userId,
-        product_id: product.id,
+        userId: userId,
+        productId: product.id,
         quantity
       });
 
