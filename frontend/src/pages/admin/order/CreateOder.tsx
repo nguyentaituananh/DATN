@@ -14,10 +14,8 @@ import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import debounce from "lodash.debounce";
 import instanceAxios from "../../../utils/instanceAxios";
-
 import { useNavigate } from "react-router-dom";
 import { createOrder } from "../../../api/orderAPI";
-
 
 const { Option } = Select;
 
@@ -27,8 +25,10 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
   const [loading, setLoading] = useState(false);
   const [userOptions, setUserOptions] = useState<any[]>([]);
   const [userFetching, setUserFetching] = useState(false);
+  const [productOptions, setProductOptions] = useState<any[]>([]);
+  const [productFetching, setProductFetching] = useState(false);
 
-  // Tìm kiếm user theo mã KH
+  // Tìm user theo mã khách hàng
   const fetchUsers = debounce(async (query: string) => {
     if (!query) return;
     setUserFetching(true);
@@ -42,14 +42,29 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     }
   }, 500);
 
+  // Tìm sản phẩm theo tên hoặc mã
+  const fetchProducts = debounce(async (query: string) => {
+    if (!query) return;
+    setProductFetching(true);
+    try {
+      const res = await instanceAxios.get(`api/products/search?q=${query}`);
+      setProductOptions(res.data);
+    } catch (error) {
+      message.error("Không thể tìm sản phẩm");
+    } finally {
+      setProductFetching(false);
+    }
+  }, 500);
+
   const handleFinish = async (values: any) => {
     try {
       setLoading(true);
       const payload = {
         ...values,
         order_date: values.order_date?.toISOString(),
+        billing_address: values.shipping_address, // ✅ Tự động gán
       };
-      await createOrder(payload); // ✅ dùng API chuẩn
+      await createOrder(payload);
       message.success("✅ Đã thêm đơn hàng");
       onSuccess?.();
       navigate("/admin/order");
@@ -71,11 +86,11 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           order_date: dayjs(),
         }}
       >
-        {/* --- Tìm kiếm người dùng bằng customer_code --- */}
+        {/* Khách hàng */}
         <Form.Item label="Khách hàng" name="user_id" rules={[{ required: true }]}>
           <Select
             showSearch
-            placeholder="Nhập mã khách hàng (VD: AA00001)"
+            placeholder="Nhập mã KH (VD: AA00001)"
             filterOption={false}
             onSearch={fetchUsers}
             notFoundContent={userFetching ? <Spin size="small" /> : null}
@@ -88,17 +103,17 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           </Select>
         </Form.Item>
 
-        {/* --- địa chỉ giao hàng --- */}
+        {/* Địa chỉ giao hàng */}
         <Form.Item label="Địa chỉ giao hàng" name="shipping_address" rules={[{ required: true }]}>
           <Input placeholder="123 Nguyễn Huệ, Q1" />
         </Form.Item>
 
-        {/* --- ngày đặt hàng --- */}
+        {/* Ngày đặt */}
         <Form.Item label="Ngày đặt hàng" name="order_date" rules={[{ required: true }]}>
-          <DatePicker format="YYYY-MM-DD" className="w-full" placeholder="Chọn ngày" />
+          <DatePicker format="YYYY-MM-DD" className="w-full" />
         </Form.Item>
 
-        {/* --- trạng thái --- */}
+        {/* Trạng thái */}
         <Form.Item label="Trạng thái" name="status">
           <Select>
             <Option value="pending">Chờ xử lý</Option>
@@ -107,7 +122,7 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           </Select>
         </Form.Item>
 
-        {/* --- danh sách sản phẩm --- */}
+        {/* Danh sách sản phẩm */}
         <Form.List name="products">
           {(fields, { add, remove }) => (
             <>
@@ -117,9 +132,21 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                   <Form.Item
                     {...restField}
                     name={[name, "product_id"]}
-                    rules={[{ required: true, message: "Vui lòng nhập ID sản phẩm" }]}
+                    rules={[{ required: true, message: "Vui lòng chọn sản phẩm" }]}
                   >
-                    <Input placeholder="Product ID" />
+                    <Select
+                      showSearch
+                      placeholder="Tìm sản phẩm"
+                      filterOption={false}
+                      onSearch={fetchProducts}
+                      notFoundContent={productFetching ? <Spin size="small" /> : null}
+                    >
+                      {productOptions.map((product) => (
+                        <Option key={product._id} value={product._id}>
+                          {product.name}
+                        </Option>
+                      ))}
+                    </Select>
                   </Form.Item>
 
                   <Form.Item
@@ -127,7 +154,7 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                     name={[name, "quantity"]}
                     rules={[{ required: true, message: "Vui lòng nhập số lượng" }]}
                   >
-                    <InputNumber placeholder="SL" min={1} className="w-full" />
+                    <InputNumber min={1} className="w-full" placeholder="SL" />
                   </Form.Item>
 
                   <Form.Item
@@ -136,9 +163,9 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
                     rules={[{ required: true, message: "Vui lòng nhập giá" }]}
                   >
                     <InputNumber
-                      placeholder="Giá (VNĐ)"
                       min={0}
                       className="w-full"
+                      placeholder="Giá (VNĐ)"
                       formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
                     />
                   </Form.Item>
@@ -161,6 +188,7 @@ const OrderForm = ({ onSuccess }: { onSuccess?: () => void }) => {
           )}
         </Form.List>
 
+        {/* Submit */}
         <Form.Item>
           <Button type="primary" htmlType="submit" loading={loading}>
             Tạo đơn hàng

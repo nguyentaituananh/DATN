@@ -1,16 +1,19 @@
-// src/models/order.model.js
 import mongoose from 'mongoose';
 
 const orderSchema = new mongoose.Schema(
   {
     user_id: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
     products: [
       {
-        product_id: { type: String, required: true },
+        product_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Product', // ✅ ref đúng model Product
+          required: true,
+        },
         quantity: { type: Number, required: true },
         price: { type: Number, required: true },
       }
@@ -28,11 +31,10 @@ const orderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-     billing_address: { 
+    billing_address: { 
       type: String,
       required: true,
     },
-    
   },
   { timestamps: true }
 );

@@ -16,6 +16,7 @@ import { ReviewProvider } from "./context/reviewsContext";
 // Admin Pages
 import { DashboardPage } from "./pages/admin/DashboardPage";
 import ProductList from "./pages/admin/products/ProductList";
+import ProductVariantList from "./pages/product-variant/productVariantList";
 import CreateProducts from "./pages/admin/products/CreateProducts";
 import OrderList from "./pages/admin/order/OrderList";
 import EditOrder from "./pages/admin/order/EditOrder";
@@ -28,6 +29,8 @@ import ProtectedRouteAdmin from "./components/ProtectedRouteAdmin";
 import CategoryList from "./pages/admin/category/CategoryList";
 import CategoryCreate from "./pages/admin/category/CategoryCreate";
 import EditCategory from "./pages/admin/category/CategoryEdit";
+import EditProducts from "./pages/admin/products/EditProduct";
+import AddProductVariant from "./pages/product-variant/productVariantCreate";
 
 
 // User Pages
@@ -75,13 +78,18 @@ function App() {
                         <Route index element={<DashboardPage />} />
                         <Route path="dashboard" element={<DashboardPage />} />
                         <Route path="product" element={<ProductList />} />
+                        <Route path="product-variant" element={<ProductVariantList />} />
                         <Route
                           path="product/add"
                           element={<CreateProducts />}
                         />
                         <Route
                           path="product/edit/:id"
-                          element={<CreateProducts />}
+                          element={<EditProducts />}
+                        />
+                        <Route
+                          path="product-variant/create"
+                          element={<AddProductVariant />}
                         />
                         <Route path="order" element={<OrderList />} />
                         <Route path="user" element={<UserList />} />
