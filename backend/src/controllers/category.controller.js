@@ -15,7 +15,7 @@ export const createCategory = async (req, res) => {
 // [GET] Lấy tất cả danh mục
 export const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find().populate("parent_category_id", "name");
     res.json(categories);
   } catch (err) {
     res.status(500).json({ message: err.message });

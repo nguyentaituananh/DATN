@@ -9,6 +9,11 @@ interface AuthContextType {
     address: string;
     phone_number: string;
   }) => Promise<any>;
+ login: (data: {
+     email: string;
+     password: string 
+    }) => Promise<any>; 
+   getUser: () => Promise<any>; 
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -37,7 +42,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const login = async (data: { email: string; password: string }) => {
+  try {
+    const res = await instanceAxios.post("auth/login", data);
+    return res.data;
+  } catch (err: any) {
+    throw err.response?.data || err;
+  }
+};
+const getUser = async () => {
+  try {
+    const userId = localStorage.getItem("id");
+
+    if (!userId) {
+      throw new Error("Không tìm thấy ID người dùng trong localStorage");
+    }
+
+    const res = await instanceAxios.get(`auth/${userId}`);
+    return res.data;
+  } catch (err: any) {
+    throw err.response?.data || err;
+  }
+};
+
+
+
   return (
-    <AuthContext.Provider value={{ register }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ register,login,getUser }}>{children}</AuthContext.Provider>
   );
 };

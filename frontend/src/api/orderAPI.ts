@@ -3,7 +3,7 @@ import { Order } from '../types';
 const API_URL = 'http://localhost:5000/api/orders';
 
 export const getAllOrders = () => {
-  return axios.get(API_URL);
+  return axios.get(`${API_URL}`);
 };
 
 export const getOrderById = (orderId: string) => {
@@ -41,4 +41,7 @@ export const updateOrder = (
 
 export const deleteOrder = (orderId: string) => {
   return axios.delete(`${API_URL}/${orderId}`);
+};
+export const getOrdersByUser = (userId: string) => {
+  return axios.get(`${API_URL}/user/${userId}`);
 };

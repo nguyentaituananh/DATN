@@ -192,3 +192,21 @@ export const getProductsByCategoryName = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+export const searchProducts = async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q) return res.status(400).json({ message: "Thiếu tham số tìm kiếm" });
+
+    const products = await Product.find({
+      name: { $regex: q, $options: "i" },
+    })
+      .limit(10)
+      .select("name _id");
+
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};

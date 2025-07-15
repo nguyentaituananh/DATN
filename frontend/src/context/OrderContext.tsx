@@ -38,7 +38,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     billingAddress: Address,
     paymentMethod: string
   ): Promise<Order> => {
-    if (!user || !user.id) throw new Error('User not authenticated');
+    if (!user || !user._id) throw new Error('User not authenticated');
 
     const subtotal = items.reduce(
       (sum, item) => sum + (item.product.salePrice || item.product.price) * item.quantity,
@@ -54,7 +54,7 @@ export const OrderProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       price: item.product.salePrice || item.product.price
     }));
 const orderData = {
-  user_id: user.id,
+  user_id: user._id,
   shipping_address: `${shippingAddress.street}, ${shippingAddress.city}, ${shippingAddress.state}, ${shippingAddress.zipCode}, ${shippingAddress.country}`,
   billing_address: `${billingAddress.street}, ${billingAddress.city}, ${billingAddress.state}, ${billingAddress.zipCode}, ${billingAddress.country}`,
   order_date: new Date().toISOString(),

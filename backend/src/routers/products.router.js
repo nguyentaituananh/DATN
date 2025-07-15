@@ -7,11 +7,13 @@ import {
   updateProduct,
   deleteProduct,
   getProductsByCategoryName,
+  searchProducts
 } from "../controllers/products.controller.js";
 
 const router = express.Router();
 
 router.get("/", getAllProducts);
+router.get("/search", searchProducts);
 router.get("/:id", getProductById);
 router.get("/category/:name", getProductsByCategoryName);
 router.post("/", upload.array("images"), createProduct);

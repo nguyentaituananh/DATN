@@ -22,53 +22,62 @@ const LayoutAdmin: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   const menuItems = [
-    {
-      key: "dashboard",
-      icon: <DashboardOutlined />,
-      label: <NavLink to="dashboard">Thống kê</NavLink>,
-    },
-    {
-      key: "product",
-      icon: <ShoppingOutlined />,
-      label: <NavLink to="product">Quản lý sản phẩm</NavLink>,
-    },
-    {
-      key: "user",
-      icon: <UserOutlined />,
-      label: <NavLink to="user">Quản lý người dùng</NavLink>,
-    },
-    {
-      key: "order",
-      icon: <FileTextOutlined />,
-      label: <NavLink to="order">Quản lý đơn hàng</NavLink>,
-    },
-
-    {
-      key: "voucher",
-      icon: <GiftOutlined />,
-      label: <NavLink to="voucher">Quản lý voucher</NavLink>,
-    },
-    {
-      key: "import",
-      icon: <FileAddOutlined />,
-      label: <NavLink to="import">Quản lý nhập hàng</NavLink>,
-    },
-    {
-      key: "comment",
-      icon: <CommentOutlined />,
-      label: <NavLink to="comment">Quản lý bình luận</NavLink>,
-    },
-    {
-      key: "account",
-      icon: <DollarOutlined />,
-      label: <NavLink to="account">Thông tin tài khoản</NavLink>,
-    },
-    {
-      key: "category",
-      icon: <UserOutlined />,
-      label: <NavLink to="/category">Danh mục</NavLink>,
-    },
-  ];
+  {
+    key: "dashboard",
+    icon: <DashboardOutlined />,
+    label: <NavLink to="dashboard">Thống kê</NavLink>,
+  },
+  {
+    key: "product",
+    icon: <ShoppingOutlined />,
+    label: "Quản lý sản phẩm",
+    children: [
+      {
+        key: "product-list",
+        label: <NavLink to="product">Sản phẩm</NavLink>,
+      },
+      {
+        key: "product-variant",
+        label: <NavLink to="product-variant">Biến thể sản phẩm</NavLink>,
+      },
+    ],
+  },
+  {
+    key: "user",
+    icon: <UserOutlined />,
+    label: <NavLink to="user">Quản lý người dùng</NavLink>,
+  },
+  {
+    key: "order",
+    icon: <FileTextOutlined />,
+    label: <NavLink to="order">Quản lý đơn hàng</NavLink>,
+  },
+  {
+    key: "voucher",
+    icon: <GiftOutlined />,
+    label: <NavLink to="voucher">Quản lý voucher</NavLink>,
+  },
+  {
+    key: "import",
+    icon: <FileAddOutlined />,
+    label: <NavLink to="import">Quản lý nhập hàng</NavLink>,
+  },
+  {
+    key: "comment",
+    icon: <CommentOutlined />,
+    label: <NavLink to="comment">Quản lý bình luận</NavLink>,
+  },
+  {
+    key: "account",
+    icon: <DollarOutlined />,
+    label: <NavLink to="account">Thông tin tài khoản</NavLink>,
+  },
+  {
+    key: "category",
+    icon: <UserOutlined />,
+    label: <NavLink to="category">Danh mục</NavLink>,
+  },
+];
 
   return (
     <Layout style={{ minHeight: "100vh" }}>

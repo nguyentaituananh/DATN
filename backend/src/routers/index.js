@@ -1,3 +1,4 @@
+
 import { Router } from "express";
 import authRouter from "./auth.router.js";
 import productRouter from "./products.router.js";
@@ -10,7 +11,16 @@ import couponsRouter from "./coupons.router.js";
 
 import cartRouter from "./cart.router.js";
 import cartItemRouter from "./cartItem.router.js";
+import careInstructionsRouter from "./careInstructions.router.js";
+import assembliesRouter from "./assemblies.router.js";
 
+
+import materialsRouter from "./materials.router.js";
+
+
+=========
+
+>>>>>>>>> Temporary merge branch 2
 import roomRouter from "./room.router.js";
 import dimensionRouter from "./dimension.router.js";
 import deliveryOptionRouter from "./deliveryOption.router.js";
@@ -19,6 +29,9 @@ import assembliesRouter from "./assemblies.router.js";
 import orderItemRouter from "./orderItem.router.js";
 import product_variants from "./product_variants.router.js";
 
+<<<<<<<<< Temporary merge branch 1
+
+=========
 import materialsRouter from "./materials.router.js";
 import stylesRouter from "./styles.router.js";
 import voucherRouter from "./voucher.router.js";
@@ -36,6 +49,19 @@ router.use("/api/banners", bannersRouter);
 router.use("/api/coupons", couponsRouter);
 router.use("/api/cart", cartRouter);
 router.use("/api/cartItem", cartItemRouter);
+router.use("api/careInstructions", careInstructionsRouter);
+router.use("/api/assemblies", assembliesRouter);
+router.use("/api/oderItems", orderItemRouter);
+
+router.use("/api/product-variants", productVariantRouter);
+router.use("/api/materials", materialsRouter);
+
+router.use("/api/product-variants", productVariantRouter);
+router.use("/api/materials", materialsRouter);
+router.use("/api/room", roomRouter)
+router.use("/api/dimension", dimensionRouter)
+router.use("/api/deliveryOption", deliveryOptionRouter)
+=========
 router.use("/api/room", roomRouter);
 router.use("/api/dimension", dimensionRouter);
 router.use("/api/deliveryOption", deliveryOptionRouter);
