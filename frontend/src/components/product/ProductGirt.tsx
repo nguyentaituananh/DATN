@@ -31,42 +31,41 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, columns = 3 }) => {
           product.variants?.[0]?.price ?? product.price ?? 0;
 
         return (
-          <div
-            key={product._id} 
+          <Link
+            to={`/product/${product._id}`}
+            key={product._id}
             className="border rounded-xl overflow-hidden hover:shadow-md transition-all duration-300 bg-white"
           >
-            <Link to={`/product/${product._id}`}>
-              <div className="aspect-w-4 aspect-h-3 bg-gray-100">
-                <img
-                  src={product.images?.[0] || "/placeholder.jpg"}
-                  alt={product.name}
-                  width={400}
-                  height={300}
-                  className="object-cover w-full h-full"
-                  referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    (e.currentTarget as HTMLImageElement).src = "/placeholder.jpg";
-                  }}
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="text-lg font-medium mb-1 truncate">{product.name}</h3>
-                <p className="text-sm text-gray-500 mb-2 line-clamp-2">
-                  {product.description}
-                </p>
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-semibold text-amber-800">
-                    {price.toLocaleString()} đ
+            <div className="aspect-w-4 aspect-h-3 bg-gray-100">
+              <img
+                src={product.images?.[0] || "/placeholder.jpg"}
+                alt={product.name}
+                width={400}
+                height={300}
+                className="object-cover w-full h-full"
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = "/placeholder.jpg";
+                }}
+              />
+            </div>
+            <div className="p-4">
+              <h3 className="text-lg font-medium mb-1 truncate">{product.name}</h3>
+              <p className="text-sm text-gray-500 mb-2 line-clamp-2">
+                {product.description}
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-semibold text-amber-800">
+                  {price.toLocaleString()} đ
+                </span>
+                {product.variants?.[0]?.discount_price && (
+                  <span className="text-sm line-through text-gray-400">
+                    {originalPrice.toLocaleString()} đ
                   </span>
-                  {product.variants?.[0]?.discount_price && (
-                    <span className="text-sm line-through text-gray-400">
-                      {originalPrice.toLocaleString()} đ
-                    </span>
-                  )}
-                </div>
+                )}
               </div>
-            </Link>
-          </div>
+            </div>
+          </Link>
         );
       })}
     </div>

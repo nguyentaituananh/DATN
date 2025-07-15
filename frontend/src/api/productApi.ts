@@ -3,13 +3,15 @@ import { Product } from "../types";
 
 const API_URL = "http://localhost:5000/api/products";
 
-// Lấy tất cả sản phẩm
+// ✅ Không cần FetchProductsResponse nữa vì trả về mảng trực tiếp
 export const fetchAllProducts = async (): Promise<Product[]> => {
   const response = await axios.get(API_URL);
-  return response.data;
+
+  console.log("API raw response:", response.data); // ✅ sẽ là Product[]
+
+  return response.data; // ⬅ chính là mảng Product[]
 };
 
-// Lấy chi tiết sản phẩm theo ID
 export const fetchProductById = async (id: string): Promise<Product> => {
   const response = await axios.get(`${API_URL}/${id}`);
   return response.data;

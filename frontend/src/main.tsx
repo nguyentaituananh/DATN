@@ -16,9 +16,11 @@ createRoot(document.getElementById("root")!).render(
     <AuthProvider>
       <OrderProvider>
         <StrictMode>
-          <AntdApp>
-            <App />
-          </AntdApp>
+          <BrowserRouter>
+            <AntdApp>
+              <App />
+            </AntdApp>
+          </BrowserRouter>
         </StrictMode>
       </OrderProvider>
     </AuthProvider>
