@@ -9,12 +9,14 @@ interface Category {
   name: string;
   description: string;
   parent: string;
+  createdAt?: string;
 }
 
 const CategoryList = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
 
+  // Fetch danh sách danh mục
   const fetchCategories = async () => {
     try {
       const { data } = await instanceAxios.get("/api/categories");
@@ -23,22 +25,6 @@ const CategoryList = () => {
         name: cat.name,
         description: cat.description || "Không có mô tả",
         parent: cat.parent_category_id?.name || "Danh mục chính",
-      }));
-      setCategories(formatted);
-    } catch (err) {
-      message.error("Lỗi khi tải danh mục");
-    }
-  };
-
-  useEffect(() => {
-  const fetchCategories = async () => {
-    try {
-      const { data } = await instanceAxios.get("/api/categories");
-      const formatted = data.map((cat: any, index: number) => ({
-        key: cat._id,
-        name: cat.name,
-        description: cat.description,
-        parent: cat.parent_category_id ? cat.parent_category_id.name : "Danh mục chính", 
         createdAt: new Date(cat.createdAt).toLocaleDateString("vi-VN"),
       }));
       setCategories(formatted);
@@ -47,14 +33,27 @@ const CategoryList = () => {
     }
   };
 
-  fetchCategories();
-}, []);
+  // Xoá danh mục
+  const handleDelete = async (id: string) => {
+    try {
+      await instanceAxios.delete(`/api/categories/${id}`);
+      message.success("Xoá danh mục thành công");
+      fetchCategories();
+    } catch (error) {
+      message.error("Xoá danh mục thất bại");
+    }
+  };
 
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
+  // Cấu hình các cột hiển thị trong bảng
   const columns: ColumnsType<Category> = [
     { title: "Tên danh mục", dataIndex: "name", align: "center" },
     { title: "Mô tả", dataIndex: "description", align: "center" },
     { title: "Danh mục cha", dataIndex: "parent", align: "center" },
+    { title: "Ngày tạo", dataIndex: "createdAt", align: "center" },
     {
       title: "Hành động",
       dataIndex: "actions",
@@ -68,8 +67,10 @@ const CategoryList = () => {
             Sửa
           </Button>
           <Popconfirm
-            title="Xác nhận xoá?"
+            title="Xác nhận xoá danh mục này?"
             onConfirm={() => handleDelete(record.key)}
+            okText="Xoá"
+            cancelText="Huỷ"
           >
             <Button danger>Xoá</Button>
           </Popconfirm>

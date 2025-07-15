@@ -1,8 +1,13 @@
 import { Table, Tag, Button, Popconfirm, message, Card } from "antd";
 import { useEffect, useState } from "react";
-import { data, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import instanceAxios from "../../../utils/instanceAxios";
 import type { ColumnsType } from "antd/es/table";
+
+interface Product {
+  name: string;
+  images: string[];
+}
 
 interface Order {
   key: string;
@@ -11,10 +16,9 @@ interface Order {
   date: string;
   total: string;
   address: string;
+  products: Product[];
   status: string;
-  products: string;
-  quantity: number;
-  rawStatus: string; // thêm để xử lý logic
+  rawStatus: string;
 }
 
 const OrderList = () => {
@@ -24,16 +28,20 @@ const OrderList = () => {
   const fetchOrders = async () => {
     try {
       const { data } = await instanceAxios.get("/api/orders");
-      console.log(data)
+
       const formatted = data.map((o: any): Order => ({
         key: o._id,
         code: o._id.slice(-6).toUpperCase(),
-        customer: o.user_id ? `${o.user_id.customer_code} - ${o.user_id.name}`: "Không rõ",
+        customer: o.user_id
+          ? `${o.user_id.customer_code} - ${o.user_id.name}`
+          : "Không rõ",
         date: new Date(o.order_date).toLocaleDateString("vi-VN"),
-        total: `${o.products.reduce((acc: number, p: any) => acc + p.price * p.quantity,0).toLocaleString()}₫`,
-        quantity: o.products.reduce((acc: number, p: any) => acc + p.quantity, 0),
+        total: `${o.products.reduce(
+          (acc: number, p: any) => acc + p.price * p.quantity,
+          0
+        ).toLocaleString()}₫`,
         address: o.shipping_address || "Chưa có địa chỉ",
-        products: o.products.map((p: any) => p.product_id?.name || "Sản phẩm").join(", "),
+        products: o.products.map((p: any) => p.product_id),
         status:
           o.status === "done"
             ? "✅ Hoàn thành"
@@ -68,8 +76,25 @@ const OrderList = () => {
     { title: "Khách hàng", dataIndex: "customer", align: "center" },
     { title: "Ngày đặt", dataIndex: "date", align: "center" },
     { title: "Địa chỉ", dataIndex: "address", align: "center" },
-    { title: "Sản phẩm", dataIndex: "products", align: "center" },
-    
+    {
+      title: "Sản phẩm",
+      dataIndex: "products",
+      align: "center",
+      render: (products: Product[]) => (
+        <div className="flex flex-wrap justify-center gap-3">
+          {products.map((p, index) => (
+            <div key={index} className="w-[80px] text-center">
+              <img
+                src={p?.images?.[0] || "https://via.placeholder.com/60"}
+                alt={p?.name}
+                className="w-[60px] h-[60px] object-cover rounded-md mx-auto border"
+              />
+              <div className="text-sm mt-1 line-clamp-2">{p?.name}</div>
+            </div>
+          ))}
+        </div>
+      ),
+    },
     {
       title: "Tổng tiền",
       dataIndex: "total",

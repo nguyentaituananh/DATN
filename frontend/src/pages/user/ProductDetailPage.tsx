@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchProductById } from "../../api/productApi";
-import { Product } from "../../types";
+import { Product, ProductVariant } from "../../types";
 import {
   Typography,
   Image as AntImage,
@@ -9,10 +9,12 @@ import {
   Button,
   Tag,
   message,
+  Select,
 } from "antd";
 import { ShoppingCart } from "lucide-react";
 
 const { Title, Paragraph, Text } = Typography;
+const { Option } = Select;
 
 const currencyFormatter = new Intl.NumberFormat("vi-VN");
 
@@ -21,6 +23,9 @@ const ProductDetailPage: React.FC = () => {
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
+    null
+  );
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -41,22 +46,24 @@ const ProductDetailPage: React.FC = () => {
     loadProduct();
   }, [id]);
 
-  const firstVariant = useMemo(() => product?.variants?.[0], [product]);
+  const variants = product?.variants ?? [];
 
   const price =
-    firstVariant?.discount_price ??
-    firstVariant?.price ??
+    selectedVariant?.discount_price ??
+    selectedVariant?.price ??
     product?.salePrice ??
     product?.price ??
     0;
 
   const originalPrice =
-    firstVariant?.price ??
-    product?.price ??
-    0;
+    selectedVariant?.price ?? product?.price ?? 0;
 
   const handleAddToCart = () => {
-    if (!product) return;
+    if (!product || !selectedVariant) {
+      message.warning("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng.");
+      return;
+    }
+
     setAdding(true);
 
     const cartItem = {
@@ -65,14 +72,16 @@ const ProductDetailPage: React.FC = () => {
       price,
       quantity: 1,
       image: product.images?.[0],
-      variantId: firstVariant?._id,
+      variantId: selectedVariant._id,
+      size: selectedVariant.size,
+      color: selectedVariant.color,
     };
 
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     const existing = cart.find(
       (item: any) =>
         item.productId === cartItem.productId &&
-        item.variantId === cartItem.variantId,
+        item.variantId === cartItem.variantId
     );
 
     if (existing) existing.quantity += 1;
@@ -80,10 +89,8 @@ const ProductDetailPage: React.FC = () => {
 
     localStorage.setItem("cart", JSON.stringify(cart));
 
-    setTimeout(() => {
-      message.success(`Đã thêm \"${product.name}\" vào giỏ hàng!`);
-      setAdding(false);
-    }, 600);
+    message.success(`Đã thêm "${product.name}" vào giỏ hàng!`);
+    setAdding(false);
   };
 
   if (loading)
@@ -94,16 +101,22 @@ const ProductDetailPage: React.FC = () => {
     );
 
   if (!product)
-    return <Paragraph className="text-center mt-10">Không tìm thấy sản phẩm.</Paragraph>;
+    return (
+      <Paragraph className="text-center mt-10">
+        Không tìm thấy sản phẩm.
+      </Paragraph>
+    );
 
   const imageFallback = "/images/placeholder.jpg";
+  const imageArray = Array.isArray(product.images) ? product.images : [];
+  const imageSrc = imageArray[0] || imageFallback;
 
   return (
     <div className="w-full px-4 py-10 bg-white">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-7xl mx-auto">
         <div className="w-full">
           <AntImage
-            src={product.images?.[0]?.includes("via.placeholder.com") ? imageFallback : product.images?.[0] || imageFallback}
+            src={imageSrc}
             fallback={imageFallback}
             alt={product.name}
             className="rounded-xl w-full object-cover"
@@ -119,6 +132,44 @@ const ProductDetailPage: React.FC = () => {
             {product.description}
           </Paragraph>
 
+          {variants.length > 0 && (
+            <div className="flex gap-4">
+              <Select
+                placeholder="Chọn kích thước"
+                value={selectedVariant?.size}
+                onChange={(value) => {
+                  const variant = variants.find((v) => v.size === value);
+                  setSelectedVariant(variant || null);
+                }}
+                className="w-1/2"
+              >
+                {variants.map((v) => (
+                  <Option key={v._id} value={v.size}>
+                    {v.size}
+                  </Option>
+                ))}
+              </Select>
+
+              <Select
+                placeholder="Chọn màu"
+                value={selectedVariant?.color}
+                onChange={(value) => {
+                  const variant = variants.find(
+                    (v) => v.color === value && v.size === selectedVariant?.size
+                  );
+                  setSelectedVariant(variant || null);
+                }}
+                className="w-1/2"
+              >
+                {[...new Set(variants.map((v) => v.color))].map((color) => (
+                  <Option key={color} value={color}>
+                    {color}
+                  </Option>
+                ))}
+              </Select>
+            </div>
+          )}
+
           <div className="flex items-end space-x-3">
             <Title level={3} className="!m-0 text-primary">
               {price > 0 ? `${currencyFormatter.format(price)} đ` : "Liên hệ"}
@@ -128,7 +179,7 @@ const ProductDetailPage: React.FC = () => {
                 {currencyFormatter.format(originalPrice)} đ
               </Text>
             )}
-            {firstVariant?.discount_price && <Tag color="red">Giảm giá</Tag>}
+            {selectedVariant?.discount_price && <Tag color="red">Giảm giá</Tag>}
           </div>
 
           <Button
@@ -136,7 +187,6 @@ const ProductDetailPage: React.FC = () => {
             size="large"
             icon={<ShoppingCart size={18} />}
             loading={adding}
-            disabled={!product}
             onClick={handleAddToCart}
             className="rounded-xl"
           >

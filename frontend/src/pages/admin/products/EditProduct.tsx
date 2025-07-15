@@ -1,272 +1,178 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import {
+  Form,
+  Input,
+  InputNumber,
+  Upload,
+  Button,
+  Select,
+  message,
+  Typography,
+} from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import instanceAxios from "../../../utils/instanceAxios";
 
-type Category = {
-  _id: string;
-  name: string;
-};
+const { TextArea } = Input;
+const { Option } = Select;
 
-const EditProducts = () => {
+const EditProducts: React.FC = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    category_id: "",
-    images: [] as string[],
-  });
-
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [variants, setVariants] = useState<any[]>([]);
+  const [form] = Form.useForm();
+  const [categories, setCategories] = useState<any[]>([]);
+  const [allProducts, setAllProducts] = useState<any[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  // Tải dữ liệu khi vào trang
   useEffect(() => {
-    fetchCategories();
-    fetchProductDetail();
+    fetchInitialData();
   }, []);
 
-  const fetchCategories = async () => {
-    const res = await instanceAxios.get("/api/categories");
-    setCategories(res.data);
-  };
+  const fetchInitialData = async () => {
+    const [catRes, prodRes, productRes] = await Promise.all([
+      instanceAxios.get("/api/categories"),
+      instanceAxios.get("/api/products"),
+      instanceAxios.get(`/api/products/${id}`),
+    ]);
 
-  const fetchProductDetail = async () => {
-    const res = await instanceAxios.get(`/api/products/${id}`);
-    const product = res.data;
+    setCategories(catRes.data || []);
+    setAllProducts(prodRes.data || []);
 
-    setFormData({
+    const product = productRes.data;
+    form.setFieldsValue({
       name: product.name,
       description: product.description,
+      price: product.price,
+      discount_price: product.discount_price,
       category_id: product.category_id?._id || "",
-      images: product.images,
+      related_products: product.related_products?.map((p: any) => p._id) || [],
     });
-
-    setImagePreviews(product.images);
-    setVariants(product.variants);
+    setImagePreviews(product.images || []);
   };
 
-  const handleChange = (e: React.ChangeEvent<any>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleVariantChange = (index: number, field: string, value: any) => {
-    const updatedVariants = [...variants];
-    updatedVariants[index][field] = value;
-    setVariants(updatedVariants);
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (values: any) => {
     try {
-      // Update product
-      await instanceAxios.put(`/api/products/${id}`, {
-        name: formData.name,
-        description: formData.description,
-        category_id: formData.category_id,
-      });
-
-      // Update variants
-      for (const variant of variants) {
-        await instanceAxios.put(`/api/product-variant/${variant._id}`, {
-          price: variant.price,
-          import_price: variant.import_price,
-          sku: variant.sku,
-          stock_quantity: variant.stock_quantity,
-          attributes: variant.attributes,
-        });
-      }
-
-      alert("Cập nhật sản phẩm thành công!");
+      setLoading(true);
+      await instanceAxios.put(`/api/products/${id}`, values);
+      message.success("Cập nhật sản phẩm thành công!");
       navigate("/admin/product");
     } catch (err: any) {
-      console.error(err.response?.data || err);
-      alert(err.response?.data.message || "Có lỗi xảy ra.");
+      console.error("Lỗi cập nhật:", err);
+      message.error(err.response?.data?.message || "Cập nhật thất bại");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white rounded-xl shadow">
-      <h2 className="text-2xl font-bold mb-4">Chỉnh sửa sản phẩm</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block mb-1 font-semibold">Tên sản phẩm</label>
-          <input
-            type="text"
+    <div className="p-6">
+      <div className="bg-white rounded-xl shadow-sm p-8 w-full max-w-6xl mx-auto">
+        <Typography.Title level={4} className="mb-6">
+          ✏️ Chỉnh sửa sản phẩm
+        </Typography.Title>
+
+        <Form layout="vertical" form={form} onFinish={handleSubmit}>
+          <Form.Item
             name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="border p-3 w-full rounded"
-          />
-        </div>
-
-        <div>
-          <label className="block mb-1 font-semibold">Mô tả</label>
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            className="border p-3 w-full rounded"
-          />
-        </div>
-
-        <div>
-          <label className="block mb-1 font-semibold">Danh mục</label>
-          <select
-            name="category_id"
-            value={formData.category_id}
-            onChange={handleChange}
-            className="border p-3 w-full rounded"
+            label="Tên sản phẩm"
+            rules={[{ required: true, message: "Vui lòng nhập tên" }]}
           >
-            <option value="">-- Chọn danh mục --</option>
-            {categories.map((c) => (
-              <option key={c._id} value={c._id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </div>
+            <Input placeholder="VD: Sofa xám cao cấp" />
+          </Form.Item>
 
-        <div>
-          <label className="block mb-1 font-semibold">Ảnh sản phẩm</label>
-          <div className="flex gap-2 flex-wrap mt-2">
-            {imagePreviews.map((src, idx) => (
-              <img
-                key={idx}
-                src={src}
-                alt=""
-                className="w-20 h-20 object-cover rounded"
+          <Form.Item
+            name="description"
+            label="Mô tả"
+            rules={[{ required: true, message: "Vui lòng nhập mô tả" }]}
+          >
+            <TextArea rows={4} placeholder="Nhập mô tả sản phẩm..." />
+          </Form.Item>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Form.Item
+              name="price"
+              label="Giá gốc"
+              rules={[{ required: true, message: "Vui lòng nhập giá" }]}
+            >
+              <InputNumber
+                min={0}
+                className="w-full"
+                placeholder="VD: 2,000,000"
+                formatter={(value) =>
+                  value
+                    ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " đ"
+                    : ""
+                }
+                parser={(value) => value?.replace(/[^\d]/g, "")}
               />
-            ))}
+            </Form.Item>
+
+            <Form.Item name="discount_price" label="Giá khuyến mãi">
+              <InputNumber
+                min={0}
+                className="w-full"
+                placeholder="VD: 1,800,000"
+                formatter={(value) =>
+                  value
+                    ? `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",") + " đ"
+                    : ""
+                }
+                parser={(value) => value?.replace(/[^\d]/g, "")}
+              />
+            </Form.Item>
           </div>
-        </div>
 
-        {/* Biến thể */}
-        {variants.length > 0 && (
-          <>
-            <h3 className="font-semibold text-lg mt-6">Danh sách Biến thể</h3>
-            <table className="w-full border text-sm mt-2">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="border p-2">SKU</th>
-                  <th className="border p-2">Giá nhập</th>
-                  <th className="border p-2">Giá bán</th>
-                  <th className="border p-2">Kho</th>
-                  <th className="border p-2">Size</th>
-                  <th className="border p-2">Màu</th>
-                  <th className="border p-2">Kích thước</th>
-                </tr>
-              </thead>
-              <tbody>
-                {variants.map((v, index) => (
-                  <tr key={v._id}>
-                    <td className="border p-2">
-                      <input
-                        value={v.sku}
-                        onChange={(e) =>
-                          handleVariantChange(index, "sku", e.target.value)
-                        }
-                        className="border p-1 rounded w-24"
-                      />
-                    </td>
-                    <td className="border p-2">
-                      <input
-                        type="number"
-                        value={v.import_price}
-                        onChange={(e) =>
-                          handleVariantChange(
-                            index,
-                            "import_price",
-                            Number(e.target.value)
-                          )
-                        }
-                        className="border p-1 rounded w-20"
-                      />
-                    </td>
-                    <td className="border p-2">
-                      <input
-                        type="number"
-                        value={v.price}
-                        onChange={(e) =>
-                          handleVariantChange(
-                            index,
-                            "price",
-                            Number(e.target.value)
-                          )
-                        }
-                        className="border p-1 rounded w-20"
-                      />
-                    </td>
-                    <td className="border p-2">
-                      <input
-                        type="number"
-                        value={v.stock_quantity}
-                        onChange={(e) =>
-                          handleVariantChange(
-                            index,
-                            "stock_quantity",
-                            Number(e.target.value)
-                          )
-                        }
-                        className="border p-1 rounded w-16"
-                      />
-                    </td>
-                    <td className="border p-2">
-                      <input
-                        value={v.attributes.size}
-                        onChange={(e) =>
-                          handleVariantChange(index, "attributes", {
-                            ...v.attributes,
-                            size: e.target.value,
-                          })
-                        }
-                        className="border p-1 rounded w-16"
-                      />
-                    </td>
-                    <td className="border p-2">
-                      <input
-                        value={v.attributes.color}
-                        onChange={(e) =>
-                          handleVariantChange(index, "attributes", {
-                            ...v.attributes,
-                            color: e.target.value,
-                          })
-                        }
-                        className="border p-1 rounded w-16"
-                      />
-                    </td>
-                    <td className="border p-2">
-                      <input
-                        value={v.attributes.dimensions}
-                        onChange={(e) =>
-                          handleVariantChange(index, "attributes", {
-                            ...v.attributes,
-                            dimensions: e.target.value,
-                          })
-                        }
-                        className="border p-1 rounded w-24"
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </>
-        )}
+          <Form.Item
+            name="category_id"
+            label="Danh mục"
+            rules={[{ required: true, message: "Chọn danh mục" }]}
+          >
+            <Select placeholder="Chọn danh mục">
+              {categories.map((cat) => (
+                <Option key={cat._id} value={cat._id}>
+                  {cat.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-3 px-6 rounded mt-6"
-        >
-          Cập nhật sản phẩm
-        </button>
-      </form>
+          <Form.Item name="related_products" label="Sản phẩm liên quan">
+            <Select mode="multiple" placeholder="Chọn sản phẩm liên quan">
+              {allProducts.map((p) => (
+                <Option key={p._id} value={p._id}>
+                  {p.name}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item label="Ảnh sản phẩm">
+            <div className="flex gap-2 flex-wrap">
+              {imagePreviews.map((src, idx) => (
+                <img
+                  key={idx}
+                  src={src}
+                  alt={`preview-${idx}`}
+                  className="w-20 h-20 object-cover rounded"
+                />
+              ))}
+            </div>
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={loading}
+              className="bg-orange-500 hover:bg-orange-600 text-white rounded-lg"
+            >
+              Cập nhật sản phẩm
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
     </div>
   );
 };
