@@ -8,8 +8,8 @@ import {
   Typography,
   message,
 } from "antd";
-import { createVariant } from "../../api/productVariantApi";
-import { fetchAllProducts } from "../../api/productApi";
+import { createVariant } from "../../../api/productVariantApi";
+import { fetchAllProducts } from "../../../api/productApi";
 import { useNavigate } from "react-router-dom";
 
 const { Option } = Select;

@@ -65,10 +65,6 @@ export const register = async (req, res) => {
     if (existingUser) {
       return res.status(400).json({ message: "Email đã tồn tại." });
     }
-=========
-    const existingUser = await User.findOne({ email });
-    if (existingUser)
-      return res.status(400).json({ message: "Email đã tồn tại." });
 
     // Thêm dòng này để sinh mã tự động
     const customer_code = await generateCustomerCode();
@@ -110,11 +106,7 @@ export const login = async (req, res) => {
 
     // Tạo JWT token
     const token = generateToken(user._id);
-<<<<<<<<< Temporary merge branch 1
     res.status(200).json({ user: user.name, token ,id :user.id});
-=========
-    res.status(200).json({ user: user, token });
->>>>>>>>> Temporary merge branch 2
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -168,8 +160,6 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-<<<<<<<<< Temporary merge branch 1
-
 export const changePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;
   const userId = req.user._id;
@@ -193,7 +183,6 @@ export const changePassword = async (req, res) => {
   }
 };
 
-=========
 // Tìm kiếm theo mã khách hàng (autocomplete)
 export const searchUsersByCustomerCode = async (req, res) => {
   try {
@@ -213,4 +202,4 @@ export const searchUsersByCustomerCode = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
->>>>>>>>> Temporary merge branch 2
+

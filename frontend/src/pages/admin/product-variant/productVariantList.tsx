@@ -3,8 +3,8 @@ import { Table, Button, Popconfirm, message, Space, Typography } from "antd";
 import {
   fetchAllVariants,
   deleteVariant,
-} from "../../api/productVariantApi";
-import { ProductVariant } from "../../types";
+} from "../../../api/productVariantApi";
+import { ProductVariant } from "../../../types";
 import { useNavigate } from "react-router-dom";
 
 const ProductVariantList = () => {
