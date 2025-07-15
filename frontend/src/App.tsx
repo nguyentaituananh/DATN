@@ -31,6 +31,7 @@ import CategoryList from "./pages/admin/category/CategoryList";
 import CategoryCreate from "./pages/admin/category/CategoryCreate";
 import EditCategory from "./pages/admin/category/CategoryEdit";
 import ProtectedRouteAdmin from "./components/ProtectedRouteAdmin";
+import EditProductVariant from "./pages/admin/product-variant/productVariantEdit";
 
 // User Pages
 import HomePage from "./pages/user/HomePage";
@@ -60,7 +61,6 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ConfigProvider theme={theme}>
         <StrictMode>
-          <BrowserRouter>
             <AuthProvider>
               <OrderProvider>
                 <CartProvider>
@@ -82,6 +82,7 @@ function App() {
                         <Route path="product/edit/:id" element={<EditProducts />} />
                         <Route path="product-variant" element={<ProductVariantList />} />
                         <Route path="product-variant/create" element={<AddProductVariant />} />
+                        <Route path="product-variant/edit/:id" element={<EditProductVariant />} />
                         <Route path="order" element={<OrderList />} />
                         <Route path="order/create" element={<OrderForm />} />
                         <Route path="order/edit/:id" element={<EditOrder />} />
@@ -112,7 +113,6 @@ function App() {
                 </CartProvider>
               </OrderProvider>
             </AuthProvider>
-          </BrowserRouter>
         </StrictMode>
       </ConfigProvider>
     </QueryClientProvider>

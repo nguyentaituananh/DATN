@@ -1,11 +1,39 @@
 import ProductVariant from "../models/product_variants.model.js";
+import cloudinary from "../config/cloudinary.config.js";
+import fs from "fs";
 
 // Thêm variant
 export const createVariant = async (req, res) => {
   try {
-    const { product_id, sku, price, stock_quantity, attributes } = req.body;
+    let {
+      product_id,
+      sku,
+      price,
+      stock_quantity,
+      discount_price,
+      attributes,
+    } = req.body;
+
+    // Kiểm tra bắt buộc
     if (!product_id || !sku || !price || !stock_quantity) {
       return res.status(400).json({ message: "Thiếu trường bắt buộc" });
+    }
+
+    // Chuyển đổi kiểu dữ liệu
+    price = Number(price);
+    stock_quantity = Number(stock_quantity);
+    if (discount_price) discount_price = Number(discount_price);
+
+    // Upload ảnh nếu có
+    const images = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const result = await cloudinary.uploader.upload(file.path, {
+          folder: "product_variants",
+        });
+        images.push(result.secure_url);
+        fs.unlinkSync(file.path); // Xoá ảnh tạm
+      }
     }
 
     const newVariant = new ProductVariant({
@@ -13,12 +41,15 @@ export const createVariant = async (req, res) => {
       sku,
       price,
       stock_quantity,
+      discount_price,
       attributes,
+      images,
     });
 
-    await newVariant.save();
-    res.status(201).json(newVariant);
+    const savedVariant = await newVariant.save();
+    res.status(201).json(savedVariant);
   } catch (error) {
+    console.error("Lỗi khi tạo variant:", error);
     res.status(500).json({ message: "Lỗi khi tạo variant" });
   }
 };
@@ -26,7 +57,8 @@ export const createVariant = async (req, res) => {
 // Lấy tất cả variant
 export const getAllVariants = async (req, res) => {
   try {
-    const variants = await ProductVariant.find();
+    const variants = await ProductVariant.find()
+    .populate("product_id", "name");
     res.status(200).json(variants);
   } catch (error) {
     res.status(500).json({ message: "Lỗi khi lấy danh sách variant" });
