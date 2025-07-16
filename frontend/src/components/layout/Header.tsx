@@ -41,7 +41,7 @@ const Header: React.FC = () => {
     setSearchOpen(false);
     setIsMobileMenuOpen(false);
   }, [location]);
-   const { user, logout } = useAuth();
+  const { user, logout } = useAuth();
   const userMenuItems =  (user) ?
       [
         { key: "profile", label: "Tài khoản" },
@@ -176,7 +176,7 @@ const Header: React.FC = () => {
                 <Avatar size="small" icon={<UserOutlined />} className="bg-gradient-to-r from-amber-500 to-amber-600" />
                 <span className="text-sm font-semibold">Tài khoản</span>
               </AntButton>
-</Dropdown>
+            </Dropdown>
             <AntButton
               type="text"
               icon={<MenuOutlined />}

@@ -106,7 +106,7 @@ export const login = async (req, res) => {
 
     // Tạo JWT token
     const token = generateToken(user._id);
-    res.status(200).json({ user: user.name, token ,id :user.id});
+    res.status(200).json({ user: user, token ,id :user.id});
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -10,42 +10,67 @@ import {
   Upload,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import { createVariant } from "../../../api/productVariantApi";
+import { useNavigate, useParams } from "react-router-dom";
 import { fetchAllProducts } from "../../../api/productApi";
-import { useNavigate } from "react-router-dom";
+import {
+  fetchVariantById,
+  updateVariant,
+} from "../../../api/productVariantApi";
+import { RcFile } from "antd/es/upload";
 
 const { Option } = Select;
 
-const AddProductVariant: React.FC = () => {
+const EditProductVariant: React.FC = () => {
   const [form] = Form.useForm();
   const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
   const [fileList, setFileList] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [initialImages, setInitialImages] = useState<string[]>([]);
   const navigate = useNavigate();
+  const { id } = useParams();
 
   useEffect(() => {
-    const loadProducts = async () => {
+    const loadData = async () => {
       try {
-        const data = await fetchAllProducts();
-        setProducts(data);
+        const [productsData, variantData] = await Promise.all([
+          fetchAllProducts(),
+          fetchVariantById(id!),
+        ]);
+
+        setProducts(productsData);
+        setInitialImages(variantData.images || []);
+
+        form.setFieldsValue({
+          ...variantData,
+          attributes: variantData.attributes || {},
+        });
+
+        setFileList(
+          (variantData.images || []).map((url: string, index: number) => ({
+            uid: `-${index}`,
+            name: `image-${index}`,
+            status: "done",
+            url,
+          }))
+        );
       } catch (error) {
-        message.error("Không thể tải danh sách sản phẩm");
+        message.error("Không thể tải dữ liệu biến thể");
       }
     };
-    loadProducts();
-  }, []);
+
+    loadData();
+  }, [form, id]);
 
   const handleSubmit = async (values: any) => {
     try {
       setLoading(true);
-
       const formData = new FormData();
       formData.append("product_id", values.product_id);
       formData.append("sku", values.sku);
-      formData.append("price", values.price.toString());
-      formData.append("stock_quantity", values.stock_quantity.toString());
-      if (values.discount_price !== undefined && values.discount_price !== null) {
-        formData.append("discount_price", values.discount_price.toString());
+      formData.append("price", values.price);
+      formData.append("stock_quantity", values.stock_quantity);
+      if (values.discount_price) {
+        formData.append("discount_price", values.discount_price);
       }
 
       if (values.attributes?.color) {
@@ -59,22 +84,17 @@ const AddProductVariant: React.FC = () => {
       }
 
       fileList.forEach((file) => {
-        formData.append("images", file.originFileObj);
+        if (file.originFileObj) {
+          formData.append("images", file.originFileObj as RcFile);
+        }
       });
 
-      // Debug formData
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
-      }
-
-      await createVariant(formData);
-      message.success("Tạo biến thể thành công!");
-      form.resetFields();
-      setFileList([]);
+      await updateVariant(id!, formData);
+      message.success("Cập nhật biến thể thành công!");
       navigate("/admin/product-variant");
-    } catch (err: any) {
-      console.error("❌ Lỗi:", err);
-      message.error(err.response?.data?.message || "Tạo biến thể thất bại");
+    } catch (error) {
+      console.error(error);
+      message.error("Cập nhật biến thể thất bại");
     } finally {
       setLoading(false);
     }
@@ -82,8 +102,8 @@ const AddProductVariant: React.FC = () => {
 
   return (
     <div className="p-6">
-      <div className="bg-white rounded-xl shadow-sm p-8 w-full max-w-screen-xl mx-auto">
-        <Typography.Title level={4}>➕ Thêm mới Biến thể</Typography.Title>
+      <div className="bg-white rounded-xl shadow-sm p-8 max-w-4xl mx-auto">
+        <Typography.Title level={4}>✏️ Cập nhật Biến thể</Typography.Title>
 
         <Form layout="vertical" form={form} onFinish={handleSubmit}>
           <Form.Item
@@ -170,7 +190,6 @@ const AddProductVariant: React.FC = () => {
               onChange={({ fileList }) => setFileList(fileList)}
               beforeUpload={() => false}
               multiple
-              className="!w-full"
             >
               {fileList.length < 5 && (
                 <div>
@@ -188,7 +207,7 @@ const AddProductVariant: React.FC = () => {
               loading={loading}
               className="bg-orange-500 hover:bg-orange-600 text-white rounded-lg"
             >
-              Tạo biến thể
+              Cập nhật
             </Button>
           </Form.Item>
         </Form>
@@ -197,4 +216,4 @@ const AddProductVariant: React.FC = () => {
   );
 };
 
-export default AddProductVariant;
+export default EditProductVariant;

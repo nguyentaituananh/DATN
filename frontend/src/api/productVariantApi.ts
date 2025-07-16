@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ProductVariant } from "../types"; 
 
-const API_URL = "http://localhost:5000/api/product-variant";
+const API_URL = "http://localhost:5000/api/product-variants";
 
 // Lấy tất cả biến thể sản phẩm
 export const fetchAllVariants = async (): Promise<ProductVariant[]> => {
@@ -44,3 +44,4 @@ export const updateVariant = async (
 export const deleteVariant = async (id: string): Promise<void> => {
   await axios.delete(`${API_URL}/${id}`);
 };
+
