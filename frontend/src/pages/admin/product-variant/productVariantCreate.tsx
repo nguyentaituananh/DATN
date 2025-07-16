@@ -9,7 +9,6 @@ import {
   message,
   Upload,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
 import { createVariant } from "../../../api/productVariantApi";
 import { fetchAllProducts } from "../../../api/productApi";
 import { useNavigate } from "react-router-dom";

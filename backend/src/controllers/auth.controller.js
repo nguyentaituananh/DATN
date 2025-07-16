@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { registerSchema } from "../validates/user.validate.js";
+import { changePasswordSchema } from "../validates/user.validate.js";
 
 
 
@@ -57,16 +58,22 @@ const generateToken = (userId) => {
 
 // Đăng ký
 export const register = async (req, res) => {
-  const { name, email, password, address, phone_number, role } = req.body;
-
   try {
-    // Kiểm tra xem email đã tồn tại chưa
+    const { error } = registerSchema.validate(req.body, { abortEarly: false });
+    if (error) {
+      const messages = error.details.map((detail) => detail.message);
+      return res.status(400).json({ message: messages });
+    }
+
+    const { name, email, password, address, phone_number, role } = req.body;
+
+    // Kiểm tra email đã tồn tại
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email đã tồn tại." });
     }
 
-    // Thêm dòng này để sinh mã tự động
+
     const customer_code = await generateCustomerCode();
 
     const newUser = new User({
@@ -87,6 +94,7 @@ export const register = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 // Đăng nhập
 export const login = async (req, res) => {
@@ -161,6 +169,13 @@ export const deleteUser = async (req, res) => {
 };
 
 export const changePassword = async (req, res) => {
+  const { error } = changePasswordSchema.validate(req.body, { abortEarly: false });
+
+  if (error) {
+    const messages = error.details.map((detail) => detail.message);
+    return res.status(400).json({ message: "Dữ liệu không hợp lệ", errors: messages });
+  }
+
   const { currentPassword, newPassword } = req.body;
   const userId = req.user._id;
 
@@ -173,7 +188,11 @@ export const changePassword = async (req, res) => {
       return res.status(400).json({ message: "Mật khẩu hiện tại không đúng." });
     }
 
-    user.password = newPassword; // sẽ được mã hóa bởi pre-save
+    if (currentPassword === newPassword) {
+      return res.status(400).json({ message: "Mật khẩu mới không được trùng với mật khẩu cũ." });
+    }
+
+    user.password = newPassword;
     await user.save();
 
     res.json({ message: "Đổi mật khẩu thành công." });

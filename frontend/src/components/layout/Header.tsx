@@ -21,6 +21,28 @@ import {
 import { Bed, Armchair, Table, Archive, Lamp, ChevronDown } from "lucide-react";
 
 const { Text } = Typography;
+import {
+  ShoppingCartOutlined,
+  BellOutlined,
+  HeartOutlined,
+  HomeOutlined,
+  UserOutlined,
+  MenuOutlined,
+} from "@ant-design/icons";
+import {
+  Drawer,
+  Avatar,
+  Badge,
+  Button as AntButton,
+  Divider,
+  Dropdown,
+  Space,
+  Typography,
+} from "antd";
+import { Bed, Armchair, Table, Archive, Lamp, ChevronDown } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+
+const { Text } = Typography;
 
 const Header: React.FC = () => {
   const location = useLocation();
@@ -40,12 +62,17 @@ const Header: React.FC = () => {
     setSearchOpen(false);
     setIsMobileMenuOpen(false);
   }, [location]);
-
-  const userMenuItems = [
-    { key: "profile", label: <Link to="/profile">Tài khoản</Link> },
-    { key: "orders", label: <Link to="/orders">Đơn hàng</Link> },
-    { key: "logout", label: "Đăng xuất", danger: true },
-  ];
+   const { user, logout } = useAuth();
+  const userMenuItems =  (user) ?
+      [
+        { key: "profile", label: "Tài khoản" },
+        { key: "orders", label: "Đơn hàng" },
+        { key: "logout", label: "Đăng xuất", onClick: logout },
+      ] :
+      [
+        { key: "login", label: <Link to="/login">Đăng nhập</Link> },
+        { key: "register", label: <Link to="/register">Đăng ký</Link> },
+      ];
 
   const navigation = [
     { key: "home", name: "Trang chủ", href: "/" },
@@ -94,7 +121,7 @@ const Header: React.FC = () => {
             <div className="text-xs text-stone-500">85+ sản phẩm</div>
           </div>
         </Link>
-      ),
+),
     },
     {
       key: "cabinets",
@@ -170,7 +197,7 @@ const Header: React.FC = () => {
                 <Avatar size="small" icon={<UserOutlined />} className="bg-gradient-to-r from-amber-500 to-amber-600" />
                 <span className="text-sm font-semibold">Tài khoản</span>
               </AntButton>
-            </Dropdown>
+</Dropdown>
             <AntButton
               type="text"
               icon={<MenuOutlined />}
