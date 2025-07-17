@@ -7,7 +7,7 @@ interface AuthContextType {
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<User>;
   register: (
     name: string,
     email: string,
