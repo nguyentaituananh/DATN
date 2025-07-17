@@ -76,6 +76,24 @@ export const getVariantById = async (req, res) => {
     res.status(500).json({ message: "Lỗi khi lấy variant" });
   }
 };
+// Lấy tất cả variant theo product_id
+export const getVariantsByProductId = async (req, res) => {
+  try {
+    const { productId } = req.params;
+
+    const variants = await ProductVariant.find({ product_id: productId });
+
+    if (!variants || variants.length === 0) {
+      return res.status(404).json({ message: "Không tìm thấy biến thể nào cho sản phẩm này" });
+    }
+
+    res.status(200).json(variants);
+  } catch (error) {
+    console.error("Lỗi khi lấy variant theo product_id:", error);
+    res.status(500).json({ message: "Lỗi khi lấy variant theo product_id" });
+  }
+};
+
 
 // Cập nhật variant
 export const updateVariant = async (req, res) => {

@@ -14,6 +14,7 @@ export const fetchAllProducts = async (): Promise<Product[]> => {
 
 export const fetchProductById = async (id: string): Promise<Product> => {
   const response = await axios.get(`${API_URL}/${id}`);
+  console.log("Chi tiết sản phẩm:", response.data);
   return response.data;
 };
 

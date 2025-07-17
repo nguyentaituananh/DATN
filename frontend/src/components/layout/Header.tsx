@@ -1,26 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  ShoppingCartOutlined,
-  BellOutlined,
-  HeartOutlined,
-  HomeOutlined,
-  UserOutlined,
-  MenuOutlined,
-} from "@ant-design/icons";
-import {
-  Drawer,
-  Avatar,
-  Badge,
-  Button as AntButton,
-  Divider,
-  Dropdown,
-  Space,
-  Typography,
-} from "antd";
-import { Bed, Armchair, Table, Archive, Lamp, ChevronDown } from "lucide-react";
 
-const { Text } = Typography;
 import {
   ShoppingCartOutlined,
   BellOutlined,

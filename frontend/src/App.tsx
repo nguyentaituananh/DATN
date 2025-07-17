@@ -70,9 +70,9 @@ function App() {
                       <Route
                         path="/admin"
                         element={
-                          <ProtectedRouteAdmin>
+                          // <ProtectedRouteAdmin>
                             <LayoutAdmin />
-                          </ProtectedRouteAdmin>
+                          // </ProtectedRouteAdmin>
                         }
                       >
                         <Route index element={<DashboardPage />} />

@@ -59,6 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('auth', JSON.stringify({ user: res.data.user }));
     return res.data.user;
   };
+  
 
   const register = async (
     name: string,

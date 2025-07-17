@@ -7,10 +7,13 @@ export interface ProductVariant {
   attributes?: {
     color?: string;
     material?: string;
+    size?: string;
+    dimensions?: string;
   };
   images?: string[];
   is_active?: boolean;
 }
+
 
 export interface Product {
   _id: string;

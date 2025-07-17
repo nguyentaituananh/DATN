@@ -10,10 +10,13 @@ export const fetchAllVariants = async (): Promise<ProductVariant[]> => {
 };
 
 // Lấy chi tiết biến thể theo ID
-export const fetchVariantById = async (id: string): Promise<ProductVariant> => {
-  const response = await axios.get(`${API_URL}/${id}`);
+export const fetchVariantById = async (
+  productId: string
+): Promise<ProductVariant[]> => {
+  const response = await axios.get(`${API_URL}?product_id=${productId}`);
   return response.data;
 };
+
 
 // Tạo biến thể mới
 export const createVariant = async (data: FormData | ProductVariant): Promise<ProductVariant> => {

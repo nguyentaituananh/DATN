@@ -1,176 +1,139 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { InputNumber, Divider, Empty } from 'antd';
-import { Trash2, ArrowRight, ShoppingBag } from 'lucide-react';
-import { useCart } from '../../context/CartContext';
-import Button from '../../components/ui/Button';
+import React, { useEffect, useState } from "react";
+import { Typography, Table, Image, Button, message } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+
+const { Title, Text } = Typography;
+
+const currency = new Intl.NumberFormat("vi-VN");
+
+interface CartItem {
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+  variantId: string;
+  variantName: string;
+  variantSku: string;
+  variantAttributes: {
+    size?: string;
+    color?: string;
+    dimensions?: string;
+  };
+}
+
 const CartPage: React.FC = () => {
-  const { items= [], subtotal, shipping, tax, total, updateQuantity, removeFromCart } = useCart();
-  const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-  const handleQuantityChange = (productId: string, color: string, quantity: number) => {
-    updateQuantity(productId, color, quantity);
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("cart");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setCartItems(parsed);
+        }
+      }
+    } catch (err) {
+      console.error("Error loading cart:", err);
+    }
+  }, []);
+
+  const handleRemove = (variantId: string) => {
+    const updated = cartItems.filter(item => item.variantId !== variantId);
+    setCartItems(updated);
+    localStorage.setItem("cart", JSON.stringify(updated));
+    message.success("Đã xóa sản phẩm khỏi giỏ hàng");
   };
 
-  const handleRemoveItem = (productId: string, color: string) => {
-    removeFromCart(productId, color);
-  };
+  const columns = [
+    {
+      title: "Sản phẩm",
+      dataIndex: "name",
+      render: (_: any, record: CartItem) => (
+        <div className="flex items-center space-x-4">
+          <Image
+            width={80}
+            src={record.image}
+            fallback="/images/placeholder.jpg"
+            alt={record.name}
+          />
+          <div>
+            <div className="font-medium">{record.name}</div>
+            <div className="text-xs text-gray-500">
+              {record.variantName} - SKU: {record.variantSku}
+            </div>
+            <div className="text-xs text-gray-400">
+              {record.variantAttributes.size} | {record.variantAttributes.color} |{" "}
+              {record.variantAttributes.dimensions}
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Giá",
+      dataIndex: "price",
+      render: (price: number) => `${currency.format(price)} đ`,
+    },
+    {
+      title: "Số lượng",
+      dataIndex: "quantity",
+    },
+    {
+      title: "Tạm tính",
+      key: "total",
+      render: (_: any, record: CartItem) =>
+        `${currency.format(record.price * record.quantity)} đ`,
+    },
+    {
+      title: "",
+      key: "actions",
+      render: (_: any, record: CartItem) => (
+        <Button
+          danger
+          icon={<DeleteOutlined />}
+          onClick={() => handleRemove(record.variantId)}
+        />
+      ),
+    },
+  ];
+
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   return (
-    <div className="py-8 md:py-12">
-      <div className="container mx-auto px-4">
-        <h1 className="text-3xl font-serif font-medium mb-6">Giỏ hàng</h1>
+    <div className="p-6 max-w-7xl mx-auto bg-white">
+      <Title level={2}>Giỏ hàng</Title>
 
-        {items.length === 0 ? (
-          <div className="text-center py-12">
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={
-                <span className="text-gray-500">Giỏ hàng của bạn trống</span>
-              }
-            >
-              <Button onClick={() => navigate('/products')}
-                leftIcon={<ShoppingBag size={18}/>}
-                >
-                Mua sắm
-              </Button>
-            </Empty>
-          </div>
-        ) : (
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Cart Items */}
-            <div className="lg:w-2/3">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <div className="hidden md:flex font-sans text-gray-500 pb-4 border-b">
-                  <div className="w-1/2">Sản phẩm</div>
-                  <div className="w-1/6 text-center">Giá</div>
-                  <div className="w-1/6 text-center">Số lượng</div>
-                  <div className="w-1/6 text-right">Tổng cộng</div>
-                </div>
+      {cartItems.length === 0 ? (
+        <Text>Giỏ hàng của bạn đang trống.</Text>
+      ) : (
+        <>
+          <Table
+            dataSource={cartItems}
+            columns={columns}
+            rowKey={(item) => item.variantId}
+            pagination={false}
+          />
 
-                {items.map((item) => (
-                  <div key={`${item.product.id}-${item.color}`} className="py-6 border-b last:border-b-0">
-                    <div className="flex flex-col md:flex-row items-start md:items-center">
-                      {/* Product Info */}
-                      <div className="w-full md:w-1/2 flex mb-4 md:mb-0">
-                        <div className="w-24 h-24 rounded-md overflow-hidden flex-shrink-0">
-                          <img
-                            src={item.product.images[0]}
-                            alt={item.product.name}
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                        <div className="ml-4">
-                          <Link to={`/product/${item.product.id}`} className="font-sans text-gray-800 hover:text-amber-700">
-                            {item.product.name}
-                          </Link>
-                          <p className="text-gray-500 text-sm mt-1">Màu sắc: {item.color}</p>
-                          <button
-                            className="text-rose-600 text-sm mt-2 flex items-center md:hidden"
-                            onClick={() => handleRemoveItem(item.product.id, item.color)}
-                          >
-                            <Trash2 size={14} className="mr-1" />
-                            Xóa
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Price */}
-                      <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center mb-3 md:mb-0">
-                        <span className="md:hidden text-gray-500">Giá:</span>
-                        <span className="font-font-sans">
-                          ${(item.product.salePrice || item.product.price).toFixed(2)}
-                        </span>
-                      </div>
-
-                      {/* Quantity */}
-                      <div className="w-full md:w-1/6 flex justify-between md:justify-center items-center mb-3 md:mb-0">
-                        <span className="md:hidden text-gray-500">Số lượng:</span>
-                        <InputNumber
-                          min={1}
-                          max={10}
-                          value={item.quantity}
-                          onChange={(value) => handleQuantityChange(item.product.id, item.color, value as number)}
-                          className="w-20"
-                        />
-                      </div>
-
-                      {/* Total */}
-                      <div className="w-full md:w-1/6 flex justify-between md:justify-end items-center">
-                        <span className="md:hidden text-gray-500">Tổng cộng:</span>
-                        <div className="flex items-center">
-                          <span className="font-sans- text-amber-800">  
-                            ${((item.product.salePrice || item.product.price) * item.quantity).toFixed(2)}
-                          </span>
-                          <button
-                            className="text-gray-400 hover:text-rose-600 ml-4 hidden md:block"
-                            onClick={() => handleRemoveItem(item.product.id, item.color)}
-                            aria-label="Remove item"
-                          >
-                            <Trash2 size={18} />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                <div className="mt-6 flex justify-between">
-                  <Link to="/products">
-                  </Link>
-                </div>
-              </div>
+          <div className="mt-6 text-right space-y-2">
+            <div>
+              <Text strong>Tạm tính: </Text>
+              <Text>{currency.format(subtotal)} đ</Text>
             </div>
-
-            {/* Order Summary */}
-            <div className="lg:w-1/3">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-xl font-sans mb-4">Tóm tắt đơn hàng
-                </h2>
-                <div className="space-y-3 mb-4">
-                  <div className="flex justify-between">
-                    <span className="font-sans text-gray-600">
-                    Tổng phụ</span>
-                    <span>${subtotal.toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-sans text-gray-600">Vận chuyển
-                    </span>
-                    <span>${shipping.toFixed(2)}</span>
-                  </div>
-                  <div className="font-sans flex justify-between">
-                    <span className="text-gray-600">Thuế</span>
-                    <span>${tax.toFixed(2)}</span>
-                  </div>
-                </div>
-                <Divider />
-                <div className="flex justify-between font-sans text-lg mb-6">
-                  <span>Tổng cộng</span>
-                  <span className="text-amber-800">${total.toFixed(2)}</span>
-                </div>
-                 <Button 
-                variant="primary"
-                  size="lg"
-                  fullWidth
-                  rightIcon={<ArrowRight size={18} />}
-                  onClick={() => navigate('/checkout')}
-                  >
-                    Tiến hành thanh toán 
-                  </Button>
-                <div className="mt-6">
-                  <h3 className="font-medium mb-2">Chúng tôi chấp nhận</h3>
-                  <div className="flex space-x-2">
-                    <div className="w-12 h-8 bg-gray-200 rounded"></div>
-                    <div className="w-12 h-8 bg-gray-200 rounded"></div>
-                    <div className="w-12 h-8 bg-gray-200 rounded"></div>
-                    <div className="w-12 h-8 bg-gray-200 rounded"></div>
-                  </div>
-                </div>
-              </div>
+            <div>
+              <Text strong>Tổng cộng: </Text>
+              <Text>{currency.format(subtotal)} đ</Text>
             </div>
+            <Button type="primary" size="large" className="mt-4">
+              Tiến hành thanh toán
+            </Button>
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 };
