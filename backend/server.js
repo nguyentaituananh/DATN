@@ -5,7 +5,7 @@ import connectDB from "./src/config/db.js";
 import router from "./src/routers/index.js";
 import roomRouter from "./src/routers/room.router.js";
 import orderRouter from './src/routers/order.router.js';
-
+import authRouter from "./src/routers/auth.router.js";
 dotenv.config();
 
 const app = express();
@@ -31,6 +31,7 @@ app.get("/", (req, res) => {
 app.use("/", router);
 
 
+app.use("/auth", authRouter);
 app.use("/api/orders", orderRouter);
 
 const PORT = process.env.PORT || 5000;
