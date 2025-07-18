@@ -11,7 +11,7 @@ const productVariantSchema = new mongoose.Schema({
   price: { type: Number, required: true },
   stock_quantity: { type: Number, required: true },
   discount_price: { type: Number },
-  images: [String],
+  images:{ type: [String], default: [] },
   is_active: { type: Boolean, default: true },
 });
 

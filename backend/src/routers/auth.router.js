@@ -7,14 +7,12 @@ import {
   getUserById,
   updateUser,
   deleteUser,
-<<<<<<<<< Temporary merge branch 1
   changePassword
 } from "../controllers/auth.controller.js";
 import { authMiddleware } from "../middlewares/authMiddleware.js";
-=========
+import {
   searchUsersByCustomerCode,
 } from "../controllers/auth.controller.js";
->>>>>>>>> Temporary merge branch 2
 
 const authRouter = express.Router();
 
