@@ -1,69 +1,39 @@
-export interface Product {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  salePrice?: number;
-  description: string;
-  shortDescription: string;
-  images: string[];
-  features: string[];
-  dimensions: {
-    width: number;
-    height: number;
-    depth: number;
-  };
-  colors: string[];
-  materials: string[];
-  inStock: boolean;
-  rating: number;
-  reviews: number;
-  isNew?: boolean;
-  isBestseller?: boolean;
+import type { LayoutType } from '@/constants/enum'
+import type { IndexRouteObject, NonIndexRouteObject } from 'react-router-dom'
+
+// Route types
+export interface ICustomRouteObjectParams {
+	layout?: LayoutType
 }
 
-export interface CartItem {
-  product: Product;
-  quantity: number;
-  color: string;
+export interface ICustomIndexRouteObject extends IndexRouteObject, ICustomRouteObjectParams {}
+
+export type CustomNonIndexRouteObject = Omit<NonIndexRouteObject, 'children'> &
+	ICustomRouteObjectParams & {
+		children?: (ICustomIndexRouteObject | CustomNonIndexRouteObject)[]
+	}
+
+export type CustomRouteConfig = ICustomIndexRouteObject | CustomNonIndexRouteObject
+
+// Layout types
+export interface LayoutProps {
+	children: React.ReactNode
 }
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-  phone?: string;
-  address?: Address;
+// Common component props
+export interface BaseComponentProps {
+	className?: string
+	children?: React.ReactNode
 }
 
-export interface Address {
-  street: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  country: string;
+export interface ISidebar {
+	title: string
+	url: string
+	icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>
+	items?: ISidebar[]
 }
-export interface Order {
-  id: string;
-  userId: string;
-  items: CartItem[];
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'canceled';
-  shippingAddress: Address;
-  billingAddress: Address;
-  paymentMethod: string;
-  subtotal: number;
-  shipping: number;
-  tax: number;
-  total: number;
-  createdAt: string;
-  updatedAt: string;
+
+export interface ISidebarItem {
+	versions: string[]
+	nav: ISidebar[]
 }
-export interface Store{
-  city: string;
-  name: string;
-  address: string;
-  hours: string;
-  phone: string;
-  mapEmbedUrl: string;
-};
