@@ -1,29 +1,18 @@
-import { Router } from "express";
-import categoryRouter from "./category.router.js";
-import couponsRouter from "./coupons.router.js";
+import { Router } from 'express'
 
-import cartRouter from "./cart.router.js";
-import cartItemRouter from "./cartItem.router.js";
+import authRouter from './auth/index.js'
+import userRouter from './user/index.js'
+import uploadRouter from './upload/index.js'
+import categoryRouter from './category/index.js'
 
-import roomRouter from "./room.router.js";
-import dimensionRouter from "./dimension.router.js";
-import deliveryOptionRouter from "./deliveryOption.router.js";
-import orderItemRouter from "./orderItem.router.js";
-import product_variants from "./product_variants.router.js";
+const router = Router()
 
-const router = Router();
+// Authentication routes
+router.use('/api/auth', authRouter)
 
-router.use("/auth", authRouter);
-router.use("/api/products", productRouter);
-router.use("/api/product-variant", product_variants);
-router.use("/api/categories", categoryRouter);
-router.use("/api/orders", orderRouter);
-router.use("/api/coupons", couponsRouter);
-router.use("/api/cart", cartRouter);
-router.use("/api/cartItem", cartItemRouter);
-router.use("/api/room", roomRouter);
-router.use("/api/dimension", dimensionRouter);
-router.use("/api/deliveryOption", deliveryOptionRouter);
-router.use("/api/oderItems", orderItemRouter);
+// API routes
+router.use('/api/users', userRouter)
+router.use('/api/upload', uploadRouter)
+router.use('/api/categories', categoryRouter)
 
-export default router;
+export default router

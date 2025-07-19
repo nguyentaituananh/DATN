@@ -1,5 +1,4 @@
-import { createHashRouter } from 'react-router-dom'
-
+import { createBrowserRouter } from 'react-router-dom'
 import { LayoutType } from '@/constants/enum'
 import type { CustomRouteConfig } from '@/types'
 import { BaseLayout, DashboardLayout } from '@/layouts'
@@ -16,8 +15,17 @@ const checkLayout = (route: CustomRouteConfig): React.ReactNode => {
 					</LayoutChangeTitle>
 				)
 			case LayoutType.DEFAULT:
+				return (
+					<LayoutChangeTitle>
+						<BaseLayout>{route.element}</BaseLayout>
+					</LayoutChangeTitle>
+				)
 			default:
-				return null
+				return (
+					<LayoutChangeTitle>
+						<BaseLayout>{route.element}</BaseLayout>
+					</LayoutChangeTitle>
+				)
 		}
 	}
 
@@ -35,6 +43,6 @@ const finalRoutes = routeConfigs.map((route) => {
 	}
 })
 
-const router = createHashRouter(finalRoutes)
+const router = createBrowserRouter(finalRoutes)
 
 export default router
