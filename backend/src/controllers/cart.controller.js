@@ -1,10 +1,12 @@
-import Cart from "../models/cart.model.js";
+import Cart from "../models/repositories/cart.model.js";
 
 // Lấy giỏ hàng theo user_id
 export const getCartByUser = async (req, res) => {
   try {
     const { userId } = req.params;
-    const cart = await Cart.findOne({ user_id: userId }).populate("items.product_id");
+    const cart = await Cart.findOne({ user_id: userId }).populate(
+      "items.product_id"
+    );
     if (!cart) return res.status(404).json({ message: "Chưa có giỏ hàng." });
     res.json(cart);
   } catch (err) {
@@ -25,7 +27,9 @@ export const addToCart = async (req, res) => {
         items: [{ product_id, quantity }],
       });
     } else {
-      const itemIndex = cart.items.findIndex(item => item.product_id.toString() === product_id);
+      const itemIndex = cart.items.findIndex(
+        (item) => item.product_id.toString() === product_id
+      );
       if (itemIndex > -1) {
         cart.items[itemIndex].quantity += quantity;
       } else {
@@ -48,10 +52,16 @@ export const updateCartItem = async (req, res) => {
     const { quantity } = req.body;
 
     const cart = await Cart.findOne({ user_id: userId });
-    if (!cart) return res.status(404).json({ message: "Không tìm thấy giỏ hàng." });
+    if (!cart)
+      return res.status(404).json({ message: "Không tìm thấy giỏ hàng." });
 
-    const item = cart.items.find(item => item.product_id.toString() === productId);
-    if (!item) return res.status(404).json({ message: "Không tìm thấy sản phẩm trong giỏ." });
+    const item = cart.items.find(
+      (item) => item.product_id.toString() === productId
+    );
+    if (!item)
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy sản phẩm trong giỏ." });
 
     item.quantity = quantity;
     cart.updated_at = Date.now();
@@ -69,9 +79,12 @@ export const removeCartItem = async (req, res) => {
     const { userId, productId } = req.params;
 
     const cart = await Cart.findOne({ user_id: userId });
-    if (!cart) return res.status(404).json({ message: "Không tìm thấy giỏ hàng." });
+    if (!cart)
+      return res.status(404).json({ message: "Không tìm thấy giỏ hàng." });
 
-    cart.items = cart.items.filter(item => item.product_id.toString() !== productId);
+    cart.items = cart.items.filter(
+      (item) => item.product_id.toString() !== productId
+    );
     cart.updated_at = Date.now();
 
     const saved = await cart.save();
@@ -87,7 +100,8 @@ export const clearCart = async (req, res) => {
     const { userId } = req.params;
 
     const cart = await Cart.findOne({ user_id: userId });
-    if (!cart) return res.status(404).json({ message: "Không tìm thấy giỏ hàng." });
+    if (!cart)
+      return res.status(404).json({ message: "Không tìm thấy giỏ hàng." });
 
     cart.items = [];
     cart.updated_at = Date.now();

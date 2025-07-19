@@ -13,7 +13,8 @@ export const register = async (req, res) => {
   try {
     // Kiểm tra xem email đã tồn tại chưa
     const existingUser = await User.findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "Email đã tồn tại." });
+    if (existingUser)
+      return res.status(400).json({ message: "Email đã tồn tại." });
 
     // Tạo người dùng mới
     const newUser = new User({
@@ -60,7 +61,6 @@ export const login = async (req, res) => {
   }
 };
 
-
 // Lấy tất cả người dùng
 export const getAllUsers = async (req, res) => {
   try {
@@ -85,9 +85,14 @@ export const getUserById = async (req, res) => {
 // Cập nhật người dùng
 export const updateUser = async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
     if (updatedUser) res.json(updatedUser);
-    else res.status(404).json({ message: "Không tìm thấy người dùng để cập nhật" });
+    else
+      res
+        .status(404)
+        .json({ message: "Không tìm thấy người dùng để cập nhật" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
