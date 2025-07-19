@@ -4,6 +4,7 @@ import type { IndexRouteObject, NonIndexRouteObject } from 'react-router-dom'
 // Route types
 export interface ICustomRouteObjectParams {
 	layout?: LayoutType
+	protected?: boolean
 }
 
 export interface ICustomIndexRouteObject extends IndexRouteObject, ICustomRouteObjectParams {}
@@ -36,4 +37,10 @@ export interface ISidebar {
 export interface ISidebarItem {
 	versions: string[]
 	nav: ISidebar[]
+}
+
+export interface IResponseData<T> {
+	message: string
+	status: number
+	metadata: T
 }
