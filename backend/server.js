@@ -3,8 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./src/config/db.js";
 import router from "./src/routers/index.js";
-import roomRouter from "./src/routers/room.router.js";
-import orderRouter from './src/routers/order.router.js';
 
 dotenv.config();
 
@@ -29,7 +27,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/", router);
-
 
 app.use("/api/orders", orderRouter);
 

@@ -1,4 +1,4 @@
-import ProductVariant from "../models/product_variants.model.js";
+import ProductVariant from "../models/repositories/product_variants.model.js";
 
 // Thêm variant
 export const createVariant = async (req, res) => {

@@ -1,16 +1,13 @@
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.tsx";
-import { App as AntdApp } from "antd";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { StrictMode } from "react";
-import { BrowserRouter } from "react-router-dom";
-import "antd/dist/reset.css";
-import { OrderProvider } from "./context/OrderContext.tsx";
-import { AuthProvider } from "./context/AuthContext.tsx";
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { RouterProvider } from 'react-router-dom'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
-const queryClient = new QueryClient();
+import './assets/css/index.css'
+import router from '@/router'
+import { ReactQueryProvider, ThemeProvider } from '@/context'
 
+<<<<<<< HEAD
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
@@ -26,3 +23,15 @@ createRoot(document.getElementById("root")!).render(
     </AuthProvider>
   </QueryClientProvider>
 );
+=======
+createRoot(document.getElementById('root')!).render(
+	<StrictMode>
+		<ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+			<ReactQueryProvider>
+				<RouterProvider router={router} />
+				<ReactQueryDevtools initialIsOpen={false} />
+			</ReactQueryProvider>
+		</ThemeProvider>
+	</StrictMode>
+)
+>>>>>>> tuananh

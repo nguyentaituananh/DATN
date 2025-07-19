@@ -1,9 +1,5 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
-import bcrypt from "bcryptjs";
-import { registerSchema } from "../validates/user.validate.js";
-
-
 
 // Hàm tạo mã KH
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -14,12 +10,10 @@ function getNextPrefix(current) {
   const secondIndex = LETTERS.indexOf(secondChar);
 
   if (secondIndex < LETTERS.length - 1) {
-    // Tăng ký tự thứ 2 (B -> C)
     return firstChar + LETTERS[secondIndex + 1];
   }
 
   if (firstIndex < LETTERS.length - 1) {
-    // Tăng ký tự thứ 1 (A -> B), reset ký tự 2 về A
     return LETTERS[firstIndex + 1] + "A";
   }
 
@@ -32,7 +26,7 @@ export const generateCustomerCode = async () => {
     .lean();
 
   if (!latestUser || !latestUser.customer_code) {
-    return "AA00000"; // Khởi tạo ban đầu
+    return "AA00000";
   }
 
   const prevCode = latestUser.customer_code;
@@ -50,27 +44,20 @@ export const generateCustomerCode = async () => {
   return `${newPrefix}${paddedNumber}`;
 };
 
-// Tạo token
 const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, "SECRET_KEY", { expiresIn: "7d" }); // Thay "SECRET_KEY" bằng biến môi trường thực tế
+  return jwt.sign({ id: userId }, process.env.JWT_SECRET || "SECRET_KEY", {
+    expiresIn: "7d",
+  });
 };
 
-// Đăng ký
 export const register = async (req, res) => {
   const { name, email, password, address, phone_number, role } = req.body;
 
   try {
-    // Kiểm tra xem email đã tồn tại chưa
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email đã tồn tại." });
-    }
-=========
     const existingUser = await User.findOne({ email });
     if (existingUser)
       return res.status(400).json({ message: "Email đã tồn tại." });
 
-    // Thêm dòng này để sinh mã tự động
     const customer_code = await generateCustomerCode();
 
     const newUser = new User({
@@ -86,41 +73,32 @@ export const register = async (req, res) => {
     await newUser.save();
 
     const token = generateToken(newUser._id);
-    res.status(201).json({ user: newUser, token }); 
+    res.status(201).json({ user: newUser, token });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-// Đăng nhập
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Tìm người dùng theo email
     const user = await User.findOne({ email });
     if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ message: "Sai tài khoản hoặc mật khẩu" });
     }
 
-    // Kiểm tra trạng thái người dùng (is_active)
     if (!user.is_active) {
       return res.status(403).json({ message: "Tài khoản đã bị vô hiệu hóa." });
     }
 
-    // Tạo JWT token
     const token = generateToken(user._id);
-<<<<<<<<< Temporary merge branch 1
-    res.status(200).json({ user: user.name, token ,id :user.id});
-=========
     res.status(200).json({ user: user, token });
->>>>>>>>> Temporary merge branch 2
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-// Lấy tất cả người dùng
 export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find();
@@ -130,7 +108,6 @@ export const getAllUsers = async (req, res) => {
   }
 };
 
-// Lấy người dùng theo ID
 export const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -141,7 +118,6 @@ export const getUserById = async (req, res) => {
   }
 };
 
-// Cập nhật người dùng
 export const updateUser = async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
@@ -157,7 +133,6 @@ export const updateUser = async (req, res) => {
   }
 };
 
-// Xóa người dùng
 export const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -168,33 +143,6 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-<<<<<<<<< Temporary merge branch 1
-
-export const changePassword = async (req, res) => {
-  const { currentPassword, newPassword } = req.body;
-  const userId = req.user._id;
-
-  try {
-    const user = await User.findById(userId);
-    if (!user) return res.status(404).json({ message: "Không tìm thấy người dùng." });
-
-    const isMatch = await user.matchPassword(currentPassword);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Mật khẩu hiện tại không đúng." });
-    }
-
-    user.password = newPassword; // sẽ được mã hóa bởi pre-save
-    await user.save();
-
-    res.json({ message: "Đổi mật khẩu thành công." });
-  } catch (err) {
-    console.error("Lỗi khi đổi mật khẩu:", err);
-    res.status(500).json({ message: "Lỗi server khi đổi mật khẩu.", error: err.message });
-  }
-};
-
-=========
-// Tìm kiếm theo mã khách hàng (autocomplete)
 export const searchUsersByCustomerCode = async (req, res) => {
   try {
     const { q } = req.query;
@@ -213,4 +161,3 @@ export const searchUsersByCustomerCode = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
->>>>>>>>> Temporary merge branch 2
