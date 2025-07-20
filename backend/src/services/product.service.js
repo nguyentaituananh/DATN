@@ -19,15 +19,14 @@ import { removeUndefinedObject, updateNestedObjectParser } from '../utils/index.
 class ProductService {
 	// Create new product
 	static async createProduct(payload) {
-		const { name, thumb, description, price, quantity, images = [], category_id, related_products = [] } = payload
+		const { name, description, price, quantity, images = [], category_id, related_products = [] } = payload
 
-		if (!name || !thumb || !description || !price || !quantity || !category_id) {
+		if (!name || !description || !price || !quantity || !category_id) {
 			throw new BadRequestError('Thiếu thông tin bắt buộc của sản phẩm')
 		}
 
 		const newProduct = await Product.create({
 			name,
-			thumb,
 			description,
 			price,
 			quantity,
@@ -128,7 +127,7 @@ class ProductService {
 		sort = 'ctime',
 		page = 1,
 		filter = { isPublish: true },
-		select = ['name', 'price', 'thumb', 'category_id', 'quantity', 'rating_average']
+		select = ['name', 'price', 'category_id', 'quantity', 'rating_average']
 	}) {
 		return await findAllProducts({
 			limit,
@@ -189,7 +188,7 @@ class ProductService {
 		category_id,
 		limit = 50,
 		page = 1,
-		select = ['name', 'price', 'thumb', 'rating_average']
+		select = ['name', 'price', 'rating_average']
 	}) {
 		if (!category_id) {
 			throw new BadRequestError('Thiếu ID danh mục')
