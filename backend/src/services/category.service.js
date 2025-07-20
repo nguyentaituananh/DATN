@@ -3,6 +3,7 @@
 import Category from '../models/category.model.js'
 import { BadRequestError, NotFoundError, ConflictRequestError } from '../core/error.response.js'
 import { getInfoData } from '../utils/index.js'
+import Product from '../models/product.model.js'
 
 class CategoryService {
 	// Tạo category mới
@@ -191,14 +192,14 @@ class CategoryService {
 			}
 
 			// TODO: Kiểm tra có products trong category này không
-			// const products = await Product.find({ category_id: categoryId })
-			// if (products.length > 0) {
-			//     throw new BadRequestError('Cannot delete category that has products')
-			// }
+			const products = await Product.find({ category_id: categoryId })
+			if (products.length > 0) {
+				throw new BadRequestError('Không thể xóa danh mục có sản phẩm liên kết')
+			}
 
 			await Category.findByIdAndDelete(categoryId)
 
-			return { message: 'Category deleted successfully' }
+			return { message: 'Xóa danh mục thành công' }
 		} catch (error) {
 			throw error
 		}

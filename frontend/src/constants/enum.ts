@@ -1,6 +1,7 @@
 export const LayoutType = {
 	DEFAULT: 'default',
-	DASHBOARD: 'dashboard'
+	DASHBOARD: 'dashboard',
+	PROFILE: 'profile'
 } as const
 
 export const RouteStatus = {

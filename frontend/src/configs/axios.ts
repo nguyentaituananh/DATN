@@ -1,4 +1,6 @@
 import axios, { type AxiosResponse } from 'axios'
+import { useAuthStore } from '@/stores/authStore'
+import { toast } from 'sonner'
 
 const axiosClient = axios.create({
 	baseURL: import.meta.env.BE_API_URL || 'http://localhost:3001/api',
@@ -8,16 +10,10 @@ const axiosClient = axios.create({
 	}
 })
 
-// Hàm để lấy token từ store (sẽ được cập nhật từ component)
-let getAccessToken: () => string | null = () => null
-
-export const setTokenGetter = (getter: () => string | null) => {
-	getAccessToken = getter
-}
-
 // Interceptor request: Thêm token vào header
 axiosClient.interceptors.request.use((config) => {
-	const token = getAccessToken()
+	// Lấy token trực tiếp từ Zustand store
+	const token = useAuthStore.getState().accessToken
 
 	if (token) {
 		config.headers.Authorization = `Bearer ${token}`
@@ -25,7 +21,6 @@ axiosClient.interceptors.request.use((config) => {
 
 	config.headers.Accept = 'application/json'
 
-	// Chỉ set Content-Type cho JSON request, không ghi đè nếu đã có sẵn
 	if (!config.headers['Content-Type']) {
 		config.headers['Content-Type'] = 'application/json'
 	}
@@ -36,10 +31,8 @@ axiosClient.interceptors.request.use((config) => {
 // Interceptor response: Xử lý lỗi toàn cục và extract metadata
 axiosClient.interceptors.response.use(
 	(response: AxiosResponse) => {
-		// Extract data from metadata if it exists
-		if (response.data && response.data.metadata) {
-			response.data = response.data.metadata
-		}
+		if (response.status === 201) toast.success(response.data.message || 'Thêm mới thành công')
+
 		return response.data
 	},
 	(error) => {

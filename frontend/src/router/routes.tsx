@@ -8,7 +8,7 @@ export const routeConfigs: CustomRouteConfig[] = [
 		path: routes.home,
 		element: <HomePage />,
 		layout: LayoutType.DEFAULT,
-		protected: true
+		protected: false
 	},
 	{
 		path: routes.login,
@@ -16,6 +16,7 @@ export const routeConfigs: CustomRouteConfig[] = [
 		layout: LayoutType.DEFAULT,
 		protected: false
 	},
+
 	{
 		path: routes.dashboard,
 		element: <DashboardPage />,

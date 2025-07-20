@@ -34,6 +34,8 @@ export const useLogin = () => {
 	return useMutation({
 		mutationFn: (data: ILoginData) => authApis.login(data),
 		onSuccess: (response: ILoginResponse) => {
+			console.log(response)
+
 			setUser(response.user)
 			setTokens(response.tokens.accessToken, response.tokens.refreshToken)
 			setAuthenticated(true)
