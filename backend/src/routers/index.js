@@ -12,6 +12,7 @@ import instructionRouter from './instruction/index.js'
 import delivery_optionRouter from './delivery_option/index.js'
 import product_variantsRouter from './product_variants/index.js'
 // Khởi tạo router chính
+import productRouter from './product/index.js'
 
 const router = Router()
 
@@ -30,5 +31,6 @@ router.use('/api/instructions', instructionRouter)
 router.use('/api/delivery-options', delivery_optionRouter)
 router.use('/api/product-variants', product_variantsRouter)
 
+router.use('/api/products', productRouter)
 
 export default router
