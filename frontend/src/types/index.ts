@@ -62,3 +62,9 @@ export interface IUploadResponse {
 	asset_id: string
 	public_id: string
 }
+
+export interface IObjectFilter {
+	isPublish?: boolean
+	isDraft?: boolean
+	[key: string]: string | boolean | undefined
+}

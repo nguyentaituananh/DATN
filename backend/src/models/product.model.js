@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import slugify from 'slugify'
 
 const DOCUMENT_NAME = 'Product'
 const COLLECTION_NAME = 'products'
@@ -31,11 +30,6 @@ const ProductSchema = new mongoose.Schema(
 )
 
 ProductSchema.index({ name: 'text', description: 'text' })
-
-ProductSchema.pre('save', function (next) {
-	this.slug = slugify(this.name, { lower: true })
-	next()
-})
 
 const Product = mongoose.model(DOCUMENT_NAME, ProductSchema)
 export default Product

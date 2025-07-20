@@ -1,4 +1,5 @@
 'use strict'
+import slugify from 'slugify'
 
 import Product from '../models/product.model.js'
 import { BadRequestError, NotFoundError } from '../core/error.response.js'
@@ -25,6 +26,8 @@ class ProductService {
 			throw new BadRequestError('Thiếu thông tin bắt buộc của sản phẩm')
 		}
 
+		const slug = slugify(name, { lower: true })
+
 		const newProduct = await Product.create({
 			name,
 			description,
@@ -34,7 +37,8 @@ class ProductService {
 			category_id,
 			related_products,
 			isDraft: true,
-			isPublish: false
+			isPublish: false,
+			slug
 		})
 
 		if (!newProduct) {
@@ -127,7 +131,17 @@ class ProductService {
 		sort = 'ctime',
 		page = 1,
 		filter = { isPublish: true },
-		select = ['name', 'price', 'category_id', 'quantity', 'rating_average']
+		select = [
+			'name',
+			'price',
+			'category_id',
+			'quantity',
+			'rating_average',
+			'isPublish',
+			'isDraft',
+			'images',
+			'createdAt'
+		]
 	}) {
 		return await findAllProducts({
 			limit,
