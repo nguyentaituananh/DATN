@@ -56,3 +56,9 @@ export interface IPaginationMetadata {
 	total: number
 	pages: number
 }
+
+export interface IUploadResponse {
+	url: string
+	asset_id: string
+	public_id: string
+}

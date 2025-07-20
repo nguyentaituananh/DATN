@@ -4,6 +4,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useAuthStore } from '@/stores/authStore'
+import type { IResponseData } from '@/types'
 
 interface LocationState {
 	from?: string
@@ -33,11 +34,11 @@ export const useLogin = () => {
 
 	return useMutation({
 		mutationFn: (data: ILoginData) => authApis.login(data),
-		onSuccess: (response: ILoginResponse) => {
+		onSuccess: (response: IResponseData<ILoginResponse>) => {
 			console.log(response)
 
-			setUser(response.user)
-			setTokens(response.tokens.accessToken, response.tokens.refreshToken)
+			setUser(response.metadata.user)
+			setTokens(response.metadata.tokens.accessToken, response.metadata.tokens.refreshToken)
 			setAuthenticated(true)
 
 			toast.success('Đăng nhập thành công!')

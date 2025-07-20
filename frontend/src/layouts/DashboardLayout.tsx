@@ -42,7 +42,7 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
 					</div>
 					<ModeToggle />
 				</header>
-				<main className="p-4">{children}</main>
+				<main className="p-4 h-full">{children}</main>
 			</SidebarInset>
 		</SidebarProvider>
 	)

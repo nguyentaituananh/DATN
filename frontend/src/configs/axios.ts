@@ -36,8 +36,7 @@ axiosClient.interceptors.response.use(
 		return response.data
 	},
 	(error) => {
-		console.error('Global error handler:', error)
-		// Don't show toast here, let individual requests handle it
+		toast.error(error.response?.data?.message || 'Đã có lỗi xảy ra')
 		return Promise.reject(error)
 	}
 )
