@@ -13,6 +13,11 @@ import instructionRouter from './instructions/index.js'
 import delivery_optionRouter from './delivery-options/index.js'
 import product_variantsRouter from './product-variants/index.js'
 import productRouter from './product/index.js'
+import reviewRouter from './review/index.js'
+import cartRouter from './cart/index.js'
+import cartItemRouter from './cartItem/index.js'
+import favoriteRouter from './favorites/index.js'
+import couponRouter from './coupons/index.js'
 
 const router = Router()
 
@@ -33,5 +38,10 @@ router.use('/api/product-variants', product_variantsRouter)
 router.use('/api/order', orderRouter)
 router.use('/api/order-items', orderItemRoutes)
 router.use('/api/products', productRouter)
+router.use('api/review', reviewRouter)
+router.use('/api/cart', cartRouter)
+router.use('/api/cartItem', cartItemRouter)
+router.use('api/favorites', favoriteRouter)
+router.use('/api/coupons', couponRouter)
 
 export default router
