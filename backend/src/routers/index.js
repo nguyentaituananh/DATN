@@ -4,6 +4,15 @@ import authRouter from './auth/index.js'
 import userRouter from './user/index.js'
 import uploadRouter from './upload/index.js'
 import categoryRouter from './category/index.js'
+import orderRouter from './order/index.js'
+import orderItemRoutes from './orderItem/index.js'
+import addressesRouter from './addresses/index.js'
+import messageRouter from './message/index.js'
+import notificationRouter from './notification/index.js'
+import instructionRouter from './instructions/index.js'
+import delivery_optionRouter from './delivery-options/index.js'
+import product_variantsRouter from './product-variants/index.js'
+import productRouter from './product/index.js'
 
 const router = Router()
 
@@ -14,5 +23,15 @@ router.use('/api/auth', authRouter)
 router.use('/api/users', userRouter)
 router.use('/api/upload', uploadRouter)
 router.use('/api/categories', categoryRouter)
+router.use('/api/addresses', addressesRouter)
+router.use('/api/message', messageRouter)
+// router.use('/api/payment', paymentRouter)
+router.use('/api/notification', notificationRouter)
+router.use('/api/instructions', instructionRouter)
+router.use('/api/delivery-options', delivery_optionRouter)
+router.use('/api/product-variants', product_variantsRouter)
+router.use('/api/order', orderRouter)
+router.use('/api/order-items', orderItemRoutes)
+router.use('/api/products', productRouter)
 
 export default router
