@@ -33,5 +33,7 @@ router.use('/api/product-variants', product_variantsRouter)
 router.use('/api/order', orderRouter)
 router.use('/api/order-items', orderItemRoutes)
 router.use('/api/products', productRouter)
+router.use('api/order',orderRouter)
+router.use('/api/order-items', orderItemRoutes)
 
 export default router
