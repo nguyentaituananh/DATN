@@ -1,106 +1,183 @@
-import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
-import { useAuth } from '@/hooks/accounts'
+"use client"
 
-const HomePage = () => {
-	const { user } = useAuth()
+import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
+import { ArrowRight, Truck, Shield, RotateCcw, MessageSquare } from "lucide-react"
+import { useAuth } from "@/hooks/accounts"
+import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion"
 
-	return (
-		<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-			{/* Hero Section */}
-			<main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-				<div className="text-center">
-					<h2 className="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-						Chào mừng {user?.name || 'bạn'} đến với
-						<span className="text-indigo-600"> Furniture Store</span>
-					</h2>
-					<p className="mt-6 max-w-3xl mx-auto text-xl text-gray-600">
-						Khám phá bộ sưu tập nội thất cao cấp của chúng tôi. Từ ghế sofa sang trọng đến bàn làm việc hiện
-						đại, chúng tôi có mọi thứ để biến ngôi nhà của bạn thành một không gian hoàn hảo.
-					</p>
-					<div className="mt-10 flex justify-center gap-4">
-						<Button asChild size="lg">
-							<Link to="/products">Xem sản phẩm</Link>
-						</Button>
-						<Button variant="outline" size="lg" asChild>
-							<Link to="/dashboard">Quản lý cửa hàng</Link>
-						</Button>
-					</div>
-				</div>
+const heroBackgrounds = [
+  "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg",
+  "https://images.pexels.com/photos/1643383/pexels-photo-1643383.jpeg",
+  "https://images.pexels.com/photos/1090638/pexels-photo-1090638.jpeg",
+  "https://images.pexels.com/photos/2251247/pexels-photo-2251247.jpeg",
+]
 
-				{/* Features Section */}
-				<div className="mt-20">
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-						<div className="text-center">
-							<div className="bg-indigo-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-								<svg
-									className="w-8 h-8 text-indigo-600"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-									/>
-								</svg>
-							</div>
-							<h3 className="text-xl font-semibold text-gray-900 mb-2">Chất lượng cao cấp</h3>
-							<p className="text-gray-600">
-								Tất cả sản phẩm được chọn lọc kỹ càng với chất liệu cao cấp và thiết kế tinh tế.
-							</p>
-						</div>
+const textContent = [
+  {
+    heading: "Elevate Your Living Space",
+    subheading:
+      "Discover premium furniture that combines exceptional craftsmanship, and lasting comfort for your dream home.",
+  },
+  {
+    heading: "Design a Home You Love",
+    subheading: "Explore timeless furniture crafted with precision, beauty, and comfort for your ideal living space.",
+  },
+  {
+    heading: "Luxury Living Starts Here",
+    subheading: "Experience luxury furniture that blends artisan quality, modern design, and enduring comfort.",
+  },
+  {
+    heading: "Crafted for Every Corner",
+    subheading: "From cozy nooks to grand living rooms, we've got you covered.",
+  },
+]
 
-						<div className="text-center">
-							<div className="bg-indigo-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-								<svg
-									className="w-8 h-8 text-indigo-600"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
-									/>
-								</svg>
-							</div>
-							<h3 className="text-xl font-semibold text-gray-900 mb-2">Giá cả hợp lý</h3>
-							<p className="text-gray-600">
-								Cam kết mang đến giá tốt nhất thị trường với chất lượng không thể chối cãi.
-							</p>
-						</div>
+export const HomePage = () => {
+  const { user } = useAuth()
+  const [current, setCurrent] = useState(0)
 
-						<div className="text-center">
-							<div className="bg-indigo-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-								<svg
-									className="w-8 h-8 text-indigo-600"
-									fill="none"
-									stroke="currentColor"
-									viewBox="0 0 24 24"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth={2}
-										d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17M17 13v4a2 2 0 01-2 2H9a2 2 0 01-2-2v-4m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"
-									/>
-								</svg>
-							</div>
-							<h3 className="text-xl font-semibold text-gray-900 mb-2">Giao hàng nhanh chóng</h3>
-							<p className="text-gray-600">
-								Dịch vụ giao hàng nhanh chóng và đóng gói cẩn thận đảm bảo sản phẩm đến tay bạn an toàn.
-							</p>
-						</div>
-					</div>
-				</div>
-			</main>
-		</div>
-	)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % heroBackgrounds.length)
+    }, 4000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="font-sans text-gray-900">
+      <section className="relative h-screen mt-8 md:h-[700px] min-h-[600px] flex items-center">
+        {heroBackgrounds.map((bg, index) => (
+          <img
+            key={index}
+            src={bg || "/placeholder.svg"}
+            alt={`Hero ${index + 1}`}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              index === current ? "opacity-100" : "opacity-0"
+            }`}
+          />
+        ))}
+
+        <div className="absolute inset-0 bg-black/40"></div>
+
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="max-w-2xl text-white">
+            <motion.div
+              key={current}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl font-bold mb-4 leading-tight">
+                {user?.name ? `Chào ${user.name}, ` : ""}
+                {textContent[current].heading}
+              </h1>
+              <p className="text-lg md:text-xl opacity-90 mb-8 leading-relaxed">{textContent[current].subheading}</p>
+              <div className="flex flex-wrap gap-4">
+                <Link to="">
+                  <Button size="lg" variant="default">
+                    Xem sản phẩm
+                  </Button>
+                </Link>
+                <Link to="">
+                  <Button size="lg" variant="outline" className="bg-black/30 border-white text-white hover:bg-black/50">
+                    Quản lý cửa hàng
+                  </Button>
+                </Link>
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Indicators */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          {heroBackgrounds.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrent(index)}
+              className={`h-2 rounded-full transition-all ${
+                index === current ? "w-8 bg-amber-500" : "w-2 bg-white/50"
+              }`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* Categories - ĐƠN GIẢN */}
+      <section className="py-16 md:py-24 container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Shop by Category</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Browse our extensive collection of premium furniture for every room
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            { name: "Sofas", image: "https://images.pexels.com/photos/276583/pexels-photo-276583.jpeg" },
+            { name: "Tables", image: "https://images.pexels.com/photos/2251247/pexels-photo-2251247.jpeg" },
+            { name: "Chairs", image: "https://images.pexels.com/photos/1148955/pexels-photo-1148955.jpeg" },
+            { name: "Beds", image: "https://images.pexels.com/photos/1034584/pexels-photo-1034584.jpeg" },
+          ].map((item, index) => (
+            <Link key={index} to="" className="group">
+              <div className="relative rounded-lg overflow-hidden aspect-square">
+                <img
+                  src={item.image || "/placeholder.svg"}
+                  alt={item.name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/30 transition-all duration-300"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h3 className="text-xl font-serif font-medium mb-1">{item.name}</h3>
+                  <div className="flex items-center text-sm font-medium opacity-0 transform translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                    <span>Shop Collection</span>
+                    <ArrowRight size={16} className="ml-1" />
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Features - ĐƠN GIẢN */}
+      <section className="py-16 md:py-24 container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[
+            { icon: <Truck size={24} />, title: "Miễn phí giao hàng", desc: "Miễn phí vận chuyển với đơn từ 999k." },
+            { icon: <Shield size={24} />, title: "Bảo hành 5 năm", desc: "Chất lượng bền bỉ theo thời gian." },
+            { icon: <RotateCcw size={24} />, title: "Đổi trả 30 ngày", desc: "Đổi trả dễ dàng nếu không hài lòng." },
+            { icon: <MessageSquare size={24} />, title: "Hỗ trợ tận tâm", desc: "Chuyên viên tư vấn luôn sẵn sàng." },
+          ].map((item, index) => (
+            <div key={index} className="text-center">
+              <div className="flex justify-center mb-4">
+                <div className="bg-amber-100 p-3 rounded-full text-amber-700">{item.icon}</div>
+              </div>
+              <h3 className="text-lg font-medium mb-2">{item.title}</h3>
+              <p className="text-gray-600">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* New Products */}
+      <section className="bg-stone-50 py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Sản phẩm mới</h2>
+            <p className="text-lg text-gray-600 mb-8">Khám phá bộ sưu tập nội thất mới nhất của chúng tôi</p>
+            <Link to="">
+              <Button variant="outline">
+                Xem tất cả sản phẩm
+                <ArrowRight size={16} className="ml-2" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  )
 }
 
 export default HomePage
