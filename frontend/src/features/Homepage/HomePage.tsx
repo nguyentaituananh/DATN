@@ -6,6 +6,7 @@ import { ArrowRight, Truck, Shield, RotateCcw, MessageSquare } from "lucide-reac
 import { useAuth } from "@/hooks/accounts"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
+import SectionHeading from "@/components/ui/sectionHeading"
 
 const heroBackgrounds = [
   "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg",
@@ -141,6 +142,26 @@ export const HomePage = () => {
         </div>
       </section>
 
+<section className="py-16 bg-stone-50">
+        <div className="container mx-auto px-4">
+          <SectionHeading
+            title="New Arrivals"
+            subtitle="Discover our latest collection of premium furniture pieces"
+          />
+
+          <div className="flex justify-center mt-12">
+  <Link to="">
+    <Button
+      variant="default"
+      rightIcon={<ArrowRight size={16} />}
+    >
+      View All Products
+    </Button>
+  </Link>
+</div>
+        </div>
+      </section>
+
       {/* Features - ĐƠN GIẢN */}
       <section className="py-16 md:py-24 container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -162,20 +183,6 @@ export const HomePage = () => {
       </section>
 
       {/* New Products */}
-      <section className="bg-stone-50 py-16">
-        <div className="container mx-auto px-4">
-          <div className="text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Sản phẩm mới</h2>
-            <p className="text-lg text-gray-600 mb-8">Khám phá bộ sưu tập nội thất mới nhất của chúng tôi</p>
-            <Link to="">
-              <Button variant="outline">
-                Xem tất cả sản phẩm
-                <ArrowRight size={16} className="ml-2" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

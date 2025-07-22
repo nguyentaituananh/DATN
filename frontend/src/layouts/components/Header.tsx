@@ -93,10 +93,10 @@ export const Header = () => {
                 <ChevronDown size={16} />
               </div>
 					<Link to="" className="hover:text-primary transition-colors">
-						Giới thiệu
+						Về chúng tôi
 					</Link>
 					<Link to="" className="hover:text-primary transition-colors">
-						Liên hệ
+						Tin tức
 					</Link>
 				</nav>
 
