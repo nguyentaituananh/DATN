@@ -1,3 +1,5 @@
+'use strict'
+
 import Order from '../models/order.model.js'
 import { BadRequestError, NotFoundError } from '../core/error.response.js'
 

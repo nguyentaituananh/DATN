@@ -1,7 +1,7 @@
 'use strict'
 
 import express from 'express'
-import product_variantsController from '../../controllers/product_variants.controller.js'
+import product_variantsController from '../../controllers/product_variant.controller.js'
 
 const router = express.Router()
 

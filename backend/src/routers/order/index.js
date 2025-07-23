@@ -1,6 +1,8 @@
+'use strict'
+
 import express from 'express'
 import OrderController from '../../controllers/order.controller.js'
-import { authentication, isAdmin } from '../middlewares/authMiddleware.js'
+import { authentication, isAdmin } from '../../middlewares/authMiddleware.js'
 
 const router = express.Router()
 

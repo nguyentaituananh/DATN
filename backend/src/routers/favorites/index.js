@@ -1,6 +1,8 @@
+'use strict'
+
 import express from 'express'
 import FavoriteController from '../../controllers/favorites.controlle.js'
-import { authentication, isAdmin } from '../middlewares/authMiddleware.js'
+import { authentication, isAdmin } from '../../middlewares/authMiddleware.js'
 
 const router = express.Router()
 
