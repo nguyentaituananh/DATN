@@ -1,3 +1,5 @@
+'use strict'
+
 import Cart from '../models/cart.model.js'
 import { BadRequestError, NotFoundError } from '../core/error.response.js'
 import { removeUndefinedObject } from '../utils/index.js'

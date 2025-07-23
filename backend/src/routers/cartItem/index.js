@@ -1,6 +1,8 @@
+'use strict'
+
 import express from 'express'
 import CartItemController from '../../controllers/cartItem.controller.js'
-import { authentication, isAdmin } from '../middlewares/authMiddleware.js'
+import { authentication, isAdmin } from '../../middlewares/authMiddleware.js'
 
 const router = express.Router()
 

@@ -1,6 +1,8 @@
+'use strict'
+
 import express from 'express'
 import CouponController from '../../controllers/coupons.controlle.js'
-import { authentication, isAdmin } from '../middlewares/authMiddleware.js'
+import { authentication, isAdmin } from '../../middlewares/authMiddleware.js'
 
 const router = express.Router()
 

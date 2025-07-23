@@ -1,3 +1,5 @@
+'use strict'
+
 import OrderItem from '../models/orderItem.model.js'
 import { BadRequestError, NotFoundError } from '../core/error.response.js'
 import { removeUndefinedObject } from '../utils/index.js'

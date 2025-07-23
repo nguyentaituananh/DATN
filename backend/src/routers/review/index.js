@@ -1,6 +1,8 @@
+'use strict'
+
 import express from 'express'
-import ReviewController from '../controllers/reviews.controller.js'
-import { authentication, isAdmin } from '../middlewares/authMiddleware.js'
+import ReviewController from '../../controllers/review.controller.js'
+import { authentication, isAdmin } from '../../middlewares/authMiddleware.js'
 
 const router = express.Router()
 

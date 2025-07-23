@@ -1,3 +1,5 @@
+'use strict'
+
 import Favorite from '../models/favorites.model.js'
 import { BadRequestError, NotFoundError } from '../core/error.response.js'
 
