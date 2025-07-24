@@ -23,4 +23,9 @@ export interface IProduct {
 	rating_average: number
 	createdAt: string
 	updatedAt: string
+	original_price?: number;
+  material?: string;
+  size?: string;
+  discount_price?: number;
+  category_name?: string;
 }

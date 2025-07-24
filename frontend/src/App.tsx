@@ -32,7 +32,7 @@ import CategoryCreate from "./pages/admin/category/CategoryCreate";
 import EditCategory from "./pages/admin/category/CategoryEdit";
 import ProtectedRouteAdmin from "./components/ProtectedRouteAdmin";
 import EditProductVariant from "./pages/admin/product-variant/productVariantEdit";
-
+import DetailProduct from "./features/Homepage/DetailProduct";
 // User Pages
 import HomePage from "./pages/user/HomePage";
 import ProductsPage from "./pages/user/ProductsPage";
@@ -107,6 +107,7 @@ function App() {
                         <Route path="checkout" element={<CheckoutPage />} />
                         <Route path="about" element={<AboutPage />} />
                         <Route path="userDeitail/:id" element={<AccountInfoPage />} />
+                        <Route path="products/:id" element={<DetailProduct />} />
                       </Route>
                     </Routes>
                   </ReviewProvider>
