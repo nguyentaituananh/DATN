@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import {  Edit, Trash2 } from 'lucide-react'
+import { Edit, Trash2, Eye, EyeOff } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -9,9 +9,11 @@ import { formatDate } from '@/utils'
 interface ProductColumnsProps {
 	onEdit?: (product: IProduct) => void
 	onDelete?: (productId: string) => void
+	onPublish?: (productId: string) => void
+	onUnpublish?: (productId: string) => void
 }
 
-export const createProductColumns = ({ onEdit, onDelete }: ProductColumnsProps): ColumnDef<IProduct>[] => [
+export const createProductColumns = ({ onEdit, onDelete, onPublish, onUnpublish }: ProductColumnsProps): ColumnDef<IProduct>[] => [
 	{
 		accessorKey: '_id',
 		header: 'ID sản phẩm',
@@ -72,16 +74,34 @@ export const createProductColumns = ({ onEdit, onDelete }: ProductColumnsProps):
 			const handleDelete = () => {
 				onDelete?.(product._id)
 			}
+			const handlePublish = () => {
+				onPublish?.(product._id)
+			}
+			const handleUnpublish = () => {
+				onUnpublish?.(product._id)
+			}
 
 			return (
 				<div className="flex items-center gap-2">
-					<Button onClick={handleEdit} size="icon" variant="outline">
+					<Button onClick={handleEdit} size="icon" variant="outline" title="Chỉnh sửa">
 						<Edit className="h-4 w-4" />
 					</Button>
+
+					{product.isPublish ? (
+						<Button onClick={handleUnpublish} size="icon" variant="outline" title="Chuyển về Draft">
+							<EyeOff className="h-4 w-4" />
+						</Button>
+					) : (
+						<Button onClick={handlePublish} size="icon" variant="outline" title="Xuất bản">
+							<Eye className="h-4 w-4" />
+						</Button>
+					)}
+
 					<Button
 						onClick={handleDelete}
 						size="icon"
 						variant="destructive"
+						title="Xóa"
 					>
 						<Trash2 className="h-4 w-4" />
 					</Button>

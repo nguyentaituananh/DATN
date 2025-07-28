@@ -9,6 +9,7 @@ export const useCreateCategory = () => {
 	return useMutation({
 		mutationFn: async (data: ICategoryData) => categoryApis.createCategory(data),
 		onSuccess: () => {
+			toast.success('Tạo danh mục thành công')
 			queryClient.invalidateQueries({ queryKey: ['categories'] })
 		}
 	})
@@ -27,6 +28,7 @@ export const useUpdateCategory = () => {
 	return useMutation({
 		mutationFn: async ({ id, data }: { id: string; data: ICategoryData }) => categoryApis.updateCategory(id, data),
 		onSuccess: () => {
+			toast.success('Cập nhật danh mục thành công')
 			queryClient.invalidateQueries({ queryKey: ['categories'] })
 		}
 	})

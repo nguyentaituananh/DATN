@@ -59,9 +59,9 @@ export function DataTable<TData, TValue>({
       const pageSize = table.getState().pagination.pageSize
       return <div className="font-medium text-center">{currentPage * pageSize + row.index + 1}</div>
     },
-    size: 80,
-    minSize: 80,
-    maxSize: 80,
+    size: 40,
+    minSize: 40,
+    maxSize: 40,
   }
 
   // Kết hợp cột STT với các cột khác
@@ -99,9 +99,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className={`flex flex-col border rounded-lg overflow-hidden bg-card ${className || ""}`} style={{ height }}>
-      {/* Container với overflow để sticky hoạt động */}
-      <div className="flex-1 relative overflow-auto h-full">
-        <Table className="w-full table-fixed border-collapse">
+      {/* Container với overflow để hỗ trợ cuộn ngang và dọc */}
+      <div className="flex-1 relative overflow-x-auto overflow-y-auto h-full">
+        <Table className="w-full border-collapse">
           {/* Sticky Header */}
           <TableHeader className="sticky top-0 z-10 bg-accent">
             {table.getHeaderGroups().map((headerGroup: HeaderGroup<TData>) => (
@@ -113,9 +113,9 @@ export function DataTable<TData, TValue>({
                       key={header.id}
                       className="border-r border-b last:border-r-0 px-4 py-3 font-semibold bg-slate-200 dark:bg-slate-100 text-left border-border dark:text-black"
                       style={{
-                        width: isSTTColumn ? "60px" : "250px",
-                        minWidth: isSTTColumn ? "70px" : "150px",
-                        maxWidth: isSTTColumn ? "70px" : "250px",
+                        width: isSTTColumn ? "50px" : "50px",
+                        minWidth: isSTTColumn ? "50px" : "50px",
+                        maxWidth: isSTTColumn ? "50px" : "50px",
                       }}
                     >
                       <div className="truncate">
@@ -132,26 +132,25 @@ export function DataTable<TData, TValue>({
           <TableBody className="h-full">
             {!isLoading && table.getRowModel().rows?.length
               ? table.getRowModel().rows.map((row: Row<TData>) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                    {row.getVisibleCells().map((cell: Cell<TData, unknown>) => {
-                      const isSTTColumn = cell.column.id === "stt"
-
-                      return (
-                        <TableCell
-                          key={cell.id}
-                          className="border-r last:border-r-0 px-4 py-2 bg-muted"
-                          style={{
-                            width: isSTTColumn ? "80px" : "250px",
-                            minWidth: isSTTColumn ? "80px" : "150px",
-                            maxWidth: isSTTColumn ? "80px" : "250px",
-                          }}
-                        >
-                          <div className="truncate">{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
-                        </TableCell>
-                      )
-                    })}
-                  </TableRow>
-                ))
+                <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                  {row.getVisibleCells().map((cell: Cell<TData, unknown>) => {
+                    const isSTTColumn = cell.column.id === "stt"
+                    return (
+                      <TableCell
+                        key={cell.id}
+                        className="border-r last:border-r-0 px-4 py-2 bg-muted"
+                        style={{
+                          width: isSTTColumn ? "50px" : cell.column.columnDef.size || "200px",
+                          minWidth: isSTTColumn ? "50px" : cell.column.columnDef.minSize || "150px",
+                          maxWidth: isSTTColumn ? "50px" : cell.column.columnDef.maxSize || "250px",
+                        }}
+                      >
+                        <div className="truncate">{flexRender(cell.column.columnDef.cell, cell.getContext())}</div>
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              ))
               : null}
           </TableBody>
         </Table>

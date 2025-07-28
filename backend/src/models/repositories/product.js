@@ -4,7 +4,7 @@ import { getSelectData, unGetSelectData, convertToObjectMongoId } from '../../ut
 
 const queryProduct = async ({ query, limit, skip }) => {
 	return await Product.find(query)
-		.populate('category_id', 'name description -_id')
+		.populate('category_id', 'name description _id')
 		.sort({ updatedAt: -1 })
 		.skip(skip)
 		.limit(limit)

@@ -20,7 +20,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { pathname } = useLocation()
 
 	return (
-		<Sidebar {...props}>
+		<Sidebar {...props} className='z-50 overflow-x-hidden'>
 			<SidebarHeader>
 				<VersionSwitcher versions={appSidebar.versions} defaultVersion={appSidebar.versions[0]} />
 				<SearchForm />

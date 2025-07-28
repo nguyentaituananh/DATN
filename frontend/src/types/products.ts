@@ -16,16 +16,18 @@ export interface IProduct {
 	price: number
 	quantity: number
 	images: string[]
-	category_id: string
 	related_products: string[]
 	isDraft: boolean
 	isPublish: boolean
 	rating_average: number
 	createdAt: string
 	updatedAt: string
-	original_price?: number;
-  material?: string;
-  size?: string;
-  discount_price?: number;
-  category_name?: string;
+	original_price?: number
+	material?: string
+	size?: string
+	discount_price?: number
+	category_id: {
+		_id: string
+		name: string
+	}
 }
