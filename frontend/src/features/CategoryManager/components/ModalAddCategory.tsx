@@ -63,7 +63,7 @@ const ModalAddCategory = ({ isOpen, onClose, categoryData }: ModalAddCategoryPro
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent className="max-w-4xl max-h-[60vh]" aria-describedby={undefined}>
+			<DialogContent className="max-w-xl max-h-[60vh]" aria-describedby={undefined}>
 				<DialogHeader>
 					<DialogTitle>Tạo mới danh mục sản phẩm</DialogTitle>
 				</DialogHeader>

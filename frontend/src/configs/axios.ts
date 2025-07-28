@@ -1,3 +1,4 @@
+import { useAuthStore } from '@/stores'
 import axios, { type AxiosResponse } from 'axios'
 
 const axiosClient = axios.create({
@@ -8,16 +9,10 @@ const axiosClient = axios.create({
 	}
 })
 
-// Hàm để lấy token từ store (sẽ được cập nhật từ component)
-let getAccessToken: () => string | null = () => null
-
-export const setTokenGetter = (getter: () => string | null) => {
-	getAccessToken = getter
-}
 
 // Interceptor request: Thêm token vào header
 axiosClient.interceptors.request.use((config) => {
-	const token = getAccessToken()
+	const token = useAuthStore.getState().accessToken
 
 	if (token) {
 		config.headers.Authorization = `Bearer ${token}`
@@ -37,9 +32,9 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use(
 	(response: AxiosResponse) => {
 		// Extract data from metadata if it exists
-		if (response.data && response.data.metadata) {
-			response.data = response.data.metadata
-		}
+		// if (response.data && response.data.metadata) {
+		// 	response.data = response.data.metadata
+		// }
 		return response.data
 	},
 	(error) => {

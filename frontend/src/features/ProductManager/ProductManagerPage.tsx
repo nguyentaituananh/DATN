@@ -16,19 +16,11 @@ const ProductManagerPage = () => {
 
 	return (
 		<>
-			<div className="flex flex-col gap-4 h-full">
+		 	<div className="flex flex-col gap-4 h-full">
 				<DataTable
 					columns={columns}
 					data={products?.metadata ??  []}
-					searchKey="name"
-					searchPlaceholder="Tìm kiếm theo tên sản phẩm"
-					showColumnToggle={true}
-					showPagination={true}
-					showRowSelection={true}
-					loading={isFetching}
-					onAddNew={() => setOpenModal(true)}
-					addNewLabel="Thêm mới sản phẩm"
-					title="Quản lý sản phẩm"
+					isLoading={isFetching}
 				/>
 			</div>
 

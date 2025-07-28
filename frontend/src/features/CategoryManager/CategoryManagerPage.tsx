@@ -26,6 +26,7 @@ const CategoryManagerPage = () => {
 			setSelectedCategoryId(categoryId)
 		}
 	})
+	
 
 	return (
 		<>
@@ -33,15 +34,7 @@ const CategoryManagerPage = () => {
 				<DataTable
 					columns={columns}
 					data={data?.metadata?.categories ?? []}
-					searchKey="name"
-					searchPlaceholder="Tìm kiếm theo tên danh mục"
-					showColumnToggle={true}
-					showPagination={true}
-					showRowSelection={true}
-					loading={isFetching}
-					onAddNew={() => setOpenModal(true)}
-					addNewLabel="Thêm mới danh mục"
-					title="Quản lý danh mục"
+					isLoading={isFetching}
 				/>
 			</div>
 
