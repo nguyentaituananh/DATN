@@ -3,5 +3,6 @@ export const routes = {
 	login: '/login',
 	dashboard: '/admin/dashboard',
 	categoryManagement: '/admin/category-management',
-	productManagement: '/admin/product-management'
+	productManagement: '/admin/product-management',
+	
 }
