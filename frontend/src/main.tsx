@@ -7,23 +7,6 @@ import './assets/css/index.css'
 import router from '@/router'
 import { ReactQueryProvider, ThemeProvider } from '@/context'
 
-<<<<<<< HEAD
-createRoot(document.getElementById("root")!).render(
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <OrderProvider>
-        <StrictMode>
-          <BrowserRouter>
-            <AntdApp>
-              <App />
-            </AntdApp>
-          </BrowserRouter>
-        </StrictMode>
-      </OrderProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
-=======
 createRoot(document.getElementById('root')!).render(
 	<StrictMode>
 		<ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
@@ -34,4 +17,3 @@ createRoot(document.getElementById('root')!).render(
 		</ThemeProvider>
 	</StrictMode>
 )
->>>>>>> tuananh
