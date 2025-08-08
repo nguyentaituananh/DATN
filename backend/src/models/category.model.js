@@ -1,11 +1,21 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const categorySchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  description: { type: String },
-  parent_category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null },
-}, { timestamps: true });
+const DOCUMENT_NAME = 'Category'
+const COLLECTION_NAME = 'categories'
 
-const Category = mongoose.model('Category', categorySchema);
+const categorySchema = new mongoose.Schema(
+	{
+		name: { type: String, required: true },
+		description: { type: String },
+		parent_category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', default: null },
+		images: { type: String, default: null }
+	},
+	{
+		collection: COLLECTION_NAME,
+		timestamps: true
+	}
+)
 
-export default Category;
+const Category = mongoose.model(DOCUMENT_NAME, categorySchema)
+
+export default Category

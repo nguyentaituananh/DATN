@@ -1,54 +1,80 @@
-import OrderItem from "../models/orderItem.model.js";
-import { orderItemSchema, orderItemUpdateSchema } from "../validates/orderItems.validate.js";
+import OrderItemService from '../services/orderItem.service.js'
+import { OK, CREATED } from '../core/success.response.js'
+import asyncHandler from '../helpers/asyncHandler.js'
 
-export const getAllOrderItems = async (req, res) => {
-  try {
-    const orderItems = await OrderItem.find().populate("product_id variant_id");
-    res.status(200).json(orderItems);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+class OrderItemController {
+  // Tạo chi tiết đơn hàng mới
+  createOrderItem = asyncHandler(async (req, res) => {
+    const newOrderItem = await OrderItemService.createOrderItem(req.body)
 
-export const createOrderItem = async (req, res) => {
-  try {
-    const { error } = orderItemSchema.validate(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
+    new CREATED({
+      message: 'Tạo chi tiết đơn hàng thành công',
+      metadata: newOrderItem,
+    }).send(res)
+  })
 
-    const newOrderItem = new OrderItem(req.body);
-    await newOrderItem.save();
-    res.status(201).json(newOrderItem);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+  // Lấy tất cả chi tiết đơn hàng
+  getAllOrderItems = asyncHandler(async (req, res) => {
+    const { limit = 50, skip = 0 } = req.query
+    const orderItems = await OrderItemService.getAllOrderItems({
+      limit: parseInt(limit),
+      skip: parseInt(skip),
+    })
 
-export const updateOrderItem = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { error } = orderItemUpdateSchema.validate(req.body);
-    if (error) return res.status(400).json({ message: error.details[0].message });
+    new OK({
+      message: 'Lấy danh sách chi tiết đơn hàng thành công',
+      metadata: orderItems,
+    }).send(res)
+  })
 
-    const updatedOrderItem = await OrderItem.findByIdAndUpdate(id, req.body, { new: true });
-    if (!updatedOrderItem) {
-      return res.status(404).json({ message: "Không tìm thấy chi tiết đơn hàng." });
-    }
+  // Lấy chi tiết đơn hàng theo ID
+  getOrderItemById = asyncHandler(async (req, res) => {
+    const { orderItemId } = req.params
+    const orderItem = await OrderItemService.getOrderItemById(orderItemId)
 
-    res.status(200).json(updatedOrderItem);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    new OK({
+      message: 'Lấy thông tin chi tiết đơn hàng thành công',
+      metadata: orderItem,
+    }).send(res)
+  })
 
-export const deleteOrderItem = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deletedOrderItem = await OrderItem.findByIdAndDelete(id);
-    if (!deletedOrderItem) {
-      return res.status(404).json({ message: "Không tìm thấy chi tiết đơn hàng để xóa." });
-    }
-    res.status(200).json({ message: "Xóa chi tiết đơn hàng thành công." });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+  // Cập nhật chi tiết đơn hàng
+  updateOrderItem = asyncHandler(async (req, res) => {
+    const { orderItemId } = req.params
+    const updatedOrderItem = await OrderItemService.updateOrderItem(orderItemId, req.body)
+
+    new OK({
+      message: 'Cập nhật chi tiết đơn hàng thành công',
+      metadata: updatedOrderItem,
+    }).send(res)
+  })
+
+  // Xóa chi tiết đơn hàng
+  deleteOrderItem = asyncHandler(async (req, res) => {
+    const { orderItemId } = req.params
+    const result = await OrderItemService.deleteOrderItem(orderItemId)
+
+    new OK({
+      message: 'Xóa chi tiết đơn hàng thành công',
+      metadata: result,
+    }).send(res)
+  })
+
+  // Lấy chi tiết đơn hàng theo order_id
+  getOrderItemsByOrder = asyncHandler(async (req, res) => {
+    const { orderId } = req.params
+    const { limit = 50, skip = 0 } = req.query
+    const orderItems = await OrderItemService.getOrderItemsByOrder({
+      order_id: orderId,
+      limit: parseInt(limit),
+      skip: parseInt(skip),
+    })
+
+    new OK({
+      message: 'Lấy danh sách chi tiết đơn hàng theo đơn hàng thành công',
+      metadata: orderItems,
+    }).send(res)
+  })
+}
+
+export default new OrderItemController()

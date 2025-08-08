@@ -1,79 +1,80 @@
-import CartItem from "../models/cartItem.model.js";
-import { cartItemSchema, quantitySchema } from "../validates/cartItem.validate.js";
+import CartItemService from '../services/cartItem.service.js'
+import { OK, CREATED } from '../core/success.response.js'
+import asyncHandler from '../helpers/asyncHandler.js'
 
-// Tạo mục trong giỏ hàng
-export const addCartItem = async (req, res) => {
-  const {error} = cartItemSchema.validate(req.body, {abortEarly:false});
-  if(error){
-    const errors = error.details.map((err)=>({
-      field : error?.path?.[0] || "null",
-      message : err.message,
-    }));
-    return res.status(400).json({errors});
-  }
-  try {
-    const { cart_id, product_id, variant_id, quantity } = req.body;
-    const newItem = new CartItem({
-      cart_id,
-      product_id,
-      variant_id: variant_id || null,
-      quantity,
-    });
-    await newItem.save();
-    res.status(201).json(newItem);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+class CartItemController {
+  // Tạo mục trong giỏ hàng mới
+  createCartItem = asyncHandler(async (req, res) => {
+    const newCartItem = await CartItemService.createCartItem(req.body)
 
-// Lấy tất cả mục theo cart_id
-export const getItemsByCartId = async (req, res) => {
-  try {
-    const { cart_id } = req.params;
-    const items = await CartItem.find({ cart_id }).populate(
-      "product_id variant_id"
-    );
-    res.status(200).json(items);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    new CREATED({
+      message: 'Tạo mục trong giỏ hàng thành công',
+      metadata: newCartItem,
+    }).send(res)
+  })
 
-// Cập nhật số lượng mục trong giỏ hàng theo _id
-export const updateCartItemQuantity = async (req, res) => {
-  const {error} = quantitySchema.validate(req.body);
-  if(error){
-    return res.status(400).json({
-      message : error.details[0].message,
+  // Lấy tất cả mục trong giỏ hàng
+  getAllCartItems = asyncHandler(async (req, res) => {
+    const { limit = 50, skip = 0 } = req.query
+    const cartItems = await CartItemService.getAllCartItems({
+      limit: parseInt(limit),
+      skip: parseInt(skip),
     })
-  }
-  try {
-    const { id } = req.params;
-    const { quantity } = req.body;
-    const updatedItem = await CartItem.findByIdAndUpdate(
-      id,
-      { quantity },
-      { new: true }
-    );
-    if (!updatedItem) {
-      return res.status(404).json({ message: "CartItem not found" });
-    }
-    res.status(200).json(updatedItem);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
-// Xóa mục trong giỏ hàng theo _id
-export const deleteCartItem = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deletedItem = await CartItem.findByIdAndDelete(id);
-    if (!deletedItem) {
-      return res.status(404).json({ message: "CartItem not found" });
-    }
-    res.status(200).json({ message: "CartItem deleted" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+    new OK({
+      message: 'Lấy danh sách mục trong giỏ hàng thành công',
+      metadata: cartItems,
+    }).send(res)
+  })
+
+  // Lấy mục trong giỏ hàng theo ID
+  getCartItemById = asyncHandler(async (req, res) => {
+    const { cartItemId } = req.params
+    const cartItem = await CartItemService.getCartItemById(cartItemId)
+
+    new OK({
+      message: 'Lấy thông tin mục trong giỏ hàng thành công',
+      metadata: cartItem,
+    }).send(res)
+  })
+
+  // Cập nhật mục trong giỏ hàng
+  updateCartItem = asyncHandler(async (req, res) => {
+    const { cartItemId } = req.params
+    const updatedCartItem = await CartItemService.updateCartItem(cartItemId, req.body)
+
+    new OK({
+      message: 'Cập nhật mục trong giỏ hàng thành công',
+      metadata: updatedCartItem,
+    }).send(res)
+  })
+
+  // Xóa mục trong giỏ hàng
+  deleteCartItem = asyncHandler(async (req, res) => {
+    const { cartItemId } = req.params
+    const result = await CartItemService.deleteCartItem(cartItemId)
+
+    new OK({
+      message: 'Xóa mục trong giỏ hàng thành công',
+      metadata: result,
+    }).send(res)
+  })
+
+  // Lấy mục trong giỏ hàng theo cart_id
+  getCartItemsByCart = asyncHandler(async (req, res) => {
+    const { cartId } = req.params
+    const { limit = 50, skip = 0 } = req.query
+    const cartItems = await CartItemService.getCartItemsByCart({
+      cart_id: cartId,
+      limit: parseInt(limit),
+      skip: parseInt(skip),
+    })
+
+    new OK({
+      message: 'Lấy danh sách mục trong giỏ hàng theo giỏ hàng thành công',
+      metadata: cartItems,
+    }).send(res)
+  })
+}
+
+export default new CartItemController()

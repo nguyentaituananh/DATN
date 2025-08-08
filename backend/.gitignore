@@ -36,3 +36,5 @@ coverage/
 *.local
 *.cache
 *.tmp
+
+node_modules/
