@@ -2,7 +2,7 @@
 
 import mongoose from 'mongoose'
 
-const connectString = process.env.MONGODB_URI
+const connectString = `mongodb+srv://kaisa13102004:2lFSfOQYuJsdXd2X@cluster0.uxkc9mx.mongodb.net/make_money`
 
 class Database {
 	constructor() {

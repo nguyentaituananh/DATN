@@ -19,5 +19,8 @@ userRouter.get('/', isAdmin, userController.getAllUsers)
 userRouter.get('/:userId', isAdmin, userController.getUserById)
 userRouter.put('/:userId/toggle-status', isAdmin, userController.toggleUserStatus)
 userRouter.delete('/:userId', isAdmin, userController.deleteUser)
+userRouter.post('/:userId/send-verification-email', isAdmin, userController.sendVerificationEmail)
+userRouter.post('/:userId/reset-password-link', isAdmin, userController.resetPasswordLink)
+userRouter.post('/:userId/revoke-sessions', isAdmin, userController.revokeAllSessions)
 
 export default userRouter

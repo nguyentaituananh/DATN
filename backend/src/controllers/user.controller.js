@@ -100,6 +100,48 @@ class UserController {
 			next(error)
 		}
 	}
+
+	sendVerificationEmail = async (req, res, next) => {
+		try {
+			const { userId } = req.params
+			const result = await UserService.sendVerificationEmail(userId)
+
+			new SuccessResponse({
+				message: 'Gửi email xác minh thành công',
+				metadata: result
+			}).send(res)
+		} catch (error) {
+			next(error)
+		}
+	}
+
+	resetPasswordLink = async (req, res, next) => {
+		try {
+			const { userId } = req.params
+			const result = await UserService.resetPasswordLink(userId)
+
+			new SuccessResponse({
+				message: 'Gửi liên kết đặt lại mật khẩu thành công',
+				metadata: result
+			}).send(res)
+		} catch (error) {
+			next(error)
+		}
+	}
+
+	revokeAllSessions = async (req, res, next) => {
+		try {
+			const { userId } = req.params
+			const result = await UserService.revokeAllSessions(userId)
+
+			new SuccessResponse({
+				message: 'Hủy tất cả phiên thành công',
+				metadata: result
+			}).send(res)
+		} catch (error) {
+			next(error)
+		}
+	}
 }
 
 export default new UserController()

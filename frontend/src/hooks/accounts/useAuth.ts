@@ -1,5 +1,5 @@
 import { authApis } from '@/services/accounts/auth'
-import type { ILoginData, ILoginResponse, IApiError } from '@/types/auth'
+import type { ILoginData, IApiError } from '@/types/auth'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -28,14 +28,16 @@ export const useLogin = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const setUser = useAuthStore((state) => state.setUser)
-	const setTokens = useAuthStore((state) => state.setTokens)
+	const setTokens = useAuthStore((state) => state.setAccessToken)
 	const setAuthenticated = useAuthStore((state) => state.setAuthenticated)
 
 	return useMutation({
 		mutationFn: (data: ILoginData) => authApis.login(data),
-		onSuccess: (response: ILoginResponse) => {
-			setUser(response.user)
-			setTokens(response.tokens.accessToken, response.tokens.refreshToken)
+		onSuccess: (response) => {
+			console.log(response)
+
+			setUser(response.metadata.user)
+			setTokens(response.metadata.tokens.accessToken)
 			setAuthenticated(true)
 
 			toast.success('Đăng nhập thành công!')
@@ -45,6 +47,8 @@ export const useLogin = () => {
 			navigate(redirectTo, { replace: true })
 		},
 		onError: (error: IApiError) => {
+			console.log('Login error:', error)
+
 			const errorMessage = error?.response?.data?.message || 'Đăng nhập thất bại'
 			toast.error(errorMessage)
 		}

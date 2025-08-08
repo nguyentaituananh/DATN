@@ -2,15 +2,6 @@ import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { PanelLeftIcon } from 'lucide-react'
-
-import {
-	SIDEBAR_COOKIE_MAX_AGE,
-	SIDEBAR_COOKIE_NAME,
-	SIDEBAR_KEYBOARD_SHORTCUT,
-	SIDEBAR_WIDTH,
-	SIDEBAR_WIDTH_ICON,
-	SIDEBAR_WIDTH_MOBILE
-} from '@/constants'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
@@ -29,6 +20,18 @@ type SidebarContextProps = {
 	isMobile: boolean
 	toggleSidebar: () => void
 }
+
+const SIDEBAR_COOKIE_NAME = 'sidebar_state'
+
+const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
+
+const SIDEBAR_WIDTH = '16rem'
+
+const SIDEBAR_WIDTH_MOBILE = '18rem'
+
+const SIDEBAR_WIDTH_ICON = '3rem'
+
+const SIDEBAR_KEYBOARD_SHORTCUT = 'b'
 
 const SidebarContext = React.createContext<SidebarContextProps | null>(null)
 

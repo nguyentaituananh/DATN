@@ -8,7 +8,7 @@ const BaseLayout: React.FC<LayoutProps> = ({ children }) => {
 		<div className="min-h-screen">
 			<Header />
 			<div className="flex flex-col min-h-[calc(100vh-3.5rem)]">{children}</div>
-			<Footer />
+			< Footer/>
 		</div>
 	)
 }

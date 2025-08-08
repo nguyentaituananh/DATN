@@ -1,29 +1,35 @@
 import mongoose from 'mongoose'
 
+const DOCUMENT_NAME = 'Product'
+const COLLECTION_NAME = 'products'
+
 const ProductSchema = new mongoose.Schema(
 	{
 		name: { type: String, required: true },
+		slug: { type: String, required: true, unique: true },
 		description: { type: String, required: true },
-		price: {
+		price: { type: Number, required: true },
+		quantity: { type: Number, required: true },
+		images: { type: Array, default: [] },
+		category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
+		related_products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product', default: [] }],
+		isDraft: { type: Boolean, default: true, index: true },
+		isPublish: { type: Boolean, default: false, index: true },
+		rating_average: {
 			type: Number,
-			min: [0, 'Giá phải lớn hơn hoặc bằng 0'],
-			default: 0
-		},
-		discount_price: { type: Number, min: [0, 'Giá KM phải >= 0'] },
-		images: { type: [String], default: [] },
-		category_id: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Category',
-			required: true
-		},
-		related_products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product', default: [] }]
+			default: 4.5,
+			min: [1, 'Rating must be above 1.0'],
+			max: [5, 'Rating must be above 5.0'],
+			set: (val) => Math.round(val * 10) / 10
+		}
 	},
 	{
 		timestamps: true,
-		toJSON: { virtuals: true },
-		toObject: { virtuals: true }
+		collection: COLLECTION_NAME
 	}
 )
 
-const Product = mongoose.model('Product', ProductSchema)
+// ProductSchema.index({ name: 'text', description: 'text' })
+
+const Product = mongoose.model(DOCUMENT_NAME, ProductSchema)
 export default Product

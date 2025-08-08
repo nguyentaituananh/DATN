@@ -23,9 +23,9 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
 	return (
 		<SidebarProvider>
 			<AppSidebar />
-			<SidebarInset>
-				<header className="bg-background sticky top-0 flex h-16 shrink-0 items-center justify-between border-b px-4">
-					<div className="flex items-center gap-2">
+			<SidebarInset className='overflow-hidden'>
+				<header className="bg-background sticky top-0 flex items-center h-16 shrink-0 justify-between border-b pl-4 pr-6 z-50">
+					<div className="flex items-center gap-2 h-full">
 						<SidebarTrigger className="-ml-1" />
 						<Separator orientation="vertical" className="mr-2 h-4" />
 						<Breadcrumb>
@@ -42,7 +42,8 @@ const DashboardLayout = ({ children }: PropsWithChildren) => {
 					</div>
 					<ModeToggle />
 				</header>
-				<main className="p-4">{children}</main>
+
+				<div className="p-6 flex-1">{children}</div>
 			</SidebarInset>
 		</SidebarProvider>
 	)

@@ -1,5 +1,72 @@
+import { ModalConfirmDelete } from '@/components/modals/ModalConfirmDelete'
+import { DataTable } from '@/components/shared/DataTable'
+import { Button } from '@/components/ui/button'
+
+import { createCategoryColumns } from '@/features/CategoryManager/components/categoryColumns'
+import ModalAddCategory from '@/features/CategoryManager/components/ModalAddCategory'
+import { useDeleteCategory, useGetCategories } from '@/hooks/categories/useCategory'
+import type { ICategory } from '@/types/categories'
+import { useState } from 'react'
+
 const CategoryManagerPage = () => {
-	return <div>CategoryManagerPage</div>
+	const [openModal, setOpenModal] = useState(false)
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false)
+	const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null)
+	const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null)
+
+	const { data, isFetching } = useGetCategories()
+	const { mutate: deleteCategory } = useDeleteCategory()
+
+	const columns = createCategoryColumns({
+		onEdit: (categoryData) => {
+			setOpenModal(true)
+			setSelectedCategory(categoryData)
+		},
+		onDelete: (categoryId) => {
+			setOpenDeleteDialog(true)
+			setSelectedCategoryId(categoryId)
+		}
+	})
+
+	return (
+		<>
+			<div className="flex flex-col gap-4 h-full">
+				<div className="flex items-center justify-end">
+					<Button
+						onClick={() => {
+							setSelectedCategory(null)
+							setOpenModal(true)
+						}}
+					>
+						Thêm mới danh mục
+					</Button>
+				</div>
+
+				<DataTable columns={columns} data={data?.metadata?.categories ?? []} isLoading={isFetching} />
+			</div>
+
+			{openModal && (
+				<ModalAddCategory
+					isOpen={openModal}
+					onClose={() => setOpenModal(false)}
+					categoryData={selectedCategory ?? undefined}
+				/>
+			)}
+
+			{openDeleteDialog && (
+				<ModalConfirmDelete
+					isOpen={openDeleteDialog}
+					onClose={() => {
+						setOpenDeleteDialog(false)
+						setSelectedCategory(null)
+					}}
+					onConfirm={() => {
+						if (selectedCategoryId) deleteCategory(selectedCategoryId)
+					}}
+				/>
+			)}
+		</>
+	)
 }
 
 export default CategoryManagerPage

@@ -44,6 +44,8 @@ class UserService {
 					'address',
 					'phone_number',
 					'is_active',
+					'verify',
+					'lastLogin',
 					'createdAt'
 				],
 				object: user
@@ -72,17 +74,68 @@ class UserService {
 	}
 
 	static getAllUsers = async (query = {}) => {
-		const { page = 1, limit = 10, role, is_active } = query
+		const {
+			page = 1,
+			limit = 10,
+			sortBy = 'createdAt',
+			sortOrder = 'desc',
+			search,
+			role,
+			is_active,
+			verify,
+			lastLogin_gte,
+			lastLogin_lte
+		} = query
+
 		const filter = {}
 
-		if (role) filter.role = role
-		if (is_active !== undefined) filter.is_active = is_active
+		if (search) {
+			const searchRegex = new RegExp(search, 'i')
+			filter.$or = [
+				{ name: { $regex: searchRegex } },
+				{ email: { $regex: searchRegex } },
+				{ customer_code: { $regex: searchRegex } },
+				{ phone_number: { $regex: searchRegex } }
+			]
+		}
+
+		if (role) {
+			filter.role = role
+		}
+
+		if (is_active !== undefined) {
+			filter.is_active = ['true', '1'].includes(String(is_active).toLowerCase())
+		}
+
+		if (verify !== undefined) {
+			filter.verify = ['true', '1'].includes(String(verify).toLowerCase())
+		}
+
+		if (lastLogin_gte || lastLogin_lte) {
+			filter.lastLogin = {}
+			if (lastLogin_gte) {
+				filter.lastLogin.$gte = new Date(lastLogin_gte)
+			}
+			if (lastLogin_lte) {
+				filter.lastLogin.$lte = new Date(lastLogin_lte)
+			}
+		}
+
+		const sort = {}
+		const validSortFields = ['name', 'customer_code', 'lastLogin', 'createdAt']
+		if (validSortFields.includes(sortBy)) {
+			sort[sortBy] = sortOrder === 'asc' ? 1 : -1
+		} else {
+			sort.createdAt = -1
+		}
+
+		const fieldsToSelect = '-password -refreshToken'
 
 		const users = await User.find(filter)
-			.select('-password -refreshToken')
+			.select(fieldsToSelect)
+			.sort(sort)
 			.limit(limit * 1)
 			.skip((page - 1) * limit)
-			.sort({ createdAt: -1 })
 
 		const total = await User.countDocuments(filter)
 
@@ -95,9 +148,10 @@ class UserService {
 						'email',
 						'customer_code',
 						'role',
-						'address',
 						'phone_number',
 						'is_active',
+						'verify',
+						'lastLogin',
 						'createdAt'
 					],
 					object: user
@@ -135,8 +189,53 @@ class UserService {
 			throw new NotFoundError('User not found')
 		}
 
-		await User.findByIdAndDelete(userId)
-		return { message: 'User deleted successfully' }
+		// Soft delete
+		user.is_active = false
+		await user.save()
+
+		return { message: 'User deactivated successfully' }
+	}
+
+	static sendVerificationEmail = async (userId) => {
+		const user = await User.findById(userId)
+		if (!user) {
+			throw new NotFoundError('User not found')
+		}
+
+		if (user.verify) {
+			throw new BadRequestError('User already verified')
+		}
+
+		// In a real application, you would send an actual email here.
+		// For demonstration, we'll just log a message.
+		console.log(`Sending verification email to ${user.email}`)
+
+		return { message: 'Verification email sent successfully (placeholder)' }
+	}
+
+	static resetPasswordLink = async (userId) => {
+		const user = await User.findById(userId)
+		if (!user) {
+			throw new NotFoundError('User not found')
+		}
+
+		// In a real application, you would generate a unique token and send a reset password link.
+		// For demonstration, we'll just log a message.
+		console.log(`Sending password reset link to ${user.email}`)
+
+		return { message: 'Password reset link sent successfully (placeholder)' }
+	}
+
+	static revokeAllSessions = async (userId) => {
+		const user = await User.findById(userId)
+		if (!user) {
+			throw new NotFoundError('User not found')
+		}
+
+		user.refreshToken = [] // Clear all refresh tokens
+		await user.save()
+
+		return { message: 'All sessions revoked successfully' }
 	}
 }
 
