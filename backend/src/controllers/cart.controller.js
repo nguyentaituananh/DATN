@@ -1,114 +1,60 @@
-import Cart from "../models/repositories/cart.model.js";
 
-// Lấy giỏ hàng theo user_id
-export const getCartByUser = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const cart = await Cart.findOne({ user_id: userId }).populate(
-      "items.product_id"
-    );
-    if (!cart) return res.status(404).json({ message: "Chưa có giỏ hàng." });
-    res.json(cart);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
 
-// Thêm hoặc cập nhật sản phẩm trong giỏ
-export const addToCart = async (req, res) => {
-  try {
-    const { user_id, product_id, quantity } = req.body;
-
-    let cart = await Cart.findOne({ user_id });
-
-    if (!cart) {
-      cart = new Cart({
-        user_id,
-        items: [{ product_id, quantity }],
-      });
-    } else {
-      const itemIndex = cart.items.findIndex(
-        (item) => item.product_id.toString() === product_id
-      );
-      if (itemIndex > -1) {
-        cart.items[itemIndex].quantity += quantity;
-      } else {
-        cart.items.push({ product_id, quantity });
-      }
-    }
-
-    cart.updated_at = Date.now();
-    const saved = await cart.save();
-    res.status(200).json(saved);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
-
-// Cập nhật số lượng sản phẩm
-export const updateCartItem = async (req, res) => {
-  try {
-    const { userId, productId } = req.params;
-    const { quantity } = req.body;
-
-    const cart = await Cart.findOne({ user_id: userId });
-    if (!cart)
-      return res.status(404).json({ message: "Không tìm thấy giỏ hàng." });
-
-    const item = cart.items.find(
-      (item) => item.product_id.toString() === productId
-    );
-    if (!item)
-      return res
-        .status(404)
-        .json({ message: "Không tìm thấy sản phẩm trong giỏ." });
-
-    item.quantity = quantity;
-    cart.updated_at = Date.now();
-
-    const saved = await cart.save();
-    res.json(saved);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
-
-// Xóa một sản phẩm khỏi giỏ
-export const removeCartItem = async (req, res) => {
-  try {
-    const { userId, productId } = req.params;
-
-    const cart = await Cart.findOne({ user_id: userId });
-    if (!cart)
-      return res.status(404).json({ message: "Không tìm thấy giỏ hàng." });
-
-    cart.items = cart.items.filter(
-      (item) => item.product_id.toString() !== productId
-    );
-    cart.updated_at = Date.now();
-
-    const saved = await cart.save();
-    res.json(saved);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
-
-// Xóa toàn bộ giỏ hàng
-export const clearCart = async (req, res) => {
-  try {
-    const { userId } = req.params;
-
-    const cart = await Cart.findOne({ user_id: userId });
-    if (!cart)
-      return res.status(404).json({ message: "Không tìm thấy giỏ hàng." });
-
-    cart.items = [];
-    cart.updated_at = Date.now();
-
-    const saved = await cart.save();
-    res.json(saved);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-};
+import CartService from '../services/cart.service.js'
+import { OK, CREATED } from '../core/success.response.js'
+import asyncHandler from '../helpers/asyncHandler.js'
+class CartController {
+    createCart = asyncHandler(async (req, res) => {
+        const newCart = await CartService.createCart(req.body)
+    
+        new CREATED({
+          message: 'Tạo giỏ hàng thành công',
+          metadata: newCart,
+        }).send(res)
+      })
+    
+      // Lấy giỏ hàng theo ID
+      getCartById = asyncHandler(async (req, res) => {
+        const { cartId } = req.params
+        const cart = await CartService.getCartById(cartId)
+    
+        new OK({
+          message: 'Lấy thông tin giỏ hàng thành công',
+          metadata: cart,
+        }).send(res)
+      })
+    
+      // Lấy giỏ hàng theo user_id
+      getCartByUser = asyncHandler(async (req, res) => {
+        const { userId } = req.params
+        const cart = await CartService.getCartByUser(userId)
+    
+        new OK({
+          message: 'Lấy giỏ hàng của người dùng thành công',
+          metadata: cart,
+        }).send(res)
+      })
+    
+      // Cập nhật giỏ hàng
+      updateCart = asyncHandler(async (req, res) => {
+        const { cartId } = req.params
+        const updatedCart = await CartService.updateCart(cartId, req.body)
+    
+        new OK({
+          message: 'Cập nhật giỏ hàng thành công',
+          metadata: updatedCart,
+        }).send(res)
+      })
+    
+      // Xóa giỏ hàng
+      deleteCart = asyncHandler(async (req, res) => {
+        const { cartId } = req.params
+        const result = await CartService.deleteCart(cartId)
+    
+        new OK({
+          message: 'Xóa giỏ hàng thành công',
+          metadata: result,
+        }).send(res)
+      })
+}
+export default new CartController()
