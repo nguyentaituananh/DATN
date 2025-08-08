@@ -5,20 +5,6 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vite.dev/config/
 export default defineConfig({
-<<<<<<< HEAD
-  plugins: [react()],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000', // <-- nơi json-server chạy
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
-  },
-});
-
-=======
 	plugins: [react(), tailwindcss()],
 	resolve: {
 		alias: {
@@ -26,4 +12,3 @@ export default defineConfig({
 		}
 	}
 })
->>>>>>> tuananh
