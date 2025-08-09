@@ -20,31 +20,27 @@ import favoriteRouter from './favorites/index.js'
 import couponRouter from './coupons/index.js'
 import statsRouter from './stats/index.js'
 
-const router = Router();
+const router = Router()
 
-router.use("/auth", authRouter);
-router.use("/api/products", productRouter);
-router.use("/api/product-variant", product_variants);
-router.use("/api/categories", categoryRouter);
-router.use("/api/orders", orderRouter);
-router.use("/api/reviews", reviewRouter);
-router.use("/api/favorites", favoriteRouter);
-router.use("/api/banners", bannersRouter);
-router.use("/api/coupons", couponsRouter);
-router.use("/api/cart", cartRouter);
-router.use("/api/cartItem", cartItemRouter);
-router.use("api/careInstructions", careInstructionsRouter);
-router.use("/api/oderItems", orderItemRouter);
-router.use("/api/materials", materialsRouter);
-router.use("/api/room", roomRouter)
-router.use("/api/dimension", dimensionRouter)
-router.use("/api/deliveryOption", deliveryOptionRouter)
-router.use("/api/room", roomRouter);
-router.use("/api/dimension", dimensionRouter);
-router.use("/api/deliveryOption", deliveryOptionRouter);
-router.use("/api/careInstructions", careInstructionsRouter);
-router.use("/api/assemblies", assembliesRouter);
-router.use("/api/styles", stylesRouter);
-router.use("/api/vouchers", voucherRouter);
+// API routes
+router.use('/api/auth', authRouter)
+router.use('/api/users', userRouter)
+router.use('/api/upload', uploadRouter)
+router.use('/api/categories', categoryRouter)
+router.use('/api/addresses', addressesRouter)
+router.use('/api/message', messageRouter)
+router.use('/api/notification', notificationRouter)
+router.use('/api/instructions', instructionRouter)
+router.use('/api/delivery-options', delivery_optionRouter)
+router.use('/api/product-variants', product_variantsRouter)
+router.use('/api/orders', orderRouter)
+router.use('/api/order-items', orderItemRoutes)
+router.use('/api/products', productRouter)
+router.use('/api/review', reviewRouter)
+router.use('/api/cart', cartRouter)
+router.use('/api/cartItem', cartItemRouter)
+router.use('/api/favorites', favoriteRouter)
+router.use('/api/coupons', couponRouter)
+router.use('/api/stats', statsRouter)
 
 export default router
