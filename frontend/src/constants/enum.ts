@@ -15,6 +15,11 @@ export const ThemeMode = {
 	SYSTEM: 'system'
 } as const
 
+export type Role ={
+	ADMIN : 'admin',
+	
+}
+
 export type LayoutType = (typeof LayoutType)[keyof typeof LayoutType]
 export type RouteStatus = (typeof RouteStatus)[keyof typeof RouteStatus]
 export type ThemeMode = (typeof ThemeMode)[keyof typeof ThemeMode]

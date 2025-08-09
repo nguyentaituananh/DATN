@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { Toaster } from '@/components/ui/sonner'
 import { RouterProvider } from 'react-router-dom'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
@@ -12,6 +13,7 @@ createRoot(document.getElementById('root')!).render(
 		<ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
 			<ReactQueryProvider>
 				<RouterProvider router={router} />
+				<Toaster position="top-right" />
 				<ReactQueryDevtools initialIsOpen={false} />
 			</ReactQueryProvider>
 		</ThemeProvider>
