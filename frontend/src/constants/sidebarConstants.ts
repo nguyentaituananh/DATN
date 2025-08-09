@@ -1,15 +1,41 @@
-const SIDEBAR_COOKIE_NAME = 'sidebar_state'
-const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
-const SIDEBAR_WIDTH = '16rem'
-const SIDEBAR_WIDTH_MOBILE = '18rem'
-const SIDEBAR_WIDTH_ICON = '3rem'
-const SIDEBAR_KEYBOARD_SHORTCUT = 'b'
+import { LayoutDashboard, Package, Tickets, Settings, Box, ClipboardList, CircleUser } from 'lucide-react'
+import { routes } from './routes'
 
-export {
-	SIDEBAR_COOKIE_NAME,
-	SIDEBAR_COOKIE_MAX_AGE,
-	SIDEBAR_WIDTH,
-	SIDEBAR_WIDTH_MOBILE,
-	SIDEBAR_WIDTH_ICON,
-	SIDEBAR_KEYBOARD_SHORTCUT
-}
+export const SIDEBAR_LINKS = [
+	{
+		title: 'Dashboard',
+		href: routes.dashboard,
+		icon: LayoutDashboard
+	},
+	{
+		title: 'Quản lý danh mục',
+		href: routes.categoryManagement,
+		icon: Box
+	},
+	{
+		title: 'Quản lý sản phẩm',
+		href: routes.productManagement,
+		icon: Package
+	},
+	{
+		title: 'Quản lý đơn hàng',
+		href: routes.orderManagement,
+		icon: ClipboardList
+	},
+	{
+		title: 'Quản lý khách hàng',
+		href: routes.customerManagement,
+		icon: CircleUser
+	},
+
+	{
+		title: 'Quản lý mã giảm giá',
+		href: routes.couponManagement,
+		icon: Tickets
+	},
+	{
+		title: 'Cài đặt',
+		href: '#',
+		icon: Settings
+	}
+]

@@ -1,5 +1,5 @@
 export const changeTitleDocument = (title?: string): void => {
-	document.title = `React App - ${title}`
+	document.title = `Eco Decor - ${title}`
 }
 
 export const formatDate = (date: Date | string, format = 'DD/MM/YYYY'): string => {
