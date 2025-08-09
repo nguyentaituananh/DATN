@@ -3,6 +3,7 @@ import type { IPaginationMetadata } from '@/types'
 export interface ICategoryData {
 	name: string
 	description: string
+	images?: string | null
 }
 
 export interface ICategory {

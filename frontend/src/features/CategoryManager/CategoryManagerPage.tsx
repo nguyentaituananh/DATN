@@ -1,5 +1,6 @@
 import { ModalConfirmDelete } from '@/components/modals/ModalConfirmDelete'
 import { DataTable } from '@/components/shared/DataTable'
+import { Button } from '@/components/ui/button'
 
 import { createCategoryColumns } from '@/features/CategoryManager/components/categoryColumns'
 import ModalAddCategory from '@/features/CategoryManager/components/ModalAddCategory'
@@ -30,19 +31,18 @@ const CategoryManagerPage = () => {
 	return (
 		<>
 			<div className="flex flex-col gap-4 h-full">
-				<DataTable
-					columns={columns}
-					data={data?.metadata.categories || []}
-					searchKey="name"
-					searchPlaceholder="Tìm kiếm theo tên danh mục"
-					showColumnToggle={true}
-					showPagination={true}
-					showRowSelection={true}
-					loading={isFetching}
-					onAddNew={() => setOpenModal(true)}
-					addNewLabel="Thêm mới danh mục"
-					title="Quản lý danh mục"
-				/>
+				<div className="flex items-center justify-end">
+					<Button
+						onClick={() => {
+							setSelectedCategory(null)
+							setOpenModal(true)
+						}}
+					>
+						Thêm mới danh mục
+					</Button>
+				</div>
+
+				<DataTable columns={columns} data={data?.metadata?.categories ?? []} isLoading={isFetching} />
 			</div>
 
 			{openModal && (

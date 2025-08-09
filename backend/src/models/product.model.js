@@ -13,8 +13,8 @@ const ProductSchema = new mongoose.Schema(
 		images: { type: Array, default: [] },
 		category_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Category', required: true },
 		related_products: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product', default: [] }],
-		isDraft: { type: Boolean, default: true, index: true, select: false },
-		isPublish: { type: Boolean, default: false, index: true, select: false },
+		isDraft: { type: Boolean, default: true, index: true },
+		isPublish: { type: Boolean, default: false, index: true },
 		rating_average: {
 			type: Number,
 			default: 4.5,
@@ -29,7 +29,7 @@ const ProductSchema = new mongoose.Schema(
 	}
 )
 
-ProductSchema.index({ name: 'text', description: 'text' })
+// ProductSchema.index({ name: 'text', description: 'text' })
 
 const Product = mongoose.model(DOCUMENT_NAME, ProductSchema)
 export default Product

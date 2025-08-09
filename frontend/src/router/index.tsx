@@ -38,7 +38,6 @@ const checkLayout = (route: CustomRouteConfig): React.ReactNode => {
 		)
 	})()
 
-	// Wrap with AuthGuard if route is protected (default to true if not specified)
 	const isProtected = route.protected !== false
 	if (isProtected) {
 		return <AuthGuard>{layoutContent}</AuthGuard>

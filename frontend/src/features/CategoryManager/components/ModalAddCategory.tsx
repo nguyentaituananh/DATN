@@ -1,5 +1,5 @@
 import z from 'zod'
-import { useEffect, useId } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
@@ -14,8 +14,9 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
+import UploadFile from '@/components/shared/UploadFile'
 import { useCreateCategory, useUpdateCategory } from '@/hooks/categories/useCategory'
-import type { IModelProps } from '@/types'
+import type { IModelProps, IUploadResponse } from '@/types'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { ICategory } from '@/types/categories'
 
@@ -32,6 +33,7 @@ interface ModalAddCategoryProps extends IModelProps {
 
 const ModalAddCategory = ({ isOpen, onClose, categoryData }: ModalAddCategoryProps) => {
 	const id = useId()
+	const [filesUploaded, setFilesUploaded] = useState<IUploadResponse[]>([])
 	const {
 		register,
 		handleSubmit,
@@ -44,10 +46,17 @@ const ModalAddCategory = ({ isOpen, onClose, categoryData }: ModalAddCategoryPro
 	const { mutate: updateCategory } = useUpdateCategory()
 
 	const onSubmit: SubmitHandler<CategoryFormFields> = async (data) => {
+		const categoryData_form = {
+			...data,
+			images: filesUploaded.length > 0 ? filesUploaded[0].url : (categoryData?.images || null)
+		}
+
 		if (categoryData) {
-			updateCategory({ id: categoryData._id, data })
-		} else createCategory(data)
+			updateCategory({ id: categoryData._id, data: categoryData_form })
+		} else createCategory(categoryData_form)
 		onClose()
+		reset()
+		setFilesUploaded([])
 	}
 
 	useEffect(() => {
@@ -55,17 +64,36 @@ const ModalAddCategory = ({ isOpen, onClose, categoryData }: ModalAddCategoryPro
 			if (categoryData) {
 				setValue('name', categoryData.name)
 				setValue('description', categoryData.description)
+
+				// Set existing image if available
+				if (categoryData.images) {
+					const existingImage: IUploadResponse = {
+						url: categoryData.images,
+						public_id: `existing-category-image`,
+						asset_id: `existing-category-asset`
+					}
+					setFilesUploaded([existingImage])
+				} else {
+					setFilesUploaded([])
+				}
 			} else {
 				reset({ name: '', description: '' })
+				setFilesUploaded([])
 			}
 		}
 	}, [isOpen, categoryData, setValue, reset])
 
+	const handleClose = () => {
+		onClose()
+		reset()
+		setFilesUploaded([])
+	}
+
 	return (
-		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogContent className="max-w-4xl max-h-[60vh]" aria-describedby={undefined}>
+		<Dialog open={isOpen} onOpenChange={handleClose}>
+			<DialogContent className="max-w-xl max-h-[90vh]" aria-describedby={undefined}>
 				<DialogHeader>
-					<DialogTitle>Tạo mới danh mục sản phẩm</DialogTitle>
+					<DialogTitle>{categoryData ? 'Cập nhật danh mục' : 'Tạo mới danh mục sản phẩm'}</DialogTitle>
 				</DialogHeader>
 				<DialogBody>
 					<form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)} id={id}>
@@ -82,11 +110,17 @@ const ModalAddCategory = ({ isOpen, onClose, categoryData }: ModalAddCategoryPro
 							{...register('description')}
 							error={errors?.description?.message}
 						/>
+
+						<UploadFile
+							setFilesUploaded={setFilesUploaded}
+							title={categoryData ? "Cập nhật hình ảnh danh mục" : "Tải lên hình ảnh danh mục"}
+							initialImages={filesUploaded}
+						/>
 					</form>
 				</DialogBody>
 				<DialogFooter>
 					<DialogClose asChild>
-						<Button variant="outline" disabled={isSubmitting} onClick={onClose}>
+						<Button variant="outline" disabled={isSubmitting} onClick={handleClose}>
 							Huỷ
 						</Button>
 					</DialogClose>

@@ -4,7 +4,7 @@ import { getSelectData, unGetSelectData, convertToObjectMongoId } from '../../ut
 
 const queryProduct = async ({ query, limit, skip }) => {
 	return await Product.find(query)
-		.populate('category_id', 'name description -_id')
+		.populate('category_id', 'name description _id')
 		.sort({ updatedAt: -1 })
 		.skip(skip)
 		.limit(limit)
@@ -25,7 +25,9 @@ const searchProductByUser = async ({ keySearch }) => {
 	return await Product.find({
 		$or: [{ name: { $regex: regexSearch } }, { description: { $regex: regexSearch } }],
 		isPublish: true
-	}).lean()
+	})
+		.populate('category_id', 'name description _id')
+		.lean()
 }
 
 const publicProductByShop = async ({ product_id }) => {
@@ -62,11 +64,19 @@ const findAllProducts = async ({ limit, sort, page, filter, select }) => {
 	const skip = (page - 1) * limit
 	const sortBy = sort === 'ctime' ? { _id: -1 } : { _id: 1 }
 
-	return await Product.find(filter).sort(sortBy).skip(skip).limit(limit).select(getSelectData(select)).lean()
+	const products = await Product.find(filter)
+		.populate('category_id', 'name description _id')
+		.sort(sortBy)
+		.skip(skip)
+		.limit(limit)
+		.select(getSelectData(select))
+		.lean()
+
+	return products
 }
 
 const findProduct = async ({ product_id, unSelect }) => {
-	return await Product.findById(product_id).select(unGetSelectData(unSelect)).lean()
+	return await Product.findById(product_id).populate('category_id', 'name description _id').select(unGetSelectData(unSelect)).lean()
 }
 
 const updateProductById = async ({ productId, bodyUpdate, model, isNew = true }) => {
@@ -74,7 +84,9 @@ const updateProductById = async ({ productId, bodyUpdate, model, isNew = true })
 }
 
 const getProductById = async (productId) => {
-	return await Product.findOne({ _id: convertToObjectMongoId(productId) }).lean()
+	return await Product.findOne({ _id: convertToObjectMongoId(productId) })
+		.populate('category_id', 'name description _id')
+		.lean()
 }
 
 const checkProductByServer = async (products = []) => {

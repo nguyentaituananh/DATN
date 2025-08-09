@@ -1,10 +1,10 @@
-'use client'
-
 import type { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Edit, Trash2 } from 'lucide-react'
+import { Edit, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import type { ICategory } from '@/types/categories'
 import { formatDate } from '@/utils'
+
+import placeholderImage from '@/assets/images/placeholder-image.png'
 
 interface CategoryColumnsProps {
 	onEdit?: (category: ICategory) => void
@@ -13,15 +13,24 @@ interface CategoryColumnsProps {
 
 export const createCategoryColumns = ({ onEdit, onDelete }: CategoryColumnsProps): ColumnDef<ICategory>[] => [
 	{
-		accessorKey: 'name',
-		header: ({ column }) => {
+		accessorKey: 'images',
+		header: 'Hình ảnh',
+		cell: ({ row }) => {
+			const images = row.getValue('images') as string | null
 			return (
-				<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-					Tên danh mục
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
+				<div className="w-16 h-16">
+					<img
+						src={images ?? placeholderImage}
+						alt={row.getValue('name') as string}
+						className="w-full h-full object-cover rounded-md border"
+					/>
+				</div>
 			)
-		},
+		}
+	},
+	{
+		accessorKey: 'name',
+		header: 'Tên danh mục',
 		cell: ({ row }) => {
 			const name = row.getValue('name') as string
 			return <div className="font-medium">{name}</div>
@@ -41,14 +50,7 @@ export const createCategoryColumns = ({ onEdit, onDelete }: CategoryColumnsProps
 	},
 	{
 		accessorKey: 'createdAt',
-		header: ({ column }) => {
-			return (
-				<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-					Ngày tạo
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			)
-		},
+		header: 'Ngày tạo',
 		cell: ({ row }) => {
 			const createdAt = row.getValue('createdAt') as string
 			return <div className="text-sm">{formatDate(new Date(createdAt), 'MMM dd, yyyy')}</div>
@@ -56,14 +58,7 @@ export const createCategoryColumns = ({ onEdit, onDelete }: CategoryColumnsProps
 	},
 	{
 		accessorKey: 'updatedAt',
-		header: ({ column }) => {
-			return (
-				<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-					Ngày cập nhật
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			)
-		},
+		header: 'Ngày tạo',
 		cell: ({ row }) => {
 			const updatedAt = row.getValue('updatedAt') as string
 			return <div className="text-sm">{formatDate(new Date(updatedAt), 'MMM dd, yyyy')}</div>
@@ -86,10 +81,10 @@ export const createCategoryColumns = ({ onEdit, onDelete }: CategoryColumnsProps
 
 			return (
 				<div className="flex items-center gap-4">
-					<Button onClick={handleEdit} size="icon">
+					<Button onClick={handleEdit} size="icon" variant="outline">
 						<Edit className="h-4 w-4" />
 					</Button>
-					<Button onClick={handleDelete} className="text-red-600" size="icon">
+					<Button onClick={handleDelete} size="icon" variant="destructive">
 						<Trash2 className="h-4 w-4" />
 					</Button>
 				</div>

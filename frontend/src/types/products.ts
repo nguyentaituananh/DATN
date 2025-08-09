@@ -1,3 +1,5 @@
+import type { ICategory } from "./categories";
+
 export interface IProductData {
 	id?: string
 	name: string
@@ -16,11 +18,16 @@ export interface IProduct {
 	price: number
 	quantity: number
 	images: string[]
-	category_id: string
 	related_products: string[]
 	isDraft: boolean
 	isPublish: boolean
+	is_active?: boolean
 	rating_average: number
 	createdAt: string
 	updatedAt: string
+	original_price?: number
+	material?: string
+	size?: string
+	discount_price?: number
+	category_id: string | ICategory; // Can be a string or a populated ICategory object
 }

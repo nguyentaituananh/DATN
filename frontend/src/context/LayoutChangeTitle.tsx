@@ -12,7 +12,7 @@ const LayoutChangeTitle: FC<LayoutChangeTitleProps> = ({ children }) => {
 
 	useEffect(() => {
 		const currentActive = appSidebar.nav?.find((sidebar) => sidebar?.url === pathname)
-		changeTitleDocument(currentActive?.title ?? 'Dashboard')
+		changeTitleDocument(currentActive?.title ?? 'Nội thất cao cấp')
 	}, [pathname])
 
 	return <>{children}</>

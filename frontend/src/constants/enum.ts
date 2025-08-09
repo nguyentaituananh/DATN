@@ -1,7 +1,6 @@
 export const LayoutType = {
 	DEFAULT: 'default',
-	DASHBOARD: 'dashboard',
-	PROFILE: 'profile'
+	DASHBOARD: 'dashboard'
 } as const
 
 export const RouteStatus = {
@@ -15,6 +14,11 @@ export const ThemeMode = {
 	DARK: 'dark',
 	SYSTEM: 'system'
 } as const
+
+export type Role ={
+	ADMIN : 'admin',
+	
+}
 
 export type LayoutType = (typeof LayoutType)[keyof typeof LayoutType]
 export type RouteStatus = (typeof RouteStatus)[keyof typeof RouteStatus]

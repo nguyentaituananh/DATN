@@ -1,24 +1,57 @@
 'use client'
 
 import type React from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
-import { UploadCloud, FileText, XCircle, ImageIcon, Trash2 } from 'lucide-react'
+import { UploadCloud, FileText, XCircle, ImageIcon, Trash2, Eye } from 'lucide-react'
 import { useUploadFiles } from '@/hooks/upload/useUpload'
 import type { IUploadResponse } from '@/types'
 
 interface UploadFileProps {
 	title?: string
 	setFilesUploaded?: React.Dispatch<React.SetStateAction<IUploadResponse[]>>
+	setUploadedImages?: React.Dispatch<React.SetStateAction<IUploadResponse[]>>
+	initialImages?: IUploadResponse[]
 }
 
-export default function UploadFile({ setFilesUploaded, title }: UploadFileProps) {
+export default function UploadFile({ setFilesUploaded, title, initialImages = [] }: UploadFileProps) {
 	const [selectedFiles, setSelectedFiles] = useState<File[]>([])
-	const [uploadedImages, setUploadedImages] = useState<IUploadResponse[]>([])
+	const [uploadedImages, setUploadedImages] = useState<IUploadResponse[]>(initialImages)
+	const [deletingImageId, setDeletingImageId] = useState<string | null>(null)
+	const [isDragOver, setIsDragOver] = useState(false)
 	const { mutate: uploadFiles, isPending } = useUploadFiles()
+
+	// Sync initialImages with uploadedImages state
+	useEffect(() => {
+		setUploadedImages(initialImages)
+	}, [initialImages])
+
+	// Drag and drop handlers
+	const handleDragOver = (e: React.DragEvent) => {
+		e.preventDefault()
+		setIsDragOver(true)
+	}
+
+	const handleDragLeave = (e: React.DragEvent) => {
+		e.preventDefault()
+		setIsDragOver(false)
+	}
+
+	const handleDrop = (e: React.DragEvent) => {
+		e.preventDefault()
+		setIsDragOver(false)
+
+		const droppedFiles = Array.from(e.dataTransfer.files).filter(file =>
+			file.type.startsWith('image/')
+		)
+
+		if (droppedFiles.length > 0) {
+			setSelectedFiles(prev => [...prev, ...droppedFiles])
+		}
+	}
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files && event.target.files.length > 0) {
@@ -31,7 +64,14 @@ export default function UploadFile({ setFilesUploaded, title }: UploadFileProps)
 	}
 
 	const handleDeleteUploadedImage = (publicId: string) => {
-		setUploadedImages((prevImages) => prevImages.filter((image) => image.public_id !== publicId))
+		setDeletingImageId(publicId)
+		// Simulate delete delay for better UX
+		setTimeout(() => {
+			const updatedImages = uploadedImages.filter((image) => image.public_id !== publicId)
+			setUploadedImages(updatedImages)
+			setFilesUploaded?.(updatedImages) // Update parent with remaining images
+			setDeletingImageId(null)
+		}, 300)
 	}
 
 	const handleUpload = () => {
@@ -39,15 +79,20 @@ export default function UploadFile({ setFilesUploaded, title }: UploadFileProps)
 
 		uploadFiles(selectedFiles, {
 			onSuccess: (response) => {
-				setUploadedImages((prev) => [...prev, ...response.metadata])
+				const newImages = response.metadata
+				const allImages = [...uploadedImages, ...newImages]
+				setUploadedImages(allImages)
 				setSelectedFiles([])
-				setFilesUploaded?.(response.metadata)
+				setFilesUploaded?.(allImages) // Pass all images including existing ones
 			},
 			onError: (error) => {
 				console.error('Upload failed:', error)
 			}
 		})
 	}
+
+	console.log(uploadedImages);
+
 
 	return (
 		<Card className="w-full mx-auto shadow-lg rounded-lg">
@@ -63,7 +108,13 @@ export default function UploadFile({ setFilesUploaded, title }: UploadFileProps)
 				<div className="grid w-full items-center gap-2">
 					<label
 						htmlFor="files"
-						className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-border rounded-lg cursor-pointer bg-background hover:bg-muted transition-colors duration-200"
+						className={`flex flex-col items-center justify-center w-full h-28 border-2 border-dashed rounded-lg cursor-pointer transition-colors duration-200 ${isDragOver
+								? 'border-primary bg-primary/5'
+								: 'border-border bg-background hover:bg-muted'
+							}`}
+						onDragOver={handleDragOver}
+						onDragLeave={handleDragLeave}
+						onDrop={handleDrop}
 					>
 						<div className="flex flex-col items-center justify-center pt-4 pb-5">
 							<UploadCloud className="w-8 h-8 mb-2 text-muted-foreground" />
@@ -115,10 +166,11 @@ export default function UploadFile({ setFilesUploaded, title }: UploadFileProps)
 						</p>
 					</div>
 				)}
-				{uploadedImages.length > 0 && (
+				{uploadedImages.length > 0 ? (
 					<div className="space-y-2 pt-3 border-t mt-4">
 						<p className="font-semibold text-foreground flex items-center gap-2">
 							<ImageIcon className="h-4 w-4 text-green-600" /> {'Hình ảnh đã tải lên:'}
+							<span className="text-sm font-normal text-muted-foreground">({uploadedImages.length})</span>
 						</p>
 						<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
 							{uploadedImages.map((image, index) => (
@@ -126,31 +178,51 @@ export default function UploadFile({ setFilesUploaded, title }: UploadFileProps)
 									<img
 										src={image.url || '/placeholder.svg'}
 										alt={`Uploaded image ${index + 1}`}
-										className="w-full h-20 object-cover rounded-md border border-border"
+										className={`w-full h-20 object-cover rounded-md border border-border transition-opacity ${deletingImageId === image.public_id ? 'opacity-50' : ''
+											}`}
 									/>
-									<div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-md">
-										<a
-											href={image.url}
-											target="_blank"
-											rel="noopener noreferrer"
-											className="text-white text-xs px-2 py-1 rounded-full bg-chart-2 hover:bg-chart-3"
-										>
-											{'Xem'}
-										</a>
-										<Button
-											variant="ghost"
-											size="icon"
-											onClick={() => handleDeleteUploadedImage(image.public_id)}
-											className="absolute top-1 right-1 text-white hover:text-destructive"
-											aria-label={`Delete ${image.public_id}`}
-										>
-											<Trash2 className="h-3 w-3" />
-										</Button>
-									</div>
+									{deletingImageId === image.public_id && (
+										<div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-md">
+											<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+										</div>
+									)}
+									{deletingImageId !== image.public_id && (
+										<div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity rounded-md">
+											<div className="flex items-center gap-2">
+												<Button
+													variant="ghost"
+													size="icon"
+													onClick={() => window.open(image.url, '_blank')}
+													className="text-white hover:text-blue-300"
+													aria-label={`Preview ${image.public_id}`}
+												>
+													<Eye className="h-4 w-4" />
+												</Button>
+												<Button
+													variant="ghost"
+													size="icon"
+													onClick={() => handleDeleteUploadedImage(image.public_id)}
+													className="text-white hover:text-destructive"
+													aria-label={`Delete ${image.public_id}`}
+												>
+													<Trash2 className="h-4 w-4" />
+												</Button>
+											</div>
+										</div>
+									)}
 								</div>
 							))}
 						</div>
 					</div>
+				) : (
+					selectedFiles.length === 0 && !isPending && (
+						<div className="space-y-2 pt-3 border-t mt-4">
+							<p className="text-sm text-muted-foreground text-center flex items-center justify-center gap-2">
+								<ImageIcon className="h-4 w-4" />
+								Chưa có hình ảnh nào được tải lên
+							</p>
+						</div>
+					)
 				)}
 			</CardContent>
 			<CardFooter className="p-4 flex justify-end border-t">

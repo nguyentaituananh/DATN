@@ -1,7 +1,5 @@
-'use client'
-
 import type { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Edit, Trash2 } from 'lucide-react'
+import { Edit, Trash2, Eye, EyeOff } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -11,9 +9,11 @@ import { formatDate } from '@/utils'
 interface ProductColumnsProps {
 	onEdit?: (product: IProduct) => void
 	onDelete?: (productId: string) => void
+	onPublish?: (productId: string) => void
+	onUnpublish?: (productId: string) => void
 }
 
-export const createProductColumns = ({ onEdit, onDelete }: ProductColumnsProps): ColumnDef<IProduct>[] => [
+export const createProductColumns = ({ onEdit, onDelete, onPublish, onUnpublish }: ProductColumnsProps): ColumnDef<IProduct>[] => [
 	{
 		accessorKey: '_id',
 		header: 'ID sản phẩm',
@@ -21,26 +21,20 @@ export const createProductColumns = ({ onEdit, onDelete }: ProductColumnsProps):
 	},
 	{
 		accessorKey: 'name',
-		header: ({ column }) => {
-			return (
-				<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-					{'Tên sản phẩm'}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			)
-		},
+		header: 'Tên sản phẩm',
 		cell: ({ row }) => <div className="font-medium">{row.getValue('name')}</div>
 	},
 	{
+		accessorKey: 'category_id',
+		header: 'Danh mục',
+		cell: ({ row }) => {
+			const category = row.original.category_id
+			return <div className="font-medium">{category?.name}</div>
+		}
+	},
+	{
 		accessorKey: 'price',
-		header: ({ column }) => {
-			return (
-				<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-					{'Giá'}
-					<ArrowUpDown className="h-4 w-4" />
-				</Button>
-			)
-		},
+		header: 'Giá',
 		cell: ({ row }) => {
 			const price = Number.parseFloat(row.getValue('price'))
 			const formatted = new Intl.NumberFormat('vi-VN', {
@@ -53,19 +47,12 @@ export const createProductColumns = ({ onEdit, onDelete }: ProductColumnsProps):
 	},
 	{
 		accessorKey: 'quantity',
-		header: ({ column }) => {
-			return (
-				<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-					{'Số lượng'}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			)
-		},
+		header: 'Số lượng',
 		cell: ({ row }) => <div className="text-center">{row.getValue('quantity')}</div>
 	},
 	{
 		accessorKey: 'isPublish',
-		header: 'Trạng thái', // Không cần sắp xếp cho trạng thái
+		header: 'Trạng thái',
 		cell: ({ row }) => {
 			const isPublished = row.getValue('isPublish')
 			return (
@@ -77,32 +64,10 @@ export const createProductColumns = ({ onEdit, onDelete }: ProductColumnsProps):
 	},
 	{
 		accessorKey: 'createdAt',
-		header: ({ column }) => {
-			return (
-				<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-					{'Ngày tạo'}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			)
-		},
+		header: 'Ngày tạo',
 		cell: ({ row }) => {
 			const createdAt = row.getValue('createdAt') as string
 			return <div className="text-sm">{formatDate(createdAt, 'MMM dd, yyyy')}</div>
-		}
-	},
-	{
-		accessorKey: 'updatedAt',
-		header: ({ column }) => {
-			return (
-				<Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-					{'Ngày cập nhật'}
-					<ArrowUpDown className="ml-2 h-4 w-4" />
-				</Button>
-			)
-		},
-		cell: ({ row }) => {
-			const updatedAt = row.getValue('updatedAt') as string
-			return <div className="text-sm">{formatDate(updatedAt, 'MMM dd, yyyy')}</div>
 		}
 	},
 	{
@@ -117,17 +82,34 @@ export const createProductColumns = ({ onEdit, onDelete }: ProductColumnsProps):
 			const handleDelete = () => {
 				onDelete?.(product._id)
 			}
+			const handlePublish = () => {
+				onPublish?.(product._id)
+			}
+			const handleUnpublish = () => {
+				onUnpublish?.(product._id)
+			}
 
 			return (
 				<div className="flex items-center gap-2">
-					<Button onClick={handleEdit} size="icon" variant="ghost">
+					<Button onClick={handleEdit} size="icon" variant="outline" title="Chỉnh sửa">
 						<Edit className="h-4 w-4" />
 					</Button>
+
+					{product.isPublish ? (
+						<Button onClick={handleUnpublish} size="icon" variant="outline" title="Chuyển về Draft">
+							<EyeOff className="h-4 w-4" />
+						</Button>
+					) : (
+						<Button onClick={handlePublish} size="icon" variant="outline" title="Xuất bản">
+							<Eye className="h-4 w-4" />
+						</Button>
+					)}
+
 					<Button
 						onClick={handleDelete}
 						size="icon"
-						variant="ghost"
-						className="text-destructive hover:text-destructive/80"
+						variant="destructive"
+						title="Xóa"
 					>
 						<Trash2 className="h-4 w-4" />
 					</Button>

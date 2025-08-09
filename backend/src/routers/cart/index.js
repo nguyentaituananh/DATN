@@ -1,11 +1,10 @@
-'use strict'
-
 import express from 'express'
 import CartController from '../../controllers/cart.controller.js'
 import { authentication, isAdmin } from '../../middlewares/authMiddleware.js'
 
-const router = express.Router()
+const router = express.Router();
 
+// router.use(authenticationV2)
 // Public routes (không cần authentication)
 router.get('/:cartId', CartController.getCartById)
 
@@ -23,4 +22,5 @@ router.use(isAdmin)
 
 // Không có admin routes cho carts vì không cần quản lý toàn bộ giỏ hàng bởi admin
 
-export default router
+
+export default router;

@@ -7,26 +7,36 @@ import Product from '../models/product.model.js'
 
 class CategoryService {
 	// Tạo category mới
-	static createCategory = async ({ name, description, parent_category_id, images }) => {
+	static createCategory = async (data) => {
 		try {
+			const { name, description, parent_category_id, images } = data
+
+			// Basic validation for name and description
+			if (typeof name !== 'string' || name.trim().length < 2) {
+				throw new BadRequestError('Tên danh mục không hợp lệ hoặc quá ngắn')
+			}
+			if (typeof description !== 'string' || description.trim().length < 1) {
+				throw new BadRequestError('Mô tả danh mục không hợp lệ hoặc quá ngắn')
+			}
+
 			// Kiểm tra tên category đã tồn tại chưa
 			const existingCategory = await Category.findOne({ name: name.trim() })
 			if (existingCategory) {
-				throw new ConflictRequestError('Category name already exists')
+				throw new ConflictRequestError('Tên danh mục đã tồn tại')
 			}
 
 			// Kiểm tra parent category có tồn tại không (nếu có)
 			if (parent_category_id) {
 				const parentCategory = await Category.findById(parent_category_id)
 				if (!parentCategory) {
-					throw new NotFoundError('Parent category not found')
+					throw new NotFoundError('Danh mục cha không tồn tại')
 				}
 			}
 
 			// Tạo category mới
 			const newCategory = await Category.create({
 				name: name.trim(),
-				description: description?.trim() || '',
+				description: description.trim(),
 				parent_category_id: parent_category_id || null,
 				images: images || null
 			})
@@ -38,6 +48,7 @@ class CategoryService {
 				})
 			}
 		} catch (error) {
+			// Re-throw the error to be caught by the global error handler
 			throw error
 		}
 	}

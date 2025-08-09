@@ -39,8 +39,14 @@ export const createOrderSchema = Joi.object({
     "number.min": "Tổng giá không được nhỏ hơn 0",
   }),
   status: Joi.string().valid("pending", "processing", "shipped", "delivered", "cancelled").optional(),
-  shipping_address: Joi.string().allow("", null),
+  shipping_address: Joi.string().required().messages({
+    "string.base": "Địa chỉ giao hàng phải là chuỗi",
+    "any.required": "Địa chỉ giao hàng là bắt buộc",
+  }),
   payment_method: Joi.string().allow("", null),
+  coupon_code: Joi.string().optional().messages({
+    "string.base": "Mã giảm giá phải là chuỗi",
+  }),
 });
 
 // ✅ Schema cập nhật đơn hàng
